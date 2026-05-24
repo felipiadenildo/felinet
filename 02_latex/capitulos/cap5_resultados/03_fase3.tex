@@ -1,0 +1,30 @@
+% =============================================================================
+% cap5 §5.3 Resultados Fase III (classificação)
+% =============================================================================
+\section{Fase III --- triagem de espécie}
+\label{sec:resultados-fase3}
+
+A Tabela~\ref{tab:res-fase3-confusao} apresenta a matriz de confusão estimada do \modeloSN{} sobre classes representativas do CCT e do NACTI, com destaque para o par crítico \emph{Felis catus} \emph{vs.}\ \emph{Lynx rufus} (NACTI), ecologicamente análogo, no Brasil, à distinção entre gato doméstico e felinos silvestres de pequeno porte.
+
+\begin{table}[!htb]
+\centering
+\caption{Matriz de confusão estimada da Fase~III. Linhas: classe verdadeira; colunas: classe predita. \obsfic{faixas plausíveis com base na literatura recente; substituir pelos valores medidos.}}
+\label{tab:res-fase3-confusao}
+\small
+\begin{tabular}{@{}lccccc|c@{}}
+\toprule
+\textbf{Verdadeira $\downarrow$ / Predita $\rightarrow$} & \emph{F.\,cat.} & \emph{L.\,ruf.} & \emph{P.\,lot.} & \emph{D.\,virg.} & \emph{Sciurus} & $F_1$ \\
+\midrule
+\emph{Felis catus} (CCT+NACTI)        & \textbf{0{,}90} & 0{,}06 & 0{,}02 & 0{,}01 & 0{,}01 & 0{,}88 \\
+\emph{Lynx rufus} (NACTI)             & 0{,}12 & \textbf{0{,}82} & 0{,}03 & 0{,}02 & 0{,}01 & 0{,}80 \\
+\emph{Procyon lotor} (CCT)            & 0{,}02 & 0{,}03 & \textbf{0{,}89} & 0{,}04 & 0{,}02 & 0{,}86 \\
+\emph{Didelphis virginiana} (CCT)     & 0{,}03 & 0{,}02 & 0{,}05 & \textbf{0{,}87} & 0{,}03 & 0{,}85 \\
+\emph{Sciurus} sp.\ (CCT)             & 0{,}01 & 0{,}01 & 0{,}03 & 0{,}03 & \textbf{0{,}92} & 0{,}90 \\
+\midrule
+\multicolumn{6}{r}{Acurácia balanceada (\modeloSN)}                 & \textbf{0{,}87} \\
+\multicolumn{6}{r}{Acurácia balanceada (baseline binário gato/não-gato)} & 0{,}78 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A leitura conjunta da diagonal e do par crítico permite duas observações conceituais. Primeiro, a discriminação direta entre \emph{Felis catus} e as três classes não-felinas (\emph{P.\,lotor}, \emph{D.\,virginiana}, \emph{Sciurus}) tende a ser elevada (acertos $\geq 0{,}87$), pois envolve diferenças morfológicas marcadas que o \modeloSN{} captura nativamente. Segundo, e mais relevante para o cenário brasileiro, a confusão entre \emph{F.\,catus} e \emph{L.\,rufus} estimada em $\sim$12\% das instâncias projetadas como ``é \emph{F.\,catus}'' corresponde ao caso ecológico em que o pipeline mais provavelmente confundirá gato doméstico com felinos silvestres de pequeno porte (gato-do-mato, gato-mourisco). Esse ponto sustenta a recomendação --- já registrada como trabalho futuro --- de \emph{fine-tuning} específico sobre fauna brasileira após acumulado mínimo de campo. O ganho estimado de $\sim$9\,p.p.\ na acurácia balanceada do \modeloSN{} sobre o baseline binário é \textbf{moderado-grande}, justificando a opção arquitetural pelo classificador multi-espécie.

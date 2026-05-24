@@ -1,0 +1,38 @@
+% =============================================================================
+% pos-textuais/apendices/apendice_b_pseudocodigos.tex
+% Apêndice B -- códigos do pipeline e da execução experimental
+% =============================================================================
+
+\chapter{códigos}
+\label{ap:pseudocodigos}
+
+Reúnem-se os códigos dos cinco scripts da estrutura operacional descrita na Seção~\ref{sec:metodologia-reprodutibilidade}: três scripts por fase (Fases~II, III e~IV), um orquestrador ponta-a-ponta e um consolidador comparativo. As listagens omitem detalhes de \emph{logging} e tratamento de exceções para preservar foco no fluxo de dados; o código efetivamente executado pode incluir trechos auxiliares que não alteram a semântica aqui descrita. A correspondência entre cada código e os módulos de \texttt{04\_codigo/src/} é documentada no \texttt{README} daquele subprojeto.
+
+\section*{B.1 Fase II --- detecção (\texttt{run\_phase2.py})}
+\addcontentsline{toc}{section}{B.1 Fase II --- detecção}
+
+\lstinputlisting[language=Python,caption={\texttt{run\_phase2.py} --- \modeloMD{} e baseline YOLO sobre os \emph{splits} oficiais de CCT e Snapshot Serengeti. O mascaramento por \emph{blur} das caixas da classe ``pessoa'' é aplicado antes de qualquer escrita em disco (LGPD).},label={lst:run-phase2}]{elementos/codigos/run_phase2.py}
+
+\clearpage
+\section*{B.2 Fase III --- classificação (\texttt{run\_phase3.py})}
+\addcontentsline{toc}{section}{B.2 Fase III --- classificação}
+
+\lstinputlisting[language=Python,caption={\texttt{run\_phase3.py} --- \modeloSN{} sobre recortes da Fase~II; encaminhamento à Fase~IV restrito a quadros confirmados como \emph{F.\,catus}.},label={lst:run-phase3}]{elementos/codigos/run_phase3.py}
+
+\clearpage
+\section*{B.3 Fase IV --- re-identificação (\texttt{run\_phase4.py})}
+\addcontentsline{toc}{section}{B.3 Fase IV --- re-identificação}
+
+\lstinputlisting[language=Python,caption={\texttt{run\_phase4.py} --- fusão tardia entre \emph{embedding} facial (\modeloPetFace) e \emph{embedding} por partes do corpo sobre \modeloWildlife, com decisão \emph{closed-set}/\emph{open-set} por limiar $\tau$ calibrado em catalogados.},label={lst:run-phase4}]{elementos/codigos/run_phase4.py}
+
+\clearpage
+\section*{B.4 Orquestrador ponta-a-ponta (\texttt{run\_end2end.py})}
+\addcontentsline{toc}{section}{B.4 Orquestrador ponta-a-ponta}
+
+\lstinputlisting[language=Python,caption={\texttt{run\_end2end.py} --- encadeia as quatro fases sobre a janela sintética e emite \texttt{run\_metadata.json} reprodutível.},label={lst:run-end2end}]{elementos/codigos/run_end2end.py}
+
+\clearpage
+\section*{B.5 Consolidação de \emph{runs} (\texttt{compare\_runs.py})}
+\addcontentsline{toc}{section}{B.5 Consolidação de \emph{runs}}
+
+\lstinputlisting[language=Python,caption={\texttt{compare\_runs.py} --- consolida principal e baseline em uma única tabela comparativa, com classificação automática da magnitude da diferença por fase.},label={lst:compare-runs}]{elementos/codigos/compare_runs.py}

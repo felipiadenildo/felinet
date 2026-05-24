@@ -1,0 +1,48 @@
+% =============================================================================
+% preambulo/comandos.tex  --  Comandos auxiliares e macros do autor
+% =============================================================================
+
+% ----- TODO destacado no PDF (sem dependência do pacote todonotes) -----
+% Uso: \todoex{texto da pendência}
+\newcommand{\todoex}[1]{%
+  \textcolor{red!70!black}{\textbf{[\,TODO:\,#1\,]}}%
+}
+
+% ----- Marcação inline para revisão -----
+\newcommand{\rev}[1]{\textcolor{blue!60!black}{\textit{#1}}}
+
+% ----- OBS para elementos fictícios (resultados preliminares a substituir) -----
+% Uso: \obsfic{breve nota}  --> aparece em vermelho, em itálico, com prefixo OBS.
+\newcommand{\obsfic}[1]{\textcolor{red!75!black}{\textit{\small OBS: #1}}}
+
+% ----- Termos técnicos em inglês (itálico) -----
+\newcommand{\estr}[1]{\textit{#1}}
+
+% ----- Atalhos para nomes de modelos/datasets (manter consistência) -----
+\newcommand{\modeloMD}{MegaDetector}
+\newcommand{\modeloSN}{SpeciesNet}
+\newcommand{\modeloCatFLW}{CatFLW}
+\newcommand{\modeloPetFace}{PetFace}
+\newcommand{\modeloWildlife}{WildlifeReID-10k}
+
+% ----- Métricas (para garantir grafia consistente) -----
+\newcommand{\mAP}{\mbox{mAP}}
+\newcommand{\Fscore}{F\textsubscript{1}}
+\newcommand{\RankK}[1]{Rank-#1}
+
+% ----- Compatibilidade com .bbl gerado pelo abntex2-alf-USPSC.bst -----
+% O estilo abntex2-alf emite comandos legados de LaTeX 2.09 (\tt, \it, \bf,
+% \sf, \sc, \rm, \sl) e do pacote html (\htmladdnormallink). A classe memoir
+% bloqueia esses comandos. Redefinimos para equivalentes modernos.
+\let\tt\ttfamily
+\let\it\itshape
+\let\bf\bfseries
+\let\sf\sffamily
+\let\sc\scshape
+\let\rm\rmfamily
+\let\sl\slshape
+% Stub para \htmladdnormallink{texto}{url}; em PDF imprime só o texto.
+\providecommand{\htmladdnormallink}[2]{#1}
+\providecommand{\htmladdnormallinkfoot}[2]{#1}
+
+\raggedbottom

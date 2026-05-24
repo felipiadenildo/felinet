@@ -1,0 +1,73 @@
+% =============================================================================
+% main.tex  --  Trabalho de Conclusão de Curso
+%               Engenharia de Computação -- ICMC-EESC/USP São Carlos
+%
+%   Baseado no Pacote USPSC versão 3.2 (classe USPSC, derivada de
+%   abntex2.cls v1.9.5). Atende: ABNT NBR 14724, 6023:2018, 10520:2023
+%   e Diretrizes USP SIBi.
+%
+%   Estrutura modular -- ver /preambulo, /pre-textuais, /capitulos,
+%   /pos-textuais, /elementos e /bib.
+%
+% Compilação: pdflatex -> bibtex -> pdflatex -> pdflatex   (via Makefile)
+% =============================================================================
+\documentclass[
+    12pt,            % Tamanho da fonte
+    oneside,         % Impressão frente e verso
+    a4paper,         % Tamanho do papel
+    chapter=TITLE,   % Títulos de capítulo em maiúsculas
+    english,         % Idioma adicional para hifenização
+    brazil           % Idioma principal do documento
+]{USPSC-classe/USPSC}
+
+% --- Preâmbulo modular ---
+% Ordem importante: metadados antes de pacotes (hypersetup usa \TCCtitulo)
+\input{preambulo/metadados}
+\input{preambulo/pacotes}
+\input{preambulo/comandos}
+
+% --- DADOS INICIAIS USPSC (Unidade + Programa) ---
+% ICMC-TCC -> arquivo USPSC-TCC-pre-textual-ICMC.tex
+% ECp      -> Engenharia de Computação (Português)
+% Aqui o pré-textual foi internalizado em pre-textuais/dados_icmc_ec.tex
+\input{pre-textuais/dados_icmc_ec}
+
+% =============================================================================
+\begin{document}
+
+% --- Elementos pré-textuais ---
+\pretextual
+\input{pre-textuais/capa}
+\input{pre-textuais/folha_de_rosto}
+\input{pre-textuais/dedicatoria}
+\input{pre-textuais/agradecimentos}
+\input{pre-textuais/epigrafe}
+\input{pre-textuais/resumo}
+\input{pre-textuais/listas}
+% Folha de aprovação e ficha catalográfica são anexadas como PDFs externos
+% pela biblioteca / coordenação após a defesa.
+
+% --- Texto principal ---
+\textual
+\include{capitulos/cap1_introducao}
+\include{capitulos/cap2_hardware}
+\include{capitulos/cap3_pipeline}
+\include{capitulos/cap4_metodologia}
+\include{capitulos/cap5_resultados}
+\include{capitulos/cap6_conclusao}
+
+% --- Referências ---
+\postextual
+% Para incluir todas as entradas mesmo sem citação explícita durante a
+% redação, descomente a linha abaixo. Em produção, use \cite{key} no texto.
+%\nocite{*}
+\bibliography{bib/references}
+
+% --- Apêndices (elaborados pelo autor) ---
+\begin{apendicesenv}
+  \partapendices
+  \include{pos-textuais/apendices/apendice_a_matriz_pontos}
+  \include{pos-textuais/apendices/apendice_b_pseudocodigos}
+\end{apendicesenv}
+
+\end{document}

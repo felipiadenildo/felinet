@@ -1,0 +1,13 @@
+% =============================================================================
+% USPSC-unidades.tex  --  Override local
+%
+%   A classe USPSC.cls executa "\include{USPSC-unidades}" automaticamente.
+%   O arquivo canônico inclui os pré-textuais com dados-exemplo de cada
+%   Unidade ("José da Silva", título "Modelo para TCC em LaTeX...").
+%   Como já declaramos manualmente os campos do TCC (Engenharia de Computação,
+%   ICMC-EESC) em pre-textuais/dados_icmc_ec.tex, sobrescrevemos
+%   \siglaunidade para que seja inerte e não puxe os exemplos.
+% =============================================================================
+% A classe USPSC.cls não define \siglaunidade (linha 261 do .cls está comentada).
+% Definimos como no-op para que chamadas externas (caso ocorram) não quebrem.
+\providecommand{\siglaunidade}[1]{}

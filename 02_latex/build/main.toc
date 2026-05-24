@@ -1,0 +1,72 @@
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase []{Introdução}}{15}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contexto}{15}{section.1.1}%
+\contentsline {section}{\numberline {1.2}O problema de engenharia}{15}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Objetivos}{17}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Justificativa}{18}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Organização do trabalho}{18}{section.1.5}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase []{Aquisição de imagem em campo}}{20}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Pontos de coleta no Campus 2}{20}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Requisitos de aquisição}{21}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Energia, armazenamento e conectividade}{22}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Geometria de captura e proteção}{24}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Tipologias de câmera}{25}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Arquitetura recomendada}{28}{section.2.6}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase []{Pipeline de visão computacional}}{31}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Arquitetura em quatro fases}{31}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Fase I --- Ingestão e triagem}{34}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Fase II --- Detecção generalista}{36}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Fase III --- Classificação de espécie}{38}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Fase IV --- Reidentificação individual}{39}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Síntese e ponte com a metodologia}{41}{section.3.6}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase []{Metodologia experimental}}{43}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Objetivos e postura}{43}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Datasets públicos}{43}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Protocolo por fase}{45}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Métricas e regras de reporte}{46}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Reprodutibilidade}{47}{section.4.5}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Resultados preliminares e discussão}}{49}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Posicionamento}{49}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Fase II --- detecção genérica de fauna}{49}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Fase III --- triagem de espécie}{50}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Fase IV --- re-identificação individual}{51}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Teste ponta-a-ponta}{52}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Discussão integrada}{52}{section.5.6}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Conclusão e trabalhos futuros}}{55}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Síntese}{55}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Contribuições}{55}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Limitações}{56}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Trabalhos futuros}{56}{section.6.4}%
+\vspace {\cftbeforechapterskip }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{\uppercase {Refer\^encias}}{58}{section*.52}%
+\renewcommand *{\cftappendixname }{AP\^ENDICE \space }
+\setlength {\cftpartindent }{\cftlastnumwidth } \setlength {\cftpartnumwidth }{2em}
+\cftinsert {A}
+\contentsline {part}{\uppercase {AP\^ENDICES}}{63}{section*.53}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\cftinsert {A}
+\contentsline {appendix}{\chapternumberline {A}\MakeTextUppercase []{Matriz bruta de infraestrutura dos pontos P01--P10}}{64}{appendix.A}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\cftinsert {A}
+\contentsline {appendix}{\chapternumberline {B}\MakeTextUppercase []{códigos}}{69}{appendix.B}%
+\contentsline {section}{B.1 Fase II --- detecção}{69}{section*.54}%
+\contentsline {section}{B.2 Fase III --- classificação}{71}{section*.55}%
+\contentsline {section}{B.3 Fase IV --- re-identificação}{73}{section*.56}%
+\contentsline {section}{B.4 Orquestrador ponta-a-ponta}{75}{section*.57}%
+\contentsline {section}{B.5 Consolidação de \emph {runs}}{77}{section*.58}%

@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+04_dados/raw/
+04_dados/interim/
+04_dados/processed/
+mlruns/
+*.sqlite
+*.db
+.DS_Store
+.env

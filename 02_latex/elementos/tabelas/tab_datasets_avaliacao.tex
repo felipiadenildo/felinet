@@ -1,0 +1,18 @@
+% Tabela 4.1 — Datasets públicos selecionados
+\begin{table}[!htb]
+\centering
+\caption{Datasets públicos selecionados para a avaliação do pipeline.}
+\label{tab:datasets-avaliacao}
+\small
+\begin{tabular}{@{}p{2.6cm}p{1.8cm}p{2.6cm}p{1.8cm}p{3.6cm}@{}}
+\toprule
+\textbf{Dataset} & \textbf{Volume} & \textbf{Anotação} & \textbf{Licença} & \textbf{Função no estudo} \\
+\midrule
+\emph{Caltech CT}~\cite{beery2018terra}        & 243\,k img / 21\,cls  & \emph{bbox} + espécie    & CDLA perm. & Detecção (II); classificação (III) \\
+\emph{NACTI}~\cite{tabak2019nacti}             & 3{,}7\,M img / 28\,cls & espécie (bbox parcial)  & CDLA perm. & Par crítico \emph{F.\,catus}/\emph{L.\,rufus} (III) \\
+\emph{Snapshot Serengeti}~\cite{norouzzadeh2018automatically} & 7{,}1\,M img / 61\,cls & espécie + contagem & CDLA perm. & Descarte de quadros vazios (II) \\
+\emph{PetFace}~\cite{shinoda2024petface}       & 257\,k indiv.         & identidade + raça        & acadêmica  & Re-ID por face (IV) \\
+\emph{WildlifeReID-10k}~\cite{adam2024wildlifereid10k} & 10\,k indiv. / 33\,esp. & identidade + \emph{split} & acadêmica & Re-ID por flanco (IV) \\
+\bottomrule
+\end{tabular}
+\end{table}

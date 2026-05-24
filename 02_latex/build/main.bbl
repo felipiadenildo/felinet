@@ -1,0 +1,453 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Adam \textit{et al.} 2024]{adam2024wildlifereid10k}
+\abntrefinfo{Adam \textit{et al.}}{Adam \textit{et al.}}{2024}
+{ADAM, L. \textit{et al.} {WildlifeReID-10k}: Wildlife re-identification
+  dataset with 10k individual animals.
+\textbf{arXiv preprint arXiv:2406.09211}, 2024.
+Dispon{\'\i}vel em: \url{https://arxiv.org/abs/2406.09211}.}
+
+\bibitem[Akbar, Rees e Fleming 2025]{akbar2025bodypart}
+\abntrefinfo{Akbar, Rees e Fleming}{Akbar; Rees; Fleming}{2025}
+{AKBAR, R. R.~S.; REES, M.; FLEMING, P.~A. Body-part-based individual feral cat
+  identification from camera trap images using deep learning.
+\textbf{Ecological Informatics}, 2025.
+Dispon{\'\i}vel em:
+  \url{https://www.sciencedirect.com/science/article/pii/S1574954125002675}.}
+
+\bibitem[{AnimalCLEF} 2026]{animalclef2026}
+\abntrefinfo{{AnimalCLEF}}{{AnimalCLEF}}{2026}
+{{AnimalCLEF}. \textbf{{AnimalCLEF} 2026 --- Animal Re-identification
+  Challenge}. 2026.
+Dispon{\'\i}vel em:
+  \url{https://www.kaggle.com/competitions/animal-clef-2026}.}
+
+\bibitem[Bastos e Farias 2025]{bastos2025sporotrichosis}
+\abntrefinfo{Bastos e Farias}{Bastos; Farias}{2025}
+{BASTOS, F.; FARIAS, M.~R. de. Cat-transmitted sporotrichosis by
+  {\it{sporothrix brasiliensis}}: Focus on its potential transmission routes
+  and epidemiological profile.
+\textbf{Medical Mycology}, 2025.
+Dispon{\'\i}vel em:
+  \url{https://academic.oup.com/mmy/article/doi/10.1093/mmy/myaf051/8158997}.}
+
+\bibitem[Beery, Horn e Perona 2018]{beery2018terra}
+\abntrefinfo{Beery, Horn e Perona}{Beery; Horn; Perona}{2018}
+{BEERY, S.; HORN, G. V.; PERONA, P. Recognition in {Terra Incognita}.
+  \textit{In}:  \textbf{Proceedings of the European Conference on Computer
+  Vision (ECCV)}. [\textit{S.l.: s.n.}], 2018. p. 456--473. Dispon{\'\i}vel em:
+  \url{https://openaccess.thecvf.com/content\_ECCV\_2018/papers/Beery\_Recognition\_in\_Terra\_ECCV\_2018\_paper.pdf}.}
+
+\bibitem[Beukes \textit{et al.} 2025]{beukes2025refining}
+\abntrefinfo{Beukes \textit{et al.}}{Beukes \textit{et al.}}{2025}
+{BEUKES, M. \textit{et al.} Refining camera trap surveys for mammal detection
+  and diversity assessment in the {Baviaanskloof Catchment}, {South Africa}.
+\textbf{Wild}, v.~2, n.~2, p.~15, 2025.
+Dispon{\'\i}vel em: \url{https://www.mdpi.com/3042-4526/2/2/15}.}
+
+\bibitem[{BRASIL} 2017]{brasil_lei13426_2017}
+\abntrefinfo{{BRASIL}}{{BRASIL}}{2017}
+{{BRASIL}. \textbf{Lei Federal nº 13.426, de 30 de março de 2017}. 2017.
+Dispõe sobre a política de controle da natalidade de cães e gatos.}
+
+\bibitem[{BRASIL} 2024]{brasil_lei15046_2024}
+\abntrefinfo{{BRASIL}}{{BRASIL}}{2024}
+{{BRASIL}. \textbf{Lei Federal nº 15.046, de 17 de dezembro de 2024}. 2024.}
+
+\bibitem[{BRASIL} 2025]{brasil_decreto12439_2025}
+\abntrefinfo{{BRASIL}}{{BRASIL}}{2025}
+{{BRASIL}. \textbf{Decreto Federal nº 12.439, de 17 de abril de 2025}. 2025.
+  Diário Oficial da União, Brasília.
+Institui o Programa Nacional de Proteção e Manejo Populacional Ético de
+  Cães e Gatos e o Cadastro Nacional de Animais Domésticos. Acesso em: 17
+  maio 2026.
+Dispon{\'\i}vel em:
+  \url{https://www.planalto.gov.br/ccivil\_03/\_ato2023-2026/2025/Decreto/D12439.htm}.}
+
+\bibitem[Bruce \textit{et al.} 2025]{bruce2025largescale}
+\abntrefinfo{Bruce \textit{et al.}}{Bruce \textit{et al.}}{2025}
+{BRUCE, T. \textit{et al.} Large-scale and long-term wildlife research and
+  monitoring using camera traps: a continental synthesis.
+\textbf{Biological Reviews}, 2025.
+Dispon{\'\i}vel em:
+  \url{https://onlinelibrary.wiley.com/doi/10.1111/brv.13152}.}
+
+\bibitem[Cecchetti e Nelli 2025]{cecchetti2025planning}
+\abntrefinfo{Cecchetti e Nelli}{Cecchetti; Nelli}{2025}
+{CECCHETTI, M.; NELLI, L. Planning and optimizing neutering programs for
+  free-roaming cat populations.
+\textbf{Journal of Applied Ecology}, 2025.
+Dispon{\'\i}vel em:
+  \url{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/1365-2664.70052}.}
+
+\bibitem[{CFMV} 2024]{cfmv_resolucao1595_2024}
+\abntrefinfo{{CFMV}}{{CFMV}}{2024a}
+{{CFMV}. \textbf{Resolução {CFMV} nº 1.595, de 26 de março de 2024}. 2024.
+Altera a Resolução CFMV nº 877/2008 e autoriza o corte reto da ponta da
+  orelha de felinos para identificação.
+Dispon{\'\i}vel em:
+  \url{https://crmvsp.gov.br/nova-resolucao-do-cfmv-redefine-identificacao-de-felinos-castrados/}.}
+
+\bibitem[{CFMV} 2024]{cfmv_resolucao1596_2024}
+\abntrefinfo{{CFMV}}{{CFMV}}{2024b}
+{{CFMV}. \textbf{Resolução {CFMV} nº 1.596, de 26 de março de 2024}. 2024.
+Diretrizes gerais para programas de esterilização cirúrgica com finalidade
+  de manejo populacional.
+Dispon{\'\i}vel em:
+  \url{https://ses.sp.bvs.br/wp-content/uploads/2024/04/U\_RS-CFMV-1.596\_260324.pdf}.}
+
+\bibitem[Colombo, Carvalho \textit{et al.} 2024]{colombo2024emergence}
+\abntrefinfo{Colombo, Carvalho \textit{et al.}}{Colombo; Carvalho \textit{et
+  al.}}{2024}
+{COLOMBO, S.~A.; CARVALHO, J.~A. de \textit{et al.} The emergence of new
+  {\it{sporothrix brasiliensis}} genotypes in current epidemic of
+  sporotrichosis in southeastern {Brazil}.
+\textbf{Mycoses}, 2024.
+Dispon{\'\i}vel em:
+  \url{https://onlinelibrary.wiley.com/doi/10.1111/myc.13792}.}
+
+\bibitem[Cordier \textit{et al.} 2022]{cordier2022africa}
+\abntrefinfo{Cordier \textit{et al.}}{Cordier \textit{et al.}}{2022}
+{CORDIER, C.~P. \textit{et al.} Camera trap research in {Africa}: A systematic
+  review.
+\textbf{Global Ecology and Conservation}, 2022.
+Dispon{\'\i}vel em:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S2351989422003286}.}
+
+\bibitem[Cove \textit{et al.} 2022]{cove2022capital}
+\abntrefinfo{Cove \textit{et al.}}{Cove \textit{et al.}}{2022}
+{COVE, M.~V. \textit{et al.} Counting the {Capital}'s cats: Estimating drivers
+  of abundance of free-roaming cats with a novel hierarchical model.
+\textbf{Ecological Applications}, 2022.
+Dispon{\'\i}vel em:
+  \url{https://esajournals.onlinelibrary.wiley.com/doi/10.1002/eap.2790}.}
+
+\bibitem[Ferreira \textit{et al.} 2026]{ferreira2026tndrtm}
+\abntrefinfo{Ferreira \textit{et al.}}{Ferreira \textit{et al.}}{2026}
+{FERREIRA, B. G. G.~O. \textit{et al.} The {TND-RTM} protocol for controlling
+  sporotrichosis in a free-roaming cat colony in southern {Brazil}.
+\textbf{Research in Veterinary Science}, 2026.
+Dispon{\'\i}vel em:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S0034528826000603}.}
+
+\bibitem[Ferroglio \textit{et al.} 2024]{ferroglio2024integrated}
+\abntrefinfo{Ferroglio \textit{et al.}}{Ferroglio \textit{et al.}}{2024}
+{FERROGLIO, E. \textit{et al.} An integrated approach to an emerging problem:
+  Implementing a whole year of camera trap survey in evaluating the impact of
+  wildlife on tick abundance.
+\textbf{Transboundary and Emerging Diseases}, 2024.
+Dispon{\'\i}vel em:
+  \url{https://onlinelibrary.wiley.com/doi/10.1155/2024/4064855}.}
+
+\bibitem[Gonçalves, Machado \textit{et al.} 2025]{goncalves2025wildcat}
+\abntrefinfo{Gonçalves, Machado \textit{et al.}}{Gonçalves; Machado
+  \textit{et al.}}{2025}
+{GONçALVES, L.~S.; MACHADO, D. de S. \textit{et al.} The wildcat that lives in
+  me: A review on free-roaming cats ({\it{felis catus}}) in {Brazil}, focusing
+  on research priorities, management, and welfare.
+\textbf{Animals}, v.~15, n.~2, p.~190, 2025.
+Dispon{\'\i}vel em: \url{https://www.mdpi.com/2076-2615/15/2/190}.}
+
+\bibitem[{Google Research} 2026]{google_speciesnet_blog}
+\abntrefinfo{{Google Research}}{{Google Research}}{2026}
+{{Google Research}. \textbf{Where wild things roam: Identifying wildlife with
+  {SpeciesNet}}. 2026.
+Dispon{\'\i}vel em:
+  \url{https://research.google/blog/where-wild-things-roam-identifying-wildlife-with-speciesnet/}.}
+
+\bibitem[Gunther \textit{et al.} 2022]{gunther2022reduction}
+\abntrefinfo{Gunther \textit{et al.}}{Gunther \textit{et al.}}{2022}
+{GUNTHER, I. \textit{et al.} Reduction of free-roaming cat population requires
+  high-intensity neutering in spatial contiguity to mitigate compensatory
+  effects.
+\textbf{Proceedings of the National Academy of Sciences}, v.~119, n.~15, 2022.
+Dispon{\'\i}vel em: \url{https://pnas.org/doi/full/10.1073/pnas.2119000119}.}
+
+\bibitem[Hernandez \textit{et al.} 2024]{hernandez2024pytorchwildlife}
+\abntrefinfo{Hernandez \textit{et al.}}{Hernandez \textit{et al.}}{2024}
+{HERNANDEZ, A. \textit{et al.} {PyTorch-Wildlife}: A collaborative deep
+  learning framework for conservation.
+\textbf{arXiv preprint arXiv:2405.12930}, 2024.
+Dispon{\'\i}vel em: \url{https://arxiv.org/abs/2405.12930}.}
+
+\bibitem[Herrera e Cove 2022]{herrera2022prey}
+\abntrefinfo{Herrera e Cove}{Herrera; Cove}{2022}
+{HERRERA, D.; COVE, M.~V. Prey selection and predation behavior of free-roaming
+  domestic cats ({\it{felis catus}}) in an urban ecosystem: Implications for
+  urban cat management.
+\textbf{Biological Conservation}, 2022.
+Dispon{\'\i}vel em:
+  \url{https://www.sciencedirect.com/science/article/pii/S0006320722000568}.}
+
+\bibitem[Higa, Araújo \textit{et al.} 2010]{higa2010toxoplasma}
+\abntrefinfo{Higa, Araújo \textit{et al.}}{Higa; Araújo \textit{et
+  al.}}{2010}
+{HIGA, L.~T.; ARAúJO, S.~M. \textit{et al.} A prospective study of
+  {\it{toxoplasma}}-positive pregnant women in southern {Brazil}: a health
+  alert.
+\textbf{Transactions of the Royal Society of Tropical Medicine and Hygiene},
+  2010.
+Dispon{\'\i}vel em:
+  \url{https://academic.oup.com/trstmh/article-lookup/doi/10.1016/j.trstmh.2010.01.006}.}
+
+\bibitem[Junqueira e Galera 2024]{junqueira2024evaluation}
+\abntrefinfo{Junqueira e Galera}{Junqueira; Galera}{2024}
+{JUNQUEIRA, A. N.~N.; GALERA, P.~D. Evaluation of population management based
+  on trap--neuter--return and trap--neuter--adoption practices in a
+  free-roaming cat colony in the {Federal District}, {Brazil}.
+\textbf{Animals}, v.~14, n.~17, p.~2478, 2024.
+Dispon{\'\i}vel em: \url{https://www.mdpi.com/2076-2615/14/17/2478}.}
+
+\bibitem[Kmetiuk \textit{et al.} 2021]{kmetiuk2021toxoplasma}
+\abntrefinfo{Kmetiuk \textit{et al.}}{Kmetiuk \textit{et al.}}{2021}
+{KMETIUK, L.~B. \textit{et al.} Occurrence of antibodies anti-{\it{toxoplasma
+  gondii}} among sheltered and free-roaming cats within a university campus.
+\textbf{Semina: Ciências Agrárias}, v.~42, n. 3 supl. 1, p.~1685, 2021.
+Dispon{\'\i}vel em:
+  \url{http://www.uel.br/revistas/uel/index.php/semagrarias/article/view/41050}.}
+
+\bibitem[Kreisler, Cornell e Levy 2019]{kreisler2019orcat}
+\abntrefinfo{Kreisler, Cornell e Levy}{Kreisler; Cornell; Levy}{2019}
+{KREISLER, R.~E.; CORNELL, H.~N.; LEVY, J.~K. Decrease in population and
+  increase in welfare of community cats in a 23-year {Trap-Neuter-Return}
+  program in {Key Largo}, {FL}: The {ORCAT} program.
+\textbf{Frontiers in Veterinary Science}, v.~6, p.~7, 2019.
+Dispon{\'\i}vel em:
+  \url{https://www.frontiersin.org/article/10.3389/fvets.2019.00007/full}.}
+
+\bibitem[Levy, Gale e Gale 2003]{levy2003longterm}
+\abntrefinfo{Levy, Gale e Gale}{Levy; Gale; Gale}{2003}
+{LEVY, J.~K.; GALE, D.~W.; GALE, L.~A. Evaluation of the effect of a long-term
+  trap-neuter-return and adoption program on a free-roaming cat population.
+\textbf{Journal of the American Veterinary Medical Association}, v.~222, n.~1,
+  p. 42--46, 2003.
+Dispon{\'\i}vel em:
+  \url{https://avmajournals.avma.org/view/journals/javma/222/1/javma.2003.222.42.xml}.}
+
+\bibitem[Li \textit{et al.} 2021]{li2021china}
+\abntrefinfo{Li \textit{et al.}}{Li \textit{et al.}}{2021}
+{LI, Y. \textit{et al.} Estimates of wildlife killed by free-ranging cats in
+  {China}.
+\textbf{Biological Conservation}, 2021.
+Dispon{\'\i}vel em:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S0006320720309873}.}
+
+\bibitem[{LILA BC} 2026]{lila_bc}
+\abntrefinfo{{LILA BC}}{{LILA BC}}{2026}
+{{LILA BC}. \textbf{Labeled Information Library of {Alexandria}: Biology and
+  Conservation}. 2026.
+Acesso em: 17 maio 2026.
+Dispon{\'\i}vel em: \url{https://lila.science/}.}
+
+\bibitem[Loss, Will e Marra 2013]{loss2013impact}
+\abntrefinfo{Loss, Will e Marra}{Loss; Will; Marra}{2013}
+{LOSS, S.~R.; WILL, T.; MARRA, P.~P. The impact of free-ranging domestic cats
+  on wildlife of the {United States}.
+\textbf{Nature Communications}, v.~4, p.~1396, 2013.
+Dispon{\'\i}vel em: \url{https://www.nature.com/articles/ncomms2380}.}
+
+\bibitem[Meek, Ballard e Falzon 2016]{meek2016higher}
+\abntrefinfo{Meek, Ballard e Falzon}{Meek; Ballard; Falzon}{2016}
+{MEEK, P.; BALLARD, G.; FALZON, G. The higher you go the less you will know:
+  placing camera traps high to avoid theft will affect detection.
+\textbf{Remote Sensing in Ecology and Conservation}, 2016.
+Dispon{\'\i}vel em: \url{https://onlinelibrary.wiley.com/doi/10.1002/rse2.28}.}
+
+\bibitem[Meek \textit{et al.} 2019]{meek2018theft}
+\abntrefinfo{Meek \textit{et al.}}{Meek \textit{et al.}}{2019}
+{MEEK, P.~D. \textit{et al.} Camera trap theft and vandalism: occurrence, cost,
+  prevention and implications for wildlife research and management.
+\textbf{Remote Sensing in Ecology and Conservation}, v.~5, n.~2, p. 160--168,
+  2019.
+Dispon{\'\i}vel em:
+  \url{https://zslpublications.onlinelibrary.wiley.com/doi/10.1002/rse2.96}.}
+
+\bibitem[{Microsoft AI for Good} 2026]{microsoft_cameratraps_repo}
+\abntrefinfo{{Microsoft AI for Good}}{{Microsoft AI for Good}}{2026}
+{{Microsoft AI for Good}. \textbf{{PyTorch-Wildlife}
+  (microsoft/{CameraTraps})}. 2026.
+Repositório oficial. Acesso em: 17 maio 2026.
+Dispon{\'\i}vel em: \url{https://github.com/microsoft/CameraTraps}.}
+
+\bibitem[Moll \textit{et al.} 2020]{moll2020viewshed}
+\abntrefinfo{Moll \textit{et al.}}{Moll \textit{et al.}}{2020}
+{MOLL, R.~J. \textit{et al.} The effect of camera-trap viewshed obstruction on
+  wildlife detection: implications for inference.
+\textbf{Wildlife Research}, v.~47, n.~2, p. 158--165, 2020.
+Dispon{\'\i}vel em: \url{https://www.publish.csiro.au/wr/WR19004}.}
+
+\bibitem[Mulero-Pázmány \textit{et al.} 2025]{mulero2025addressing}
+\abntrefinfo{Mulero-Pázmány \textit{et al.}}{Mulero-Pázmány \textit{et
+  al.}}{2025}
+{MULERO-PáZMáNY, M. \textit{et al.} Addressing significant challenges for
+  animal detection in camera trap images: a novel deep learning-based approach.
+\textbf{Scientific Reports}, v.~15, 2025.
+Dispon{\'\i}vel em: \url{https://www.nature.com/articles/s41598-025-90249-z}.}
+
+\bibitem[Nakashima e Yajima 2025]{nakashima2025rest}
+\abntrefinfo{Nakashima e Yajima}{Nakashima; Yajima}{2025}
+{NAKASHIMA, Y.; YAJIMA, G. Modeling spatiotemporal variations in the density of
+  unmarked populations using camera trap data: An application to free-roaming
+  cats.
+\textbf{Biological Conservation}, 2025.
+Dispon{\'\i}vel em:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S0006320724004762}.}
+
+\bibitem[Natoli \textit{et al.} 2019]{natoli2019italy}
+\abntrefinfo{Natoli \textit{et al.}}{Natoli \textit{et al.}}{2019}
+{NATOLI, E. \textit{et al.} Evaluation of unowned domestic cat management in
+  {Italy}: A 30-year experience.
+\textbf{Frontiers in Veterinary Science}, 2019.
+Dispon{\'\i}vel em: \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC6398421/}.}
+
+\bibitem[Norouzzadeh \textit{et al.} 2018]{norouzzadeh2018automatically}
+\abntrefinfo{Norouzzadeh \textit{et al.}}{Norouzzadeh \textit{et al.}}{2018}
+{NOROUZZADEH, M.~S. \textit{et al.} Automatically identifying, counting, and
+  describing wild animals in camera-trap images with deep learning.
+\textbf{Proceedings of the National Academy of Sciences}, v.~115, n.~25, 2018.
+Dispon{\'\i}vel em:
+  \url{https://www.pnas.org/doi/full/10.1073/pnas.1719367115}.}
+
+\bibitem[{OpenIPC Project} 2025]{openipc2025}
+\abntrefinfo{{OpenIPC Project}}{{OpenIPC Project}}{2025}
+{{OpenIPC Project}. \textbf{{OpenIPC}: an alternative open firmware for {IP}
+  cameras}. 2025. \url{https://openipc.org/}.
+Acessado em 2026.}
+
+\bibitem[Passos e Bovendorp 2025]{passos2025population}
+\abntrefinfo{Passos e Bovendorp}{Passos; Bovendorp}{2025}
+{PASSOS, G.~B.; BOVENDORP, R. Population dynamics and predation by free-ranging
+  cats ({\it{felis catus}}) in a {Brazilian} university campus: Implications
+  for urban wildlife management.
+\textbf{Revista Contemporânea}, v.~5, n.~11, 2025.
+Dispon{\'\i}vel em:
+  \url{https://ojs.revistacontemporanea.com/ojs/index.php/home/article/view/9553}.}
+
+\bibitem[Pishdast, Kalva e Tye 2025]{pishdast2025smartcameratraps}
+\abntrefinfo{Pishdast, Kalva e Tye}{Pishdast; Kalva; Tye}{2025}
+{PISHDAST, H.; KALVA, H.; TYE, D. {AI}-enabled smart camera traps for wildlife
+  monitoring in {African} ecosystems. \textit{In}:  \textbf{Proceedings of the
+  2025 ACM Conference}. [\textit{S.l.: s.n.}], 2025. Dispon{\'\i}vel em:
+  \url{https://dl.acm.org/doi/10.1145/3748699.3749780}.}
+
+\bibitem[Rigoudy \textit{et al.} 2023]{rigoudy2023deepfaune}
+\abntrefinfo{Rigoudy \textit{et al.}}{Rigoudy \textit{et al.}}{2023}
+{RIGOUDY, N. \textit{et al.} The {DeepFaune} initiative: a collaborative effort
+  towards the automatic identification of {French} fauna in camera-trap images.
+\textbf{bioRxiv}, 2023.
+Dispon{\'\i}vel em:
+  \url{https://www.biorxiv.org/content/10.1101/2022.03.15.484324v3}.}
+
+\bibitem[Santiago, Costa \textit{et al.} 2025]{santiago2025sporothrix}
+\abntrefinfo{Santiago, Costa \textit{et al.}}{Santiago; Costa \textit{et
+  al.}}{2025}
+{SANTIAGO, M.~G.; COSTA, D. \textit{et al.} {\it{Sporothrix brasiliensis}} and
+  cats: understanding the disease and the promising potential of veterinary
+  antifungal vaccination.
+\textbf{Animal Diseases}, 2025.
+Dispon{\'\i}vel em:
+  \url{https://link.springer.com/10.1186/s44149-025-00208-4}.}
+
+\bibitem[Sargent \textit{et al.} 2021]{sargent2021raspberrypi}
+\abntrefinfo{Sargent \textit{et al.}}{Sargent \textit{et al.}}{2021}
+{SARGENT, A.~J. \textit{et al.} {Raspberry Pi} nest cameras: An affordable tool
+  for remote behavioral and conservation monitoring of bird nests.
+\textbf{Ecology and Evolution}, v.~11, n.~21, p. 14585--14597, 2021.
+Dispon{\'\i}vel em: \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC8571635/}.}
+
+\bibitem[Schiefer \textit{et al.} 2025]{schiefer2025tnr}
+\abntrefinfo{Schiefer \textit{et al.}}{Schiefer \textit{et al.}}{2025}
+{SCHIEFER, C.~A. \textit{et al.} Trap--neuter--return and return-to-field
+  programs for managing community cats at {Florida} animal shelters.
+\textbf{Journal of Shelter Medicine and Community Animal Health}, v.~4, 2025.
+Dispon{\'\i}vel em: \url{https://jsmcah.org/index.php/jasv/article/view/126}.}
+
+\bibitem[Schneider, Taylor e Kremer 2018]{schneider2018avss}
+\abntrefinfo{Schneider, Taylor e Kremer}{Schneider; Taylor; Kremer}{2018}
+{SCHNEIDER, S.; TAYLOR, G.~W.; KREMER, S.~C. Deep learning object detection
+  methods for ecological camera trap data. \textit{In}:  \textbf{IEEE
+  International Conference on Advanced Video and Signal Based Surveillance
+  (AVSS)}. [\textit{S.l.: s.n.}], 2018. Dispon{\'\i}vel em:
+  \url{https://ieeexplore.ieee.org/document/8575770/}.}
+
+\bibitem[Seidlitz \textit{et al.} 2020]{seidlitz2020height}
+\abntrefinfo{Seidlitz \textit{et al.}}{Seidlitz \textit{et al.}}{2020}
+{SEIDLITZ, A. \textit{et al.} Optimising camera trap height and model increases
+  detection and individual identification rates for a small mammal, the numbat.
+\textbf{Australian Mammalogy}, 2020.
+Dispon{\'\i}vel em: \url{https://connectsci.au/am/article/43/2/226/36159/}.}
+
+\bibitem[Shinoda e Shiohara 2024]{shinoda2024petface}
+\abntrefinfo{Shinoda e Shiohara}{Shinoda; Shiohara}{2024}
+{SHINODA, R.; SHIOHARA, K. {PetFace}: A large-scale dataset and benchmark for
+  animal identification.
+\textbf{arXiv preprint arXiv:2407.13555 (ECCV 2024)}, 2024.
+Dispon{\'\i}vel em: \url{https://arxiv.org/abs/2407.13555}.}
+
+\bibitem[Spehar e Wolf 2019]{spehar2019backtoschool}
+\abntrefinfo{Spehar e Wolf}{Spehar; Wolf}{2019}
+{SPEHAR, D.~D.; WOLF, P.~J. Back to school: An updated evaluation of the
+  effectiveness of a long-term trap-neuter-return program on a {University}'s
+  free-roaming cat population.
+\textbf{Animals}, v.~9, n.~10, p.~768, 2019.
+Dispon{\'\i}vel em: \url{https://www.mdpi.com/2076-2615/9/10/768}.}
+
+\bibitem[Swanson \textit{et al.} 2015]{swanson2015snapshot}
+\abntrefinfo{Swanson \textit{et al.}}{Swanson \textit{et al.}}{2015}
+{SWANSON, A. \textit{et al.} Snapshot {Serengeti}, high-frequency annotated
+  camera trap images of 40 mammalian species in an {African} savanna.
+\textbf{Scientific Data}, v.~2, p. 150026, 2015.
+Dispon{\'\i}vel em: \url{https://www.nature.com/articles/sdata201526}.}
+
+\bibitem[Tabak \textit{et al.} 2019]{tabak2019nacti}
+\abntrefinfo{Tabak \textit{et al.}}{Tabak \textit{et al.}}{2019}
+{TABAK, M.~A. \textit{et al.} Machine learning to classify animal species in
+  camera trap images: Applications in ecology.
+\textbf{Methods in Ecology and Evolution}, v.~10, n.~4, 2019.
+Dispon{\'\i}vel em:
+  \url{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13120}.}
+
+\bibitem[Tiddeman \textit{et al.} 2023]{tiddeman2023lowpowerhardware}
+\abntrefinfo{Tiddeman \textit{et al.}}{Tiddeman \textit{et al.}}{2023}
+{TIDDEMAN, B.~P. \textit{et al.} Automated video-based capture of crustacean
+  fisheries data using low-power hardware.
+\textbf{Sensors}, v.~23, n.~18, p.~7897, 2023.
+Dispon{\'\i}vel em: \url{https://www.mdpi.com/1424-8220/23/18/7897}.}
+
+\bibitem[Vecchi \textit{et al.} 2022]{vecchi2022ethical}
+\abntrefinfo{Vecchi \textit{et al.}}{Vecchi \textit{et al.}}{2022}
+{VECCHI, P. L. G.~S. \textit{et al.} Ethical population management of feral
+  cats on universities campuses based on {TNR} protocol.
+\textbf{PUBVET}, v.~16, 2022.
+Dispon{\'\i}vel em:
+  \url{https://ojs.pubvet.com.br/index.php/revista/article/view/3008}.}
+
+\bibitem[Velasco-Montero \textit{et al.} 2024]{velasco2024smartcameratraps}
+\abntrefinfo{Velasco-Montero \textit{et al.}}{Velasco-Montero \textit{et
+  al.}}{2024}
+{VELASCO-MONTERO, D. \textit{et al.} Reliable and efficient integration of {AI}
+  into camera traps for smart wildlife monitoring based on continual learning.
+\textbf{Ecological Informatics}, v.~83, p. 102815, 2024.
+Dispon{\'\i}vel em:
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S1574954124003571}.}
+
+\bibitem[Vélez \textit{et al.} 2022]{velez2022choosing}
+\abntrefinfo{Vélez \textit{et al.}}{Vélez \textit{et al.}}{2022}
+{VéLEZ, J. \textit{et al.} Choosing an appropriate platform and workflow for
+  processing camera trap data using artificial intelligence.
+\textbf{arXiv preprint arXiv:2202.02283}, 2022.
+Dispon{\'\i}vel em: \url{https://arxiv.org/pdf/2202.02283.pdf}.}
+
+\bibitem[{Wildlife Insights} 2026]{wildlifeinsights}
+\abntrefinfo{{Wildlife Insights}}{{Wildlife Insights}}{2026}
+{{Wildlife Insights}. \textbf{{Wildlife Insights AI}}. 2026.
+Acesso em: 17 maio 2026.
+Dispon{\'\i}vel em:
+  \url{https://www.wildlifeinsights.org/about-wildlife-insights-ai}.}
+
+\end{thebibliography}

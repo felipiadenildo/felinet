@@ -1,0 +1,124 @@
+% =============================================================================
+% preambulo/pacotes.tex  --  Pacotes adicionais sobre a classe USPSC
+%
+%   A classe USPSC já carrega: memoir/abntex2 base, geometry, fancyhdr,
+%   xcolor (com 'capa-azul'), hyperref/url, microtype, textpos, ...
+%   Aqui adicionamos apenas o que é específico do TCC.
+% =============================================================================
+
+% --- Codificação e fonte ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}            % Fonte Latin Modern (padrão recomendado USPSC)
+\usepackage{lastpage}           % Usado pela ficha catalográfica
+\usepackage{indentfirst}        % Indenta primeiro parágrafo de cada seção
+\usepackage{color}              % Controle de cores
+\usepackage{graphicx}           % Inclusão de figuras
+\usepackage{float}              % Posicionamento estrito de figuras/tabelas
+
+% --- Pacotes requeridos pela capa ICMC do Pacote USPSC ---
+\usepackage{microtype}          % Melhorias de justificação
+\usepackage{pdfpages}           % Para \includepdf (folha de aprovação, ficha)
+\usepackage{makeidx}            % Índice remissivo
+\usepackage{hyphenat}           % Comando \nohyphens da capa ICMC
+\usepackage[absolute]{textpos}  % Comando \begin{textblock*} da capa ICMC
+\usepackage{eso-pic}            % \AddToShipoutPicture / background da capa
+\usepackage{makebox}            % Caixas de texto na capa
+
+% --- Citações ABNT (Sistema autor-data) ---
+% Empregamos o estilo alfabético do Pacote USPSC, compatibilizado com
+% ABNT NBR 6023:2018 e 10520:2023 via abntex2-alf-USPSC.bst.
+\usepackage[
+  alf,
+  abnt-emphasize=bf,
+  abnt-thesis-year=both,
+  abnt-repeated-author-omit=no,
+  abnt-last-names=abnt,
+  abnt-etal-cite=3,
+  abnt-etal-list=3,
+  abnt-etal-text=it,
+  abnt-and-type=e,
+  abnt-doi=doi,
+  abnt-url-package=none,
+  abnt-verbatim-entry=no
+]{abntex2cite}
+\bibliographystyle{USPSC-classe/abntex2-alf-USPSC}
+
+% --- Nota de rodapé ---
+\renewcommand{\footnotesize}{\small}
+
+% --- Tabelas ---
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{threeparttablex}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{pdflscape}             % páginas em paisagem (Apêndice A)           % Tabelas profissionais (toprule/midrule)
+
+% --- Listagens de código (será útil em apêndices) ---
+\usepackage{listings}
+\usepackage{xcolor}             % já carregado pela USPSC; reincluir não dói
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\bfseries,
+  commentstyle=\itshape\color{gray!70!black},
+  tabsize=2,
+  extendedchars=true,
+  inputencoding=utf8,
+  literate=%
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1%
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1%
+    {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1%
+    {ã}{{\~a}}1 {õ}{{\~o}}1 {ñ}{{\~n}}1%
+    {Ã}{{\~A}}1 {Õ}{{\~O}}1%
+    {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1%
+    {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1%
+    {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1%
+    {ü}{{\"u}}1 {Ü}{{\"U}}1%
+    {º}{{\textordmasculine}}1 {ª}{{\textordfeminine}}1%
+}
+
+% --- Diagramas (Cap. 2 hardware, Cap. 3 pipeline, Cap. 4 DFDs) ---
+\usepackage{tikz}
+\usetikzlibrary{
+  shapes.geometric, arrows.meta, positioning, fit, calc, backgrounds,
+  decorations.pathreplacing, shapes.multipart
+}
+
+% --- Equações/matemática leve ---
+\usepackage{amsmath, amssymb}
+
+% --- Compatibilização ABNT 6023:2018 e 10520:2023 ---
+\usepackage{USPSC-classe/ABNT6023-10520}
+
+% --- Links/hyperref ---
+% A classe USPSC já configura hyperref; aqui apenas ajustamos as cores dos links.
+\hypersetup{
+  pdftitle={\TCCtitulo},
+  pdfauthor={\TCCautor},
+  pdfsubject={Monografia de Trabalho de Conclusão de Curso, Engenharia de Computação, ICMC-EESC/USP},
+  pdfkeywords={visão computacional, monitoramento de fauna, gatos, USP São Carlos, edge AI, re-identificação},
+  pdfcreator={LaTeX -- Pacote USPSC 3.2},
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  filecolor=magenta!50!black,
+  urlcolor=blue!60!black,
+  bookmarksdepth=4
+}
+
+% --- Caminhos para figuras ---
+\graphicspath{{figuras/}{USPSC-img/}}
+
+% --- Profundidade de sumário e numeração ---
+% tocdepth=3 -> entra até subsubsection no sumário (omite \paragraph)
+% secnumdepth=3 -> numera até subsubsection (omite numeração de \paragraph)
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
