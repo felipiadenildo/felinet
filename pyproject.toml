@@ -85,6 +85,7 @@ ignore = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["03_codigo/tests"]
+pythonpath = ["03_codigo"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
@@ -94,3 +95,13 @@ addopts = "-v --tb=short"
 python_version = "3.11"
 strict = false
 ignore_missing_imports = true
+
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
+torchvision = { index = "pytorch" }
+torchaudio = { index = "pytorch" }

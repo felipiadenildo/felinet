@@ -24,14 +24,25 @@ OUTPUT = BASE / "pos-textuais" / "apendice_f_lista_todos.tex"
 SCAN_DIRS = [
     ("Capítulo 1 -- Introdução", [BASE / "capitulos" / "cap1_introducao.tex"]),
     ("Capítulo 2 -- Fundamentação", [BASE / "capitulos" / "cap2_fundamentacao.tex"]),
-    ("Capítulo 3 -- Correlatos e Requisitos", [BASE / "capitulos" / "cap3_correlatos_requisitos.tex"]),
+    (
+        "Capítulo 3 -- Correlatos e Requisitos",
+        [BASE / "capitulos" / "cap3_correlatos_requisitos.tex"],
+    ),
     ("Capítulo 4 -- Projeto", [BASE / "capitulos" / "cap4_projeto.tex"]),
     ("Capítulo 5 -- Arquitetura", sorted((BASE / "capitulos" / "cap5_arquitetura").glob("*.tex"))),
     ("Capítulo 6 -- Pipeline", sorted((BASE / "capitulos" / "cap6_pipeline").glob("*.tex"))),
     ("Capítulo 7 -- Validação", sorted((BASE / "capitulos" / "cap7_validacao").glob("*.tex"))),
     ("Capítulo 8 -- Considerações Finais", [BASE / "capitulos" / "cap8_consideracoes_finais.tex"]),
-    ("Pós-textuais (Apêndices e Anexos)", sorted([p for p in (BASE / "pos-textuais").glob("*.tex")
-                                                   if p.name != "apendice_f_lista_todos.tex"])),
+    (
+        "Pós-textuais (Apêndices e Anexos)",
+        sorted(
+            [
+                p
+                for p in (BASE / "pos-textuais").glob("*.tex")
+                if p.name != "apendice_f_lista_todos.tex"
+            ]
+        ),
+    ),
 ]
 
 
@@ -50,7 +61,7 @@ def find_braced_arg(text: str, start: int) -> tuple[str, int]:
         elif c == "}":
             depth -= 1
             if depth == 0:
-                return text[start + 1:i], i + 1
+                return text[start + 1 : i], i + 1
         i += 1
     raise ValueError(f"chave não fechada começando em {start}")
 
@@ -121,11 +132,17 @@ def main():
     out.append("\\chapter{Lista consolidada de pendências do draft}")
     out.append("\\label{apendice:todos}")
     out.append("")
-    out.append("Este apêndice reúne, de forma consolidada e organizada por capítulo, todas as pendências marcadas no corpo do trabalho com os comandos \\verb|\\todoex| e \\verb|\\todoblock|. A lista é gerada automaticamente pelo script \\texttt{03\\_codigo/scripts/extrair\\_todos.py} a partir da varredura dos arquivos-fonte \\texttt{.tex} do projeto.")
+    out.append(
+        "Este apêndice reúne, de forma consolidada e organizada por capítulo, todas as pendências marcadas no corpo do trabalho com os comandos \\verb|\\todoex| e \\verb|\\todoblock|. A lista é gerada automaticamente pelo script \\texttt{03\\_codigo/scripts/extrair\\_todos.py} a partir da varredura dos arquivos-fonte \\texttt{.tex} do projeto."
+    )
     out.append("")
-    out.append(f"Total de pendências identificadas no momento desta compilação: \\textbf{{{total}}}, distribuídas em {arquivos_visitados} arquivos-fonte.")
+    out.append(
+        f"Total de pendências identificadas no momento desta compilação: \\textbf{{{total}}}, distribuídas em {arquivos_visitados} arquivos-fonte."
+    )
     out.append("")
-    out.append("\\noindent\\textbf{Como ler esta lista:} cada entrada apresenta o arquivo de origem, a descrição curta da pendência e a explicação detalhada do que precisa ser feito. A localização exata no texto pode ser encontrada buscando-se o comando \\verb|\\todoex| ou \\verb|\\todoblock| no arquivo de origem.")
+    out.append(
+        "\\noindent\\textbf{Como ler esta lista:} cada entrada apresenta o arquivo de origem, a descrição curta da pendência e a explicação detalhada do que precisa ser feito. A localização exata no texto pode ser encontrada buscando-se o comando \\verb|\\todoex| ou \\verb|\\todoblock| no arquivo de origem."
+    )
     out.append("")
 
     for grupo, _files in SCAN_DIRS:
@@ -150,10 +167,18 @@ def main():
     out.append("\\addcontentsline{toc}{section}{Observações de governança}")
     out.append("")
     out.append("\\begin{itemize}")
-    out.append("    \\item As pendências aqui listadas referem-se exclusivamente a lacunas do \\textit{draft}: dados a coletar em campo, validações com orientador, fotos a inserir, autorizações pendentes etc.")
-    out.append("    \\item Pendências de prazo macro (cronograma Mai/Out 2026) estão consolidadas em \\texttt{00\\_governanca/todo\\_mestre\\_executavel.md}.")
-    out.append("    \\item Antes de cada commit relevante no repositório, recomenda-se rodar \\texttt{python 03\\_codigo/scripts/extrair\\_todos.py} para manter este apêndice atualizado.")
-    out.append("    \\item Na versão final do trabalho, o pacote \\texttt{todonotes} deve ser desabilitado e os comandos \\verb|\\todoex|/\\verb|\\todoblock| devem ser redefinidos para não imprimir nada (ou todos os \\textit{TODOs} devem ter sido resolvidos).")
+    out.append(
+        "    \\item As pendências aqui listadas referem-se exclusivamente a lacunas do \\textit{draft}: dados a coletar em campo, validações com orientador, fotos a inserir, autorizações pendentes etc."
+    )
+    out.append(
+        "    \\item Pendências de prazo macro (cronograma Mai/Out 2026) estão consolidadas em \\texttt{00\\_governanca/todo\\_mestre\\_executavel.md}."
+    )
+    out.append(
+        "    \\item Antes de cada commit relevante no repositório, recomenda-se rodar \\texttt{python 03\\_codigo/scripts/extrair\\_todos.py} para manter este apêndice atualizado."
+    )
+    out.append(
+        "    \\item Na versão final do trabalho, o pacote \\texttt{todonotes} deve ser desabilitado e os comandos \\verb|\\todoex|/\\verb|\\todoblock| devem ser redefinidos para não imprimir nada (ou todos os \\textit{TODOs} devem ter sido resolvidos)."
+    )
     out.append("\\end{itemize}")
     out.append("")
 

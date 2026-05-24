@@ -8,6 +8,7 @@ Validação sintática leve dos arquivos .tex do projeto sem rodar LaTeX:
 - referências (\\ref/\\cite) sem alvo
 - chaves desbalanceadas (heurística)
 """
+
 from __future__ import annotations
 import re
 from pathlib import Path
@@ -73,9 +74,20 @@ def check_braces(path: Path, text: str) -> None:
 
 
 def count_structure(path: Path, text: str) -> None:
-    for cmd in ("chapter", "section", "subsection", "subsubsection",
-                "todoex", "todoblock", "cite", "citeonline", "input", "include",
-                "lstinputlisting", "label"):
+    for cmd in (
+        "chapter",
+        "section",
+        "subsection",
+        "subsubsection",
+        "todoex",
+        "todoblock",
+        "cite",
+        "citeonline",
+        "input",
+        "include",
+        "lstinputlisting",
+        "label",
+    ):
         stats[cmd] += len(re.findall(rf"\\{cmd}\b", text))
 
 
@@ -96,9 +108,20 @@ print(f"\n--- Avisos ({len(warnings)}) ---")
 for w in warnings:
     print(f"  {w}")
 print(f"\n--- Estatísticas estruturais ---")
-for cmd in ("chapter", "section", "subsection", "subsubsection",
-            "input", "include", "lstinputlisting", "label",
-            "cite", "citeonline", "todoex", "todoblock"):
+for cmd in (
+    "chapter",
+    "section",
+    "subsection",
+    "subsubsection",
+    "input",
+    "include",
+    "lstinputlisting",
+    "label",
+    "cite",
+    "citeonline",
+    "todoex",
+    "todoblock",
+):
     print(f"  \\{cmd:18}: {stats[cmd]}")
 
 # Verificar BibTeX entries usados vs definidos
@@ -112,7 +135,9 @@ if bib_keys:
     cite_keys: set[str] = set()
     for fp in TEX_FILES:
         text = fp.read_text(encoding="utf-8")
-        for m in re.finditer(r"\\(?:cite|citeonline|citeauthor|citeyear|citet|citep)(?:\[[^]]*\])?\{([^}]+)\}", text):
+        for m in re.finditer(
+            r"\\(?:cite|citeonline|citeauthor|citeyear|citet|citep)(?:\[[^]]*\])?\{([^}]+)\}", text
+        ):
             for k in m.group(1).split(","):
                 cite_keys.add(k.strip())
     missing = sorted(cite_keys - bib_keys)

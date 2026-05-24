@@ -129,18 +129,18 @@ RENOMEAR_RAIZ = {
 
 #: Arquivos didáticos/exemplos descartados (NÃO copiar).
 DESCARTAR = [
-    "USPSC-IndicesRemissivos.tex",                       # duplicado da raiz
-    "USPSC-unidades.tex",                                 # didático
-    "USPSC-bib/USPSC-modelo-references.bib",              # bib de exemplo
-    "USPSC-img/USPSC-AcentuacaoLaTeX.png",                # didático
-    "USPSC-img/USPSC-EstruturaTrabAcad.jpg",              # didático
-    "USPSC-img/USPSC-LetrasGregas.png",                   # didático
-    "USPSC-img/USPSC-SimbolosUteis.png",                  # didático
-    "USPSC-img/USPSC-modelo-img-grafico.pdf",             # didático
-    "USPSC-img/USPSC-modelo-img-marca.pdf",               # didático
-    "USPSC-TA-Textual/USPSC-Cap1-Introducao.tex",         # capítulo exemplo
-    "USPSC-TA-Textual/USPSC-Cap2-Desenvolvimento.tex",    # capítulo exemplo
-    "USPSC-TA-Textual/USPSC-Cap3-Conclusao.tex",          # capítulo exemplo
+    "USPSC-IndicesRemissivos.tex",  # duplicado da raiz
+    "USPSC-unidades.tex",  # didático
+    "USPSC-bib/USPSC-modelo-references.bib",  # bib de exemplo
+    "USPSC-img/USPSC-AcentuacaoLaTeX.png",  # didático
+    "USPSC-img/USPSC-EstruturaTrabAcad.jpg",  # didático
+    "USPSC-img/USPSC-LetrasGregas.png",  # didático
+    "USPSC-img/USPSC-SimbolosUteis.png",  # didático
+    "USPSC-img/USPSC-modelo-img-grafico.pdf",  # didático
+    "USPSC-img/USPSC-modelo-img-marca.pdf",  # didático
+    "USPSC-TA-Textual/USPSC-Cap1-Introducao.tex",  # capítulo exemplo
+    "USPSC-TA-Textual/USPSC-Cap2-Desenvolvimento.tex",  # capítulo exemplo
+    "USPSC-TA-Textual/USPSC-Cap3-Conclusao.tex",  # capítulo exemplo
 ]
 
 #: Substituições no main.tex (renomeado).  Ajusta referências bibliográficas.
@@ -150,6 +150,7 @@ SUBSTITUICOES_MAIN = [
         "\\bibliography{USPSC-bib/references}",
     ),
 ]
+
 
 #: Conteúdo neutro para arquivos opcionais esvaziados.
 def _conteudo_vazio(rotulo: str) -> str:
@@ -184,6 +185,7 @@ REFERENCES_BIB_INICIAL = """% references.bib
 # ---------------------------------------------------------------------------
 # Estruturas auxiliares
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class Relatorio:
@@ -221,8 +223,10 @@ class Relatorio:
 # Funções utilitárias
 # ---------------------------------------------------------------------------
 
-def _copiar(src: Path, dst: Path, rel: Relatorio, *, force: bool, dry: bool,
-            categoria: str = "copiados") -> None:
+
+def _copiar(
+    src: Path, dst: Path, rel: Relatorio, *, force: bool, dry: bool, categoria: str = "copiados"
+) -> None:
     """Copia ``src`` para ``dst``.  Respeita ``force`` e ``dry``."""
     if dst.exists() and not force:
         rel.pulados.append(str(dst))
@@ -235,8 +239,9 @@ def _copiar(src: Path, dst: Path, rel: Relatorio, *, force: bool, dry: bool,
     getattr(rel, categoria).append(str(dst))
 
 
-def _escrever(path: Path, conteudo: str, rel: Relatorio, *, force: bool,
-              dry: bool, categoria: str = "criados") -> None:
+def _escrever(
+    path: Path, conteudo: str, rel: Relatorio, *, force: bool, dry: bool, categoria: str = "criados"
+) -> None:
     """Escreve ``conteudo`` em ``path``."""
     if path.exists() and not force:
         rel.pulados.append(str(path))
@@ -264,6 +269,7 @@ def _extrair_zip(zip_path: Path, destino_tmp: Path) -> Path:
 # Operações principais
 # ---------------------------------------------------------------------------
 
+
 def operar(
     *,
     zip_path: Path,
@@ -289,9 +295,7 @@ def operar(
         if backup:
             backup_dir = destino / "_ORIGINAL_meutccicmcp"
             if backup_dir.exists():
-                rel.avisos.append(
-                    f"Backup já existe e foi mantido: {backup_dir}"
-                )
+                rel.avisos.append(f"Backup já existe e foi mantido: {backup_dir}")
             else:
                 if not dry:
                     shutil.copytree(raiz_template, backup_dir)
@@ -330,8 +334,12 @@ def operar(
         for rel_path, rotulo in OPCIONAIS_ESVAZIAR.items():
             dst = destino / rel_path
             _escrever(
-                dst, _conteudo_vazio(rotulo), rel,
-                force=True, dry=dry, categoria="esvaziados",
+                dst,
+                _conteudo_vazio(rotulo),
+                rel,
+                force=True,
+                dry=dry,
+                categoria="esvaziados",
             )
 
         # 7. Renomear raiz (main, pre-textuais)
@@ -363,29 +371,45 @@ def operar(
         if not dry:
             textual_dir.mkdir(parents=True, exist_ok=True)
         _escrever(
-            textual_dir / ".gitkeep", "", rel,
-            force=False, dry=dry, categoria="criados",
+            textual_dir / ".gitkeep",
+            "",
+            rel,
+            force=False,
+            dry=dry,
+            categoria="criados",
         )
 
         figuras_dir = destino / "figuras"
         if not dry:
             figuras_dir.mkdir(parents=True, exist_ok=True)
         _escrever(
-            figuras_dir / ".gitkeep", "", rel,
-            force=False, dry=dry, categoria="criados",
+            figuras_dir / ".gitkeep",
+            "",
+            rel,
+            force=False,
+            dry=dry,
+            categoria="criados",
         )
 
         bib_dir = destino / "USPSC-bib"
         _escrever(
-            bib_dir / "references.bib", REFERENCES_BIB_INICIAL, rel,
-            force=False, dry=dry, categoria="criados",
+            bib_dir / "references.bib",
+            REFERENCES_BIB_INICIAL,
+            rel,
+            force=False,
+            dry=dry,
+            categoria="criados",
         )
 
         # 10. README explicativo no destino
         readme = destino / "README.md"
         _escrever(
-            readme, _readme_destino(), rel,
-            force=False, dry=dry, categoria="criados",
+            readme,
+            _readme_destino(),
+            rel,
+            force=False,
+            dry=dry,
+            categoria="criados",
         )
 
     return rel
@@ -452,6 +476,7 @@ Para reativar, basta editar o arquivo correspondente.
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def main(argv: Optional[List[str]] = None) -> int:
     script_dir = Path(__file__).resolve().parent
     # ../../meutccicmcp.zip relativo ao script em 03_codigo/scripts/
@@ -464,23 +489,30 @@ def main(argv: Optional[List[str]] = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     p.add_argument(
-        "--zip", type=Path, default=zip_default,
+        "--zip",
+        type=Path,
+        default=zip_default,
         help=f"caminho do zip do template (default: {zip_default})",
     )
     p.add_argument(
-        "--destino", type=Path, default=destino_default,
+        "--destino",
+        type=Path,
+        default=destino_default,
         help=f"pasta de destino 02_latex/ (default: {destino_default})",
     )
     p.add_argument(
-        "--sem-backup", action="store_true",
+        "--sem-backup",
+        action="store_true",
         help="não copiar o template original para _ORIGINAL_meutccicmcp/",
     )
     p.add_argument(
-        "--force", action="store_true",
+        "--force",
+        action="store_true",
         help="sobrescreve pré-textuais já adaptados (CUIDADO: apaga edições)",
     )
     p.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         help="apenas simula; não escreve nada no disco",
     )
     args = p.parse_args(argv)
