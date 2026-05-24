@@ -67,8 +67,6 @@ import tempfile
 import zipfile
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional
-
 
 # ---------------------------------------------------------------------------
 # Configuração declarativa (única fonte de verdade do que vai/não vai)
@@ -189,13 +187,13 @@ REFERENCES_BIB_INICIAL = """% references.bib
 
 @dataclass
 class Relatorio:
-    copiados: List[str] = field(default_factory=list)
-    renomeados: List[str] = field(default_factory=list)
-    esvaziados: List[str] = field(default_factory=list)
-    descartados: List[str] = field(default_factory=list)
-    criados: List[str] = field(default_factory=list)
-    pulados: List[str] = field(default_factory=list)
-    avisos: List[str] = field(default_factory=list)
+    copiados: list[str] = field(default_factory=list)
+    renomeados: list[str] = field(default_factory=list)
+    esvaziados: list[str] = field(default_factory=list)
+    descartados: list[str] = field(default_factory=list)
+    criados: list[str] = field(default_factory=list)
+    pulados: list[str] = field(default_factory=list)
+    avisos: list[str] = field(default_factory=list)
 
     def imprimir(self) -> None:
         print("\n" + "=" * 70)
@@ -477,7 +475,7 @@ Para reativar, basta editar o arquivo correspondente.
 # ---------------------------------------------------------------------------
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     script_dir = Path(__file__).resolve().parent
     # ../../meutccicmcp.zip relativo ao script em 03_codigo/scripts/
     raiz_projeto = script_dir.parent.parent

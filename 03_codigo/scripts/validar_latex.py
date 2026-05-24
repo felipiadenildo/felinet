@@ -10,9 +10,10 @@ Validação sintática leve dos arquivos .tex do projeto sem rodar LaTeX:
 """
 
 from __future__ import annotations
+
 import re
+from collections import Counter
 from pathlib import Path
-from collections import Counter, defaultdict
 
 BASE = Path("/home/user/workspace/tcc_gatos_campus2/02_latex")
 
@@ -98,7 +99,7 @@ for fp in TEX_FILES:
     count_structure(fp, text)
 
 print("=" * 70)
-print(f"VALIDAÇÃO SINTÁTICA DO PROJETO TCC LaTeX")
+print("VALIDAÇÃO SINTÁTICA DO PROJETO TCC LaTeX")
 print("=" * 70)
 print(f"\nArquivos .tex varridos: {len(TEX_FILES)}")
 print(f"\n--- Erros ({len(errors)}) ---")
@@ -107,7 +108,7 @@ for e in errors:
 print(f"\n--- Avisos ({len(warnings)}) ---")
 for w in warnings:
     print(f"  {w}")
-print(f"\n--- Estatísticas estruturais ---")
+print("\n--- Estatísticas estruturais ---")
 for cmd in (
     "chapter",
     "section",
@@ -142,7 +143,7 @@ if bib_keys:
                 cite_keys.add(k.strip())
     missing = sorted(cite_keys - bib_keys)
     unused = sorted(bib_keys - cite_keys)
-    print(f"\n--- Bibliografia ---")
+    print("\n--- Bibliografia ---")
     print(f"  Entradas em references.bib: {len(bib_keys)}")
     print(f"  Chaves citadas no texto:    {len(cite_keys)}")
     print(f"  Citadas mas SEM entrada bib: {len(missing)}")

@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from pipeline.E0_ingestao.validar import (
     eh_imagem,
     eh_video,

@@ -13,9 +13,10 @@ Saída:
 """
 
 from __future__ import annotations
+
 import re
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
 BASE = Path("/home/user/workspace/tcc_gatos_campus2/02_latex")
 OUTPUT = BASE / "pos-textuais" / "apendice_f_lista_todos.tex"
