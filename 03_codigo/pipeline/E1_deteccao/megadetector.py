@@ -104,7 +104,7 @@ class DetectorMegaDetectorV6:
     def detectar(
         self,
         caminho_imagem: Path | str,
-        limite_confianca: float = 0.20,
+        limite_confianca: float = 0.50,
     ) -> ResultadoDeteccao:
         """Executa detecção em uma única imagem.
 
