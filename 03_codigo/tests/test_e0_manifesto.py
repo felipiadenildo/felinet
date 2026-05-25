@@ -5,7 +5,7 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-from pipeline.E0_ingestao.manifesto import COLUNAS_MANIFESTO, gerar_manifesto
+from pipeline.fase1_ingestao.manifesto import COLUNAS_MANIFESTO, gerar_manifesto
 
 
 class TestGerarManifesto:

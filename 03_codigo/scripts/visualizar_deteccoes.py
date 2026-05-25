@@ -15,12 +15,12 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(RAIZ / "03_codigo"))
 
-from pipeline.E1_deteccao.schema import (  # noqa: E402
+from pipeline.fase2_deteccao.schema import (  # noqa: E402
     BoundingBox,
     Deteccao,
     ResultadoDeteccao,
 )
-from pipeline.E1_deteccao.visualizar import desenhar_deteccoes  # noqa: E402
+from pipeline.fase2_deteccao.visualizar import desenhar_deteccoes  # noqa: E402
 
 
 def _carregar_resultados(arquivo: Path) -> list[ResultadoDeteccao]:

@@ -107,4 +107,4 @@ torchaudio = { index = "pytorch" }
 
 [tool.ruff.lint.per-file-ignores]
 "03_codigo/**/__init__.py" = ["N999"]
-"03_codigo/pipeline/E1_deteccao/megadetector.py" = ["E402"]
+"03_codigo/pipeline/fase2_deteccao/megadetector.py" = ["E402"]

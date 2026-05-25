@@ -19,7 +19,7 @@ import pytest
 def test_carrega_modelo_e_detecta_em_amostra(
     pasta_midias_sintetica: Path,
 ) -> None:
-    from pipeline.E1_deteccao.megadetector import DetectorMegaDetectorV6
+    from pipeline.fase2_deteccao.megadetector import DetectorMegaDetectorV6
 
     detector = DetectorMegaDetectorV6(dispositivo="auto")
     primeira = sorted(pasta_midias_sintetica.glob("*.jpg"))[0]

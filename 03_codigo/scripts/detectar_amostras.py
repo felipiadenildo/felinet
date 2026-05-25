@@ -13,9 +13,9 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(RAIZ / "03_codigo"))
 
-from pipeline.E0_ingestao.validar import listar_midias  # noqa: E402
-from pipeline.E1_deteccao.megadetector import DetectorMegaDetectorV6  # noqa: E402
-from pipeline.E1_deteccao.schema import salvar_resultados_json  # noqa: E402
+from pipeline.fase1_ingestao.validar import listar_midias  # noqa: E402
+from pipeline.fase2_deteccao.megadetector import DetectorMegaDetectorV6  # noqa: E402
+from pipeline.fase2_deteccao.schema import salvar_resultados_json  # noqa: E402
 
 
 def main() -> int:

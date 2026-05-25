@@ -5,12 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from PIL import Image
-from pipeline.E1_deteccao.schema import (
+from pipeline.fase2_deteccao.schema import (
     BoundingBox,
     Deteccao,
     ResultadoDeteccao,
 )
-from pipeline.E1_deteccao.visualizar import desenhar_deteccoes
+from pipeline.fase2_deteccao.visualizar import desenhar_deteccoes
 
 
 def test_gera_arquivo_com_dimensoes_da_imagem_original(

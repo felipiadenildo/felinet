@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-from pipeline.E0_ingestao.exif import extrair_metadados
+from pipeline.fase1_ingestao.exif import extrair_metadados
 
 
 class TestExtrairMetadados:

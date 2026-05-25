@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 import pytest
-from pipeline.E1_deteccao.schema import (
+from pipeline.fase2_deteccao.schema import (
     BoundingBox,
     Deteccao,
     ResultadoDeteccao,

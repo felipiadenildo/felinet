@@ -6,12 +6,12 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from pipeline.E0_ingestao.camtrap import (
+from pipeline.fase1_ingestao.camtrap import (
     Deployment,
     imagens_para_media,
     salvar_camtrap_json,
 )
-from pipeline.E0_ingestao.validar import listar_midias
+from pipeline.fase1_ingestao.validar import listar_midias
 
 
 def _deployment_dummy() -> Deployment:
