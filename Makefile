@@ -374,3 +374,14 @@ figura-roc:  ## ROC open-set com banda entre seeds
 	$(FELINET) figuras roc-openset --perfil $(PERFIL) --fonte $(FONTE) --n $(N)
 
 figuras-avancadas: figura-cmc-comp figura-dist figura-roc  ## Gera todas as figuras Bloco 2
+
+figura-galeria:  ## Galeria qualitativa de erros (top-3 candidatos)
+	$(FELINET) figuras galeria-erros --perfil $(PERFIL) --fonte $(FONTE) --n $(N) \
+		--piores $(GALERIA_PIORES) --top-k $(GALERIA_TOPK)
+
+# Variáveis padrão (adicionar no topo do Makefile):
+GALERIA_PIORES ?= 5
+GALERIA_TOPK   ?= 3
+
+# Atualizar figuras-avancadas:
+figuras-avancadas: figura-cmc-comp figura-dist figura-roc figura-galeria

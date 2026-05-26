@@ -35,6 +35,10 @@ fontes:
   petface:        data/raw/reid/petface               # PetFace oficial (mapooon/PetFace)
   petface_mini:   data/dev/reid_mini                  # subset PetFace (smoke Re-ID)
 
+  felidae:
+      raiz: data/raw/camera_trap/felidae
+      tipo: operacional
+
 # ----------------------------------------------------------
 # RUNS - Raiz dos diretorios de execucao
 # ----------------------------------------------------------

@@ -432,3 +432,144 @@ def roc_openset(
     fig.savefig(saida_arq, dpi=300, bbox_inches="tight")
     plt.close(fig)
     typer.echo(f"OK: {saida_arq}")
+
+
+@app.command("galeria-erros")
+def galeria_erros(
+    perfil: str = typer.Option("prod", "--perfil", "-p"),
+    fonte: str = typer.Option(None, "--fonte", "-f"),
+    n: int = typer.Option(200, "--n"),
+    top_n_piores: int = typer.Option(
+        5, "--piores", help="Quantas queries com erro mostrar (linhas)."
+    ),
+    top_k: int = typer.Option(3, "--top-k", help="Quantos candidatos por query (colunas)."),
+    run: Path = typer.Option(None, "--run"),
+    saida: Path = typer.Option(None, "--saida"),
+) -> None:
+    """Galeria qualitativa de erros: queries com Top-1 errado + top-K candidatos.
+
+    Mostra grade <top_n_piores> linhas x (1 + top_k) colunas:
+        coluna 0 = query (borda azul);
+        colunas 1..K = candidatos mais similares (borda verde se ID bater,
+        vermelha se nao). Ordenadas pelas queries com Top-1 errado de maior
+        similaridade (i.e., erros "mais confiantes" do modelo).
+    """
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from PIL import Image
+
+    cfg = carregar_perfil(perfil)
+    raiz_run, fonte_efetiva, protocolo = _resolver_run_metodologico(
+        cfg=cfg,
+        fonte=fonte,
+        n=n,
+        openset=False,
+        run=run,
+    )
+    arquivo_emb = raiz_run / "embeddings.npz"
+    if not arquivo_emb.exists():
+        arquivo_emb = raiz_run / "07_embeddings.npz"
+    if not arquivo_emb.exists():
+        LOG.error(f"embeddings.npz ausente em {raiz_run}")
+        raise typer.Exit(code=1)
+
+    dados = np.load(arquivo_emb, allow_pickle=True)
+    vetores = dados["vetores"]
+    ids = dados["ids"]
+    splits = dados["splits"]
+    if "caminhos" not in dados.files:
+        LOG.error(
+            "embeddings.npz nao contem 'caminhos'. Re-rode o pipeline (felinet reid extrair)"
+            " para registrar os caminhos das imagens originais."
+        )
+        raise typer.Exit(code=2)
+    caminhos = dados["caminhos"]
+
+    mask_q = splits == "query"
+    mask_g = splits == "gallery"
+    eq, ig, iq = vetores[mask_q], ids[mask_g], ids[mask_q]
+    eg = vetores[mask_g]
+    cam_q, cam_g = caminhos[mask_q], caminhos[mask_g]
+
+    if len(eq) == 0 or len(eg) == 0:
+        LOG.error("Query ou galeria vazia.")
+        raise typer.Exit(code=1)
+
+    sim = eq @ eg.T  # (Nq, Ng)
+    # Ordena galeria por similaridade decrescente para cada query
+    ordem = np.argsort(-sim, axis=1)
+    top1_ids = ig[ordem[:, 0]]
+    top1_sim = np.take_along_axis(sim, ordem[:, :1], axis=1).ravel()
+    acertou_top1 = top1_ids == iq
+
+    # Queries com Top-1 errado, ordenadas por similaridade DECRESCENTE (erros confiantes)
+    idx_errados = np.where(~acertou_top1)[0]
+    if len(idx_errados) == 0:
+        LOG.warning("Nenhum erro de Top-1 -- modelo acertou tudo. Galeria nao gerada.")
+        raise typer.Exit(code=0)
+
+    ordem_piores = idx_errados[np.argsort(-top1_sim[idx_errados])]
+    selecionados = ordem_piores[:top_n_piores]
+    n_linhas = len(selecionados)
+    n_colunas = 1 + top_k
+
+    fig, axes = plt.subplots(
+        n_linhas,
+        n_colunas,
+        figsize=(2.2 * n_colunas, 2.4 * n_linhas),
+        dpi=200,
+    )
+    if n_linhas == 1:
+        axes = axes.reshape(1, -1)
+
+    def _carregar(p: str) -> np.ndarray | None:
+        try:
+            return np.asarray(Image.open(p).convert("RGB"))
+        except (OSError, ValueError) as exc:
+            LOG.warning(f"Falha ao abrir {p}: {exc}")
+            return None
+
+    def _box(ax, cor: str) -> None:
+        for spine in ax.spines.values():
+            spine.set_edgecolor(cor)
+            spine.set_linewidth(3.0)
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+    for linha, idx_q in enumerate(selecionados):
+        # Coluna 0: query
+        ax_q = axes[linha, 0]
+        img_q = _carregar(str(cam_q[idx_q]))
+        if img_q is not None:
+            ax_q.imshow(img_q)
+        ax_q.set_title(f"Query ID={iq[idx_q]}", fontsize=8)
+        _box(ax_q, "#1f4e8a")  # azul
+
+        # Colunas 1..K: candidatos
+        for col, idx_g in enumerate(ordem[idx_q, :top_k], start=1):
+            ax_c = axes[linha, col]
+            img_c = _carregar(str(cam_g[idx_g]))
+            if img_c is not None:
+                ax_c.imshow(img_c)
+            acerto = ig[idx_g] == iq[idx_q]
+            cor = "#2a8a3e" if acerto else "#b13030"  # verde/vermelha
+            ax_c.set_title(
+                f"#{col} ID={ig[idx_g]} sim={sim[idx_q, idx_g]:.2f}",
+                fontsize=7,
+                color=cor,
+            )
+            _box(ax_c, cor)
+
+    fig.suptitle(
+        f"Galeria de erros - {fonte_efetiva} (N={n}) - {n_linhas} piores Top-1",
+        fontsize=10,
+        y=1.0,
+    )
+    fig.tight_layout()
+
+    pasta = _pasta_artifacts(cfg, "metodologico", fonte_efetiva, protocolo)
+    saida_arq = saida or (pasta / "reid_galeria_erros.png")
+    saida_arq.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(saida_arq, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    typer.echo(f"OK: {saida_arq} ({n_linhas} linhas x {n_colunas} cols)")

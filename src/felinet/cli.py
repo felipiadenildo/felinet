@@ -18,6 +18,7 @@ import typer
 from felinet import __version__
 from felinet.comandos import (
     classificacao,
+    datasets,
     deteccao,
     dev,
     figuras,
@@ -47,6 +48,7 @@ app.add_typer(figuras.app, name="figuras", help="Gera figuras (PNG/PDF) para a m
 app.add_typer(tabelas.app, name="tabelas", help="Gera tabelas (CSV + booktabs .tex).")
 app.add_typer(pipeline_cmd.app, name="pipeline", help="Orquestrador da cascata I->II->III->IV.")
 app.add_typer(dev.app, name="dev", help="Utilitarios de desenvolvimento (cascata dev, validacao).")
+app.add_typer(datasets.app, name="datasets", help="Download e preparo de datasets externos.")
 
 
 def _versao_callback(valor: bool) -> None:

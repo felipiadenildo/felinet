@@ -45,10 +45,8 @@ def _protocolo_openset(n: int) -> str:
     return f"openset_n{n:04d}"
 
 
-def _achar_embeddings(raiz_run: Path) -> Path | None:  # type: ignore[name-defined]
+def _achar_embeddings(raiz_run: Path) -> Path | None:
     """Aceita tanto embeddings.npz (novo) quanto 07_embeddings.npz (legado)."""
-    from pathlib import Path
-
     for nome in ("embeddings.npz", "07_embeddings.npz"):
         p = Path(raiz_run) / nome
         if p.exists():
@@ -96,6 +94,7 @@ def extrair_embeddings(
         vetores: list[np.ndarray] = []
         ids: list[str] = []
         splits: list[str] = []
+        caminhos: list[str] = []
 
         def _extrair(caminho: Path) -> np.ndarray:
             img = Image.open(caminho).convert("RGB")
@@ -112,11 +111,13 @@ def extrair_embeddings(
             vetores.append(_extrair(reg.query))
             ids.append(id_str)
             splits.append("query")
+            caminhos.append(str(reg.query))
             # N galeria por individuo
             for caminho_g in reg.galeria:
                 vetores.append(_extrair(caminho_g))
                 ids.append(id_str)
                 splits.append("gallery")
+                caminhos.append(str(caminho_g))
 
         matriz = np.stack(vetores).astype(np.float32)
         # Grava como embeddings.npz (nome canonico do layout runs/)
@@ -125,6 +126,7 @@ def extrair_embeddings(
             vetores=matriz,
             ids=np.array(ids),
             splits=np.array(splits),
+            caminhos=np.array(caminhos),
         )
         n_query = int((np.array(splits) == "query").sum())
         n_gallery = int((np.array(splits) == "gallery").sum())
