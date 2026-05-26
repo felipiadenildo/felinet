@@ -20,6 +20,7 @@ Mapeamento DFD -> arquivo de saida dentro do run:
 Ver docs/arquitetura/mapeamento_dfd_pipeline.md e
 docs/arquitetura/layout_runs.md.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -84,8 +85,12 @@ def executar_cascata(
     if not pasta_brutas.exists():
         # Checagem antes dos imports pesados (torch/MD/SpeciesNet).
         return RelatorioCascata(
-            n_brutas=0, n_manifesto=0, n_deteccoes_animal=0,
-            n_classificacoes_felis_catus=0, n_crops_gerados=0, n_embeddings=0,
+            n_brutas=0,
+            n_manifesto=0,
+            n_deteccoes_animal=0,
+            n_classificacoes_felis_catus=0,
+            n_crops_gerados=0,
+            n_embeddings=0,
             sucesso=False,
             mensagem=f"Pasta de brutas nao existe: {pasta_brutas}",
         )
@@ -133,9 +138,7 @@ def executar_cascata(
         deteccoes_por_imagem[str(caminho)] = [d.bbox for d in resultado.deteccoes]
     arquivo_det = run.deteccoes_dir / "deteccoes.json"
     salvar_deteccoes_json(resultados_det, arquivo_det)
-    n_animal = sum(
-        1 for r in resultados_det for d in r.deteccoes if d.categoria == "animal"
-    )
+    n_animal = sum(1 for r in resultados_det for d in r.deteccoes if d.categoria == "animal")
     LOG.info(f"Fase II OK: {n_animal} bboxes 'animal' -> {arquivo_det}")
 
     # ----- FASE III: Classificacao + Crops -----
@@ -159,7 +162,9 @@ def executar_cascata(
 
     # ----- Recorte de crops aprovados (ponte para Fase IV) -----
     crops = persistir_crops_felis_catus(
-        classificacoes, deteccoes_por_imagem, run.crops_dir,
+        classificacoes,
+        deteccoes_por_imagem,
+        run.crops_dir,
     )
     LOG.info(f"Crops persistidos: {len(crops)} -> {run.crops_dir}")
 

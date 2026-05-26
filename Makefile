@@ -359,3 +359,18 @@ smoke: doctor debug-imports testes
 # ============================================================
 ci: format-check lint testes
 	@printf "$(C_OK)>>> CI passou$(C_RESET)\n"
+
+# ============================================================
+# Figuras avançadas Re-ID (Bloco 2)
+# ============================================================
+
+figura-cmc-comp:  ## CMC sobreposta para múltiplos N
+	$(FELINET) figuras cmc-comparativo --perfil $(PERFIL) --fonte $(FONTE) --ns $(NS)
+
+figura-dist:  ## Histograma intra vs inter para um N
+	$(FELINET) figuras dist-intra-inter --perfil $(PERFIL) --fonte $(FONTE) --n $(N)
+
+figura-roc:  ## ROC open-set com banda entre seeds
+	$(FELINET) figuras roc-openset --perfil $(PERFIL) --fonte $(FONTE) --n $(N)
+
+figuras-avancadas: figura-cmc-comp figura-dist figura-roc  ## Gera todas as figuras Bloco 2

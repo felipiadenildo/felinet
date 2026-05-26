@@ -1,4 +1,5 @@
 """Testes do esquema da Fase III."""
+
 from __future__ import annotations
 
 import json

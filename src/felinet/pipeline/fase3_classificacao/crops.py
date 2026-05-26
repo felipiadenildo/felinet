@@ -8,6 +8,7 @@ Cada crop e nomeado deterministicamente como
 ``<basename_imagem>__bbox<indice>.png`` para permitir rastreabilidade direta
 ate o arquivo original e o indice da bbox no JSON da Fase II.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass

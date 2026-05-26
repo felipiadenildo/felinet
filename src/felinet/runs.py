@@ -20,6 +20,7 @@ Funcoes auxiliares:
     carregar_manifest() - le manifest.json de um run.
     listar_runs() - itera runs por filtro.
 """
+
 from __future__ import annotations
 
 import json
@@ -114,6 +115,7 @@ class RunDir:
 # CRIACAO DE RUN
 # ============================================================
 
+
 def criar_run(
     *,
     perfil: Perfil,
@@ -160,14 +162,7 @@ def criar_run(
     gitsha = _git_sha_curto()
     nome_run = f"{gitsha}__{tag}" if tag else gitsha
 
-    raiz_run = (
-        raiz_runs_efetiva
-        / modo
-        / fonte
-        / perfil.nome
-        / proto_slug
-        / nome_run
-    )
+    raiz_run = raiz_runs_efetiva / modo / fonte / perfil.nome / proto_slug / nome_run
     # Se ja existe (re-execucao com mesmo sha sem tag), sobrescreve em-place.
     raiz_run.mkdir(parents=True, exist_ok=True)
     (raiz_run / "logs").mkdir(exist_ok=True)
@@ -226,6 +221,7 @@ def finalizar_run(
 # LATEST
 # ============================================================
 
+
 def atualizar_latest(run: RunDir, raiz_runs: Path) -> Path:
     """Cria/atualiza symlink ``runs/latest/<chave>`` apontando para o run."""
     pasta_latest = raiz_runs / "latest"
@@ -261,6 +257,7 @@ def resolver_latest(
 # ============================================================
 # MANIFEST
 # ============================================================
+
 
 def carregar_manifest(run: RunDir | Path) -> dict[str, Any]:
     """Le ``manifest.json`` de um run."""
@@ -310,6 +307,7 @@ def _gravar_manifest_inicial(
 # LISTAGEM
 # ============================================================
 
+
 @dataclass
 class RegistroRun:
     """Registro leve de um run, para listagem."""
@@ -354,13 +352,16 @@ def listar_runs(
 # HELPERS PRIVADOS
 # ============================================================
 
+
 def _resolver_raiz_runs(perfil: Perfil) -> Path:
     """Resolve raiz de runs (campo do perfil ou default ``runs/``)."""
     raiz = perfil.extras.get("raiz_runs") if perfil.extras else None
     if raiz:
         from felinet.config import raiz_projeto, _resolver_path
+
         return _resolver_path(raiz_projeto(), raiz)
     from felinet.config import raiz_projeto
+
     return raiz_projeto() / "runs"
 
 
@@ -371,6 +372,7 @@ def _resolver_fonte_path(perfil: Perfil, fonte: str, modo: str) -> str | None:
     if entrada is None:
         return None
     from felinet.config import raiz_projeto, _resolver_path
+
     caminho = _resolver_path(raiz_projeto(), entrada)
     try:
         return str(caminho.resolve())
@@ -382,7 +384,8 @@ def _git_sha_curto() -> str:
     try:
         out = subprocess.check_output(
             ["git", "rev-parse", "--short=7", "HEAD"],
-            stderr=subprocess.DEVNULL, text=True,
+            stderr=subprocess.DEVNULL,
+            text=True,
         )
         return out.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
@@ -393,7 +396,8 @@ def _git_branch() -> str | None:
     try:
         out = subprocess.check_output(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            stderr=subprocess.DEVNULL, text=True,
+            stderr=subprocess.DEVNULL,
+            text=True,
         )
         return out.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
@@ -404,7 +408,8 @@ def _git_dirty() -> bool:
     try:
         out = subprocess.check_output(
             ["git", "status", "--porcelain"],
-            stderr=subprocess.DEVNULL, text=True,
+            stderr=subprocess.DEVNULL,
+            text=True,
         )
         return bool(out.strip())
     except (subprocess.CalledProcessError, FileNotFoundError):
@@ -419,6 +424,7 @@ def _coletar_ambiente() -> dict[str, Any]:
     }
     try:
         import torch  # type: ignore[import-not-found]
+
         info["torch"] = torch.__version__
         info["cuda"] = torch.cuda.is_available()
         if torch.cuda.is_available():

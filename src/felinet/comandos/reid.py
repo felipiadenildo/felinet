@@ -15,6 +15,7 @@ Fluxo:
 
 Para a cascata operacional, use ``felinet pipeline executar``.
 """
+
 from __future__ import annotations
 
 import json
@@ -47,6 +48,7 @@ def _protocolo_openset(n: int) -> str:
 def _achar_embeddings(raiz_run: Path) -> Path | None:  # type: ignore[name-defined]
     """Aceita tanto embeddings.npz (novo) quanto 07_embeddings.npz (legado)."""
     from pathlib import Path
+
     for nome in ("embeddings.npz", "07_embeddings.npz"):
         p = Path(raiz_run) / nome
         if p.exists():
@@ -77,8 +79,12 @@ def extrair_embeddings(
 
     extras = {"comando": "reid extrair-embeddings", "n": n}
     run = criar_run(
-        perfil=cfg, modo="metodologico", fonte=fonte_efetiva,
-        protocolo=_protocolo_closed(n), tag=tag, extras=extras,
+        perfil=cfg,
+        modo="metodologico",
+        fonte=fonte_efetiva,
+        protocolo=_protocolo_closed(n),
+        tag=tag,
+        extras=extras,
     )
     LOG.info(f"Run: {run.raiz}")
 
@@ -90,14 +96,16 @@ def extrair_embeddings(
         vetores: list[np.ndarray] = []
         ids: list[str] = []
         splits: list[str] = []
-        
+
         def _extrair(caminho: Path) -> np.ndarray:
             img = Image.open(caminho).convert("RGB")
             emb = extrator.extrair_de_pil(
-                media_path=caminho, bbox_indice=0, crop_img=img,
+                media_path=caminho,
+                bbox_indice=0,
+                crop_img=img,
             )
             return emb.vetor
-        
+
         for reg in registros:
             id_str = f"{reg.id_individuo:06d}"
             # 1 query por individuo
@@ -114,15 +122,19 @@ def extrair_embeddings(
         # Grava como embeddings.npz (nome canonico do layout runs/)
         np.savez(
             run.raiz / "embeddings.npz",
-            vetores=matriz, ids=np.array(ids), splits=np.array(splits),
+            vetores=matriz,
+            ids=np.array(ids),
+            splits=np.array(splits),
         )
         n_query = int((np.array(splits) == "query").sum())
         n_gallery = int((np.array(splits) == "gallery").sum())
         run.splits_path.write_text(
             json.dumps(
                 {"n_total": len(registros), "n_query": n_query, "n_galeria": n_gallery},
-                indent=2, ensure_ascii=False,
-            ) + "\n",
+                indent=2,
+                ensure_ascii=False,
+            )
+            + "\n",
             encoding="utf-8",
         )
     except Exception as exc:  # noqa: BLE001
@@ -130,17 +142,25 @@ def extrair_embeddings(
         raise
 
     finalizar_run(
-        run, sucesso=True,
+        run,
+        sucesso=True,
         metricas_resumo={
-            "n_embeddings": len(vetores), "n_query": n_query, "n_galeria": n_gallery,
+            "n_embeddings": len(vetores),
+            "n_query": n_query,
+            "n_galeria": n_gallery,
         },
     )
-    typer.echo(json.dumps(
-        {"run_path": str(run.raiz),
-         "embeddings": str(run.raiz / "embeddings.npz"),
-         "n_embeddings": len(vetores)},
-        indent=2, ensure_ascii=False,
-    ))
+    typer.echo(
+        json.dumps(
+            {
+                "run_path": str(run.raiz),
+                "embeddings": str(run.raiz / "embeddings.npz"),
+                "n_embeddings": len(vetores),
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
 
 
 @app.command("avaliar-closed")
@@ -171,8 +191,11 @@ def avaliar_closed(
     protocolo = _protocolo_closed(n)
 
     latest = resolver_latest(
-        modo="metodologico", fonte=fonte_efetiva, perfil=cfg.nome,
-        protocolo=protocolo, raiz_runs=raiz_runs,
+        modo="metodologico",
+        fonte=fonte_efetiva,
+        perfil=cfg.nome,
+        protocolo=protocolo,
+        raiz_runs=raiz_runs,
     )
     if latest is None:
         LOG.error(
@@ -192,8 +215,12 @@ def avaliar_closed(
 
     extras = {"comando": "reid avaliar-closed", "n": n, "k_max": k_max}
     run = criar_run(
-        perfil=cfg, modo="metodologico", fonte=fonte_efetiva,
-        protocolo=protocolo, tag=tag, extras=extras,
+        perfil=cfg,
+        modo="metodologico",
+        fonte=fonte_efetiva,
+        protocolo=protocolo,
+        tag=tag,
+        extras=extras,
     )
 
     try:
@@ -221,15 +248,22 @@ def avaliar_closed(
         raise
 
     finalizar_run(
-        run, sucesso=True,
+        run,
+        sucesso=True,
         metricas_resumo={"top_1": top_1, "top_5": top_5, "n": n},
     )
-    typer.echo(json.dumps(
-        {"run_path": str(run.raiz),
-         "top_1": top_1, "top_5": top_5,
-         "metricas": str(run.metricas_path)},
-        indent=2, ensure_ascii=False,
-    ))
+    typer.echo(
+        json.dumps(
+            {
+                "run_path": str(run.raiz),
+                "top_1": top_1,
+                "top_5": top_5,
+                "metricas": str(run.metricas_path),
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
 
 
 @app.command("avaliar-openset")
@@ -256,8 +290,11 @@ def avaliar_openset(
     protocolo_closed = _protocolo_closed(n)
 
     latest = resolver_latest(
-        modo="metodologico", fonte=fonte_efetiva, perfil=cfg.nome,
-        protocolo=protocolo_closed, raiz_runs=raiz_runs,
+        modo="metodologico",
+        fonte=fonte_efetiva,
+        perfil=cfg.nome,
+        protocolo=protocolo_closed,
+        raiz_runs=raiz_runs,
     )
     if latest is None:
         LOG.error(
@@ -279,12 +316,18 @@ def avaliar_openset(
 
     seed_list = [int(s) for s in seeds.split(",")]
     extras = {
-        "comando": "reid avaliar-openset", "n": n,
-        "frac_novos": frac_novos, "seeds": seed_list,
+        "comando": "reid avaliar-openset",
+        "n": n,
+        "frac_novos": frac_novos,
+        "seeds": seed_list,
     }
     run = criar_run(
-        perfil=cfg, modo="metodologico", fonte=fonte_efetiva,
-        protocolo=_protocolo_openset(n), tag=tag, extras=extras,
+        perfil=cfg,
+        modo="metodologico",
+        fonte=fonte_efetiva,
+        protocolo=_protocolo_openset(n),
+        tag=tag,
+        extras=extras,
     )
 
     try:
@@ -294,11 +337,11 @@ def avaliar_openset(
             # avaliar_open_set espera APENAS ids_novos; a galeria deve ser
             # filtrada para excluir ids_novos do catalogo.
             _, ids_novos = particionar_ids_open_set(
-                np.unique(ids), frac_novos=frac_novos, random_state=seed,
+                np.unique(ids),
+                frac_novos=frac_novos,
+                random_state=seed,
             )
-            mascara_galeria_catalogo = np.array(
-                [g not in ids_novos for g in ids_g_full]
-            )
+            mascara_galeria_catalogo = np.array([g not in ids_novos for g in ids_g_full])
             rel = avaliar_open_set(
                 embeddings_query=embeddings_q,
                 embeddings_galeria=embeddings_g_full[mascara_galeria_catalogo],
@@ -312,7 +355,9 @@ def avaliar_openset(
         tprs_01 = [s["relatorio"]["tpr_at_fpr_01"] for s in por_seed]
         tprs_05 = [s["relatorio"]["tpr_at_fpr_05"] for s in por_seed]
         payload = {
-            "n_individuos": int(n), "frac_novos": frac_novos, "seeds": seed_list,
+            "n_individuos": int(n),
+            "frac_novos": frac_novos,
+            "seeds": seed_list,
             "auc_media": float(np.mean(aucs)),
             "auc_desvio": float(np.std(aucs, ddof=1)) if len(aucs) > 1 else 0.0,
             "tpr_at_fpr_01_media": float(np.mean(tprs_01)),
@@ -328,18 +373,26 @@ def avaliar_openset(
         raise
 
     finalizar_run(
-        run, sucesso=True,
+        run,
+        sucesso=True,
         metricas_resumo={
-            "auc_media": payload["auc_media"], "auc_desvio": payload["auc_desvio"],
+            "auc_media": payload["auc_media"],
+            "auc_desvio": payload["auc_desvio"],
             "tpr_at_fpr_01_media": payload["tpr_at_fpr_01_media"],
         },
     )
-    typer.echo(json.dumps(
-        {"run_path": str(run.raiz),
-         "auc_media": payload["auc_media"], "auc_desvio": payload["auc_desvio"],
-         "tpr_at_fpr_01_media": payload["tpr_at_fpr_01_media"]},
-        indent=2, ensure_ascii=False,
-    ))
+    typer.echo(
+        json.dumps(
+            {
+                "run_path": str(run.raiz),
+                "auc_media": payload["auc_media"],
+                "auc_desvio": payload["auc_desvio"],
+                "tpr_at_fpr_01_media": payload["tpr_at_fpr_01_media"],
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
 
 
 @app.command("listar")
@@ -350,13 +403,15 @@ def listar(
 ) -> None:
     """Lista runs metodologicos existentes em ``runs/``."""
     from felinet.config import raiz_projeto
+
     cfg = carregar_perfil(perfil) if perfil else None
-    raiz_runs = raiz_projeto() / (
-        (cfg.extras.get("raiz_runs") if cfg else None) or "runs"
-    )
+    raiz_runs = raiz_projeto() / ((cfg.extras.get("raiz_runs") if cfg else None) or "runs")
     registros = listar_runs(
-        raiz_runs, modo="metodologico", fonte=fonte,
-        perfil=cfg.nome if cfg else None, protocolo=protocolo,
+        raiz_runs,
+        modo="metodologico",
+        fonte=fonte,
+        perfil=cfg.nome if cfg else None,
+        protocolo=protocolo,
     )
     if not registros:
         typer.echo("(nenhum run metodologico encontrado)")

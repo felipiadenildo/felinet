@@ -1,4 +1,5 @@
 """Testes do helper felinet.runs (gerenciamento de execucoes rastreaveis)."""
+
 from __future__ import annotations
 
 import json
@@ -54,6 +55,7 @@ perfis:
     monkeypatch.setenv("FELINET_CONFIG", str(configs / "paths.yaml"))
 
     from felinet.config import carregar_perfil
+
     carregar_perfil.cache_clear()
     return carregar_perfil("dev")
 
@@ -61,7 +63,9 @@ perfis:
 def test_criar_run_operacional(perfil_fake, tmp_path: Path):
     raiz_runs = tmp_path / "runs_out"
     run = criar_run(
-        perfil=perfil_fake, modo="operacional", fonte="kaggle_cats",
+        perfil=perfil_fake,
+        modo="operacional",
+        fonte="kaggle_cats",
         raiz_runs=raiz_runs,
     )
 
@@ -87,7 +91,9 @@ def test_criar_run_operacional(perfil_fake, tmp_path: Path):
 def test_criar_run_metodologico_exige_protocolo(perfil_fake, tmp_path: Path):
     with pytest.raises(ValueError, match="protocolo"):
         criar_run(
-            perfil=perfil_fake, modo="metodologico", fonte="petface",
+            perfil=perfil_fake,
+            modo="metodologico",
+            fonte="petface",
             raiz_runs=tmp_path / "runs_out",
         )
 
@@ -95,8 +101,11 @@ def test_criar_run_metodologico_exige_protocolo(perfil_fake, tmp_path: Path):
 def test_criar_run_metodologico(perfil_fake, tmp_path: Path):
     raiz_runs = tmp_path / "runs_out"
     run = criar_run(
-        perfil=perfil_fake, modo="metodologico", fonte="petface",
-        protocolo="n0050", raiz_runs=raiz_runs,
+        perfil=perfil_fake,
+        modo="metodologico",
+        fonte="petface",
+        protocolo="n0050",
+        raiz_runs=raiz_runs,
     )
     assert run.protocolo == "n0050"
     assert "n0050" in str(run.raiz)
@@ -107,15 +116,20 @@ def test_criar_run_metodologico(perfil_fake, tmp_path: Path):
 def test_modo_invalido_falha(perfil_fake, tmp_path: Path):
     with pytest.raises(ValueError, match="modo invalido"):
         criar_run(
-            perfil=perfil_fake, modo="experimental", fonte="kaggle_cats",
+            perfil=perfil_fake,
+            modo="experimental",
+            fonte="kaggle_cats",
             raiz_runs=tmp_path / "runs_out",
         )
 
 
 def test_tag_aparece_no_caminho(perfil_fake, tmp_path: Path):
     run = criar_run(
-        perfil=perfil_fake, modo="operacional", fonte="kaggle_cats",
-        tag="thr025", raiz_runs=tmp_path / "runs_out",
+        perfil=perfil_fake,
+        modo="operacional",
+        fonte="kaggle_cats",
+        tag="thr025",
+        raiz_runs=tmp_path / "runs_out",
     )
     assert "__thr025" in run.raiz.name
 
@@ -123,8 +137,11 @@ def test_tag_aparece_no_caminho(perfil_fake, tmp_path: Path):
 def test_latest_symlink(perfil_fake, tmp_path: Path):
     raiz_runs = tmp_path / "runs_out"
     run = criar_run(
-        perfil=perfil_fake, modo="metodologico", fonte="petface",
-        protocolo="n0200", raiz_runs=raiz_runs,
+        perfil=perfil_fake,
+        modo="metodologico",
+        fonte="petface",
+        protocolo="n0200",
+        raiz_runs=raiz_runs,
     )
     link = raiz_runs / "latest" / "metodologico__petface__dev__n0200"
     assert link.is_symlink()
@@ -134,12 +151,18 @@ def test_latest_symlink(perfil_fake, tmp_path: Path):
 def test_resolver_latest(perfil_fake, tmp_path: Path):
     raiz_runs = tmp_path / "runs_out"
     run = criar_run(
-        perfil=perfil_fake, modo="metodologico", fonte="petface",
-        protocolo="n0200", raiz_runs=raiz_runs,
+        perfil=perfil_fake,
+        modo="metodologico",
+        fonte="petface",
+        protocolo="n0200",
+        raiz_runs=raiz_runs,
     )
     alvo = resolver_latest(
-        modo="metodologico", fonte="petface", perfil="dev",
-        protocolo="n0200", raiz_runs=raiz_runs,
+        modo="metodologico",
+        fonte="petface",
+        perfil="dev",
+        protocolo="n0200",
+        raiz_runs=raiz_runs,
     )
     assert alvo is not None
     assert alvo.resolve() == run.raiz.resolve()
@@ -147,18 +170,25 @@ def test_resolver_latest(perfil_fake, tmp_path: Path):
 
 def test_resolver_latest_nao_existe(tmp_path: Path):
     alvo = resolver_latest(
-        modo="operacional", fonte="x", perfil="dev", raiz_runs=tmp_path,
+        modo="operacional",
+        fonte="x",
+        perfil="dev",
+        raiz_runs=tmp_path,
     )
     assert alvo is None
 
 
 def test_finalizar_run(perfil_fake, tmp_path: Path):
     run = criar_run(
-        perfil=perfil_fake, modo="operacional", fonte="kaggle_cats",
+        perfil=perfil_fake,
+        modo="operacional",
+        fonte="kaggle_cats",
         raiz_runs=tmp_path / "runs_out",
     )
     finalizar_run(
-        run, sucesso=True, mensagem="ok",
+        run,
+        sucesso=True,
+        mensagem="ok",
         metricas_resumo={"n_embeddings": 42},
     )
     manifest = carregar_manifest(run)
@@ -172,16 +202,24 @@ def test_finalizar_run(perfil_fake, tmp_path: Path):
 def test_listar_runs(perfil_fake, tmp_path: Path):
     raiz_runs = tmp_path / "runs_out"
     criar_run(
-        perfil=perfil_fake, modo="operacional", fonte="kaggle_cats",
+        perfil=perfil_fake,
+        modo="operacional",
+        fonte="kaggle_cats",
         raiz_runs=raiz_runs,
     )
     criar_run(
-        perfil=perfil_fake, modo="metodologico", fonte="petface",
-        protocolo="n0050", raiz_runs=raiz_runs,
+        perfil=perfil_fake,
+        modo="metodologico",
+        fonte="petface",
+        protocolo="n0050",
+        raiz_runs=raiz_runs,
     )
     criar_run(
-        perfil=perfil_fake, modo="metodologico", fonte="petface",
-        protocolo="n0200", raiz_runs=raiz_runs,
+        perfil=perfil_fake,
+        modo="metodologico",
+        fonte="petface",
+        protocolo="n0200",
+        raiz_runs=raiz_runs,
     )
 
     todos = listar_runs(raiz_runs)
@@ -199,7 +237,9 @@ def test_atualizar_latest_idempotente(perfil_fake, tmp_path: Path):
     """Atualizar latest duas vezes nao quebra."""
     raiz_runs = tmp_path / "runs_out"
     run = criar_run(
-        perfil=perfil_fake, modo="operacional", fonte="kaggle_cats",
+        perfil=perfil_fake,
+        modo="operacional",
+        fonte="kaggle_cats",
         raiz_runs=raiz_runs,
     )
     atualizar_latest(run, raiz_runs)  # idempotente

@@ -1,4 +1,5 @@
 """Testes para pipeline.fase4_reid.schema."""
+
 from __future__ import annotations
 
 import json

@@ -5,6 +5,7 @@ fora do escopo destes testes -- o objetivo e verificar que o
 encadeamento falha graciosamente quando a pasta de brutas nao existe
 (checagem antes dos imports pesados).
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -16,8 +17,12 @@ from felinet.runs import RunDir
 def test_relatorio_cascata_estrutura():
     """Smoke do schema RelatorioCascata."""
     rel = RelatorioCascata(
-        n_brutas=5, n_manifesto=5, n_deteccoes_animal=4,
-        n_classificacoes_felis_catus=3, n_crops_gerados=3, n_embeddings=3,
+        n_brutas=5,
+        n_manifesto=5,
+        n_deteccoes_animal=4,
+        n_classificacoes_felis_catus=3,
+        n_crops_gerados=3,
+        n_embeddings=3,
         sucesso=True,
     )
     d = rel.como_dicionario()
@@ -34,8 +39,12 @@ def test_cascata_pasta_brutas_inexistente(tmp_path: Path):
     """
     run = RunDir(
         raiz=tmp_path / "run_tmp",
-        modo="operacional", fonte="fake", perfil="dev",
-        protocolo="_", gitsha="nogit", chave_latest="operacional__fake__dev",
+        modo="operacional",
+        fonte="fake",
+        perfil="dev",
+        protocolo="_",
+        gitsha="nogit",
+        chave_latest="operacional__fake__dev",
     )
     run.raiz.mkdir(parents=True)
 

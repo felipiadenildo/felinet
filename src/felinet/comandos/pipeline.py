@@ -9,6 +9,7 @@ A fonte e identificada por slug registrado em ``configs/paths.yaml`` ->
 
 Ver docs/arquitetura/layout_runs.md.
 """
+
 from __future__ import annotations
 
 import json
@@ -27,19 +28,25 @@ LOG = obter_logger("comandos.pipeline")
 def executar(
     perfil: str = typer.Option("dev", "--perfil", "-p"),
     fonte: str = typer.Option(
-        None, "--fonte", "-f",
+        None,
+        "--fonte",
+        "-f",
         help="Slug da fonte (configs/paths.yaml -> fontes:). Default do perfil se omitido.",
     ),
     tag: str = typer.Option(
-        None, "--tag", "-t",
+        None,
+        "--tag",
+        "-t",
         help="Sufixo opcional para distinguir runs com mesmo git_sha.",
     ),
     confianca_deteccao: float = typer.Option(
-        0.20, "--confianca-deteccao",
+        0.20,
+        "--confianca-deteccao",
         help="Threshold do MegaDetector (default 0.20).",
     ),
     anotacao: str = typer.Option(
-        None, "--anotacao",
+        None,
+        "--anotacao",
         help="Caminho opcional para arquivo de anotacao de identidade (dev).",
     ),
 ) -> None:
@@ -63,7 +70,11 @@ def executar(
         "anotacao_origem": str(anotacao) if anotacao else None,
     }
     run = criar_run(
-        perfil=cfg, modo="operacional", fonte=fonte_efetiva, tag=tag, extras=extras,
+        perfil=cfg,
+        modo="operacional",
+        fonte=fonte_efetiva,
+        tag=tag,
+        extras=extras,
     )
     LOG.info(f"Run criado: {run.raiz}")
 
@@ -103,10 +114,9 @@ def listar(
 ) -> None:
     """Lista runs operacionais existentes em ``runs/``."""
     from felinet.config import raiz_projeto
+
     cfg = carregar_perfil(perfil) if perfil else None
-    raiz_runs = raiz_projeto() / (
-        (cfg.extras.get("raiz_runs") if cfg else None) or "runs"
-    )
+    raiz_runs = raiz_projeto() / ((cfg.extras.get("raiz_runs") if cfg else None) or "runs")
     registros = listar_runs(
         raiz_runs,
         modo="operacional",
@@ -141,12 +151,13 @@ def resumir(
     fonte_efetiva = fonte or fonte_default(cfg, "operacional")
     raiz_runs = raiz_projeto() / (cfg.extras.get("raiz_runs") or "runs")
     alvo = resolver_latest(
-        modo="operacional", fonte=fonte_efetiva, perfil=cfg.nome, raiz_runs=raiz_runs,
+        modo="operacional",
+        fonte=fonte_efetiva,
+        perfil=cfg.nome,
+        raiz_runs=raiz_runs,
     )
     if alvo is None:
-        typer.echo(
-            f"(nenhum run latest para operacional/{fonte_efetiva}/{cfg.nome})"
-        )
+        typer.echo(f"(nenhum run latest para operacional/{fonte_efetiva}/{cfg.nome})")
         return
     typer.echo(f"latest -> {alvo}")
     checagens = [

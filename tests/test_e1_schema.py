@@ -1,4 +1,5 @@
 """Testes do esquema neutro de detecção."""
+
 from __future__ import annotations
 
 import json
@@ -27,9 +28,7 @@ class TestBoundingBox:
             (0.0, 0.0, 0.5, -0.01),
         ],
     )
-    def test_valor_fora_de_intervalo_levanta(
-        self, x: float, y: float, w: float, h: float
-    ) -> None:
+    def test_valor_fora_de_intervalo_levanta(self, x: float, y: float, w: float, h: float) -> None:
         with pytest.raises(ValueError):
             BoundingBox(x=x, y=y, w=w, h=h)
 
@@ -66,11 +65,7 @@ class TestSerializacao:
             media_path="x.jpg",
             largura=100,
             altura=80,
-            deteccoes=[
-                Deteccao(
-                    "animal", 0.91, BoundingBox(0.1, 0.2, 0.3, 0.4)
-                )
-            ],
+            deteccoes=[Deteccao("animal", 0.91, BoundingBox(0.1, 0.2, 0.3, 0.4))],
             modelo="MDv6 (MDV6-yolov10-c)",
             tempo_ms=42.0,
         )

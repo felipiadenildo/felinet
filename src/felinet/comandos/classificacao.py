@@ -1,4 +1,5 @@
 """Subcomandos: felinet classificacao ..."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -53,7 +54,9 @@ def executar(
             if det.categoria != "animal":
                 continue
             entrada = CropEntrada(
-                media_path=Path(r.media_path), bbox=det.bbox, indice=i,
+                media_path=Path(r.media_path),
+                bbox=det.bbox,
+                indice=i,
             )
             classificacoes.append(classificador.classificar(entrada))
 
@@ -93,6 +96,8 @@ def recortar(
     }
 
     crops = persistir_crops_felis_catus(
-        classificacoes, deteccoes_por_imagem, pasta_saida,
+        classificacoes,
+        deteccoes_por_imagem,
+        pasta_saida,
     )
     typer.echo(f"OK: {len(crops)} crops persistidos -> {pasta_saida}")

@@ -3,6 +3,7 @@
 Utilitarios de desenvolvimento. Nao usados na execucao oficial; servem
 apenas para preparar/validar o ambiente dev.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -19,12 +20,15 @@ LOG = obter_logger("comandos.dev")
 @app.command("preparar-petface-mini")
 def preparar_petface_mini(
     origem: Path = typer.Option(
-        ..., "--origem",
+        ...,
+        "--origem",
         help="Caminho para o PetFace completo (e.g. /mnt/ssd/petface).",
     ),
     individuos: int = typer.Option(5, "--individuos", help="N de IDs a amostrar."),
     imagens_por_id: int = typer.Option(
-        3, "--imagens-por-id", help="Imagens por individuo.",
+        3,
+        "--imagens-por-id",
+        help="Imagens por individuo.",
     ),
 ) -> None:
     """Cria ``data/dev/petface_mini/`` com subset aleatorio do PetFace.
@@ -75,6 +79,7 @@ def validar_ambiente() -> None:
 
     try:
         import torch
+
         cuda = torch.cuda.is_available()
         dispositivo = torch.cuda.get_device_name(0) if cuda else "CPU"
         typer.echo(f"  [OK] CUDA disponivel: {cuda} ({dispositivo})")

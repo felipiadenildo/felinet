@@ -16,6 +16,7 @@ O carregamento expoe:
 - ``resolver_fonte(perfil, fonte)`` -> ``Path`` (caminho da fonte registrada
   em ``configs/paths.yaml`` na secao ``fontes``)
 """
+
 from __future__ import annotations
 
 import os
@@ -123,10 +124,7 @@ def carregar_perfil(perfil: str | None = None) -> Perfil:
     perfis = raw.get("perfis", {})
     if nome not in perfis:
         disponiveis = ", ".join(sorted(perfis))
-        raise KeyError(
-            f"Perfil '{nome}' nao definido em {yaml_path}. "
-            f"Disponiveis: {disponiveis}"
-        )
+        raise KeyError(f"Perfil '{nome}' nao definido em {yaml_path}. Disponiveis: {disponiveis}")
 
     dados = _aplicar_overrides_env(perfis[nome])
     raiz = raiz_projeto()
@@ -196,8 +194,7 @@ def fonte_default(perfil: Perfil, modo: str) -> str:
     valor = (perfil.extras or {}).get(chave)
     if not valor:
         raise KeyError(
-            f"Perfil '{perfil.nome}' nao define '{chave}'. "
-            f"Passe --fonte explicitamente."
+            f"Perfil '{perfil.nome}' nao define '{chave}'. Passe --fonte explicitamente."
         )
     return str(valor)
 

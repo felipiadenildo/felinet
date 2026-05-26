@@ -3,6 +3,7 @@
 Define a estrutura que a Fase IV consome, isolando o resto do pipeline
 da API específica do SpeciesNet.
 """
+
 from __future__ import annotations
 
 import json
@@ -10,8 +11,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 # Status do veredito por crop, conforme política de decisão da §3.4
-STATUS_FELIS_CATUS = "felis_catus"         # vai para Fase IV
-STATUS_OUTRA_ESPECIE = "outra_especie"     # vai para base de fauna não-alvo
+STATUS_FELIS_CATUS = "felis_catus"  # vai para Fase IV
+STATUS_OUTRA_ESPECIE = "outra_especie"  # vai para base de fauna não-alvo
 STATUS_VALIDACAO_HUMANA = "validacao_humana"  # vai para fila humana
 
 STATUS_VALIDOS = {STATUS_FELIS_CATUS, STATUS_OUTRA_ESPECIE, STATUS_VALIDACAO_HUMANA}
@@ -34,10 +35,10 @@ class ResultadoClassificacao:
     """Resultado da Fase III para um único crop."""
 
     media_path: str
-    bbox_indice: int            # índice da bbox dentro do ResultadoDeteccao
+    bbox_indice: int  # índice da bbox dentro do ResultadoDeteccao
     top_k: list[PrediccaoEspecie]
-    status: str                 # veredito da política de decisão
-    modelo: str                 # ex.: "SpeciesNet"
+    status: str  # veredito da política de decisão
+    modelo: str  # ex.: "SpeciesNet"
     tempo_ms: float
 
     def __post_init__(self) -> None:
@@ -77,12 +78,14 @@ def carregar_resultados_json(arquivo: Path | str) -> list[ResultadoClassificacao
     resultados: list[ResultadoClassificacao] = []
     for r in raw.get("resultados", []):
         top_k = [PrediccaoEspecie(**p) for p in r.get("top_k", [])]
-        resultados.append(ResultadoClassificacao(
-            media_path=r["media_path"],
-            bbox_indice=int(r["bbox_indice"]),
-            top_k=top_k,
-            status=r["status"],
-            modelo=r["modelo"],
-            tempo_ms=float(r["tempo_ms"]),
-        ))
+        resultados.append(
+            ResultadoClassificacao(
+                media_path=r["media_path"],
+                bbox_indice=int(r["bbox_indice"]),
+                top_k=top_k,
+                status=r["status"],
+                modelo=r["modelo"],
+                tempo_ms=float(r["tempo_ms"]),
+            )
+        )
     return resultados

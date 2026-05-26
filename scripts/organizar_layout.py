@@ -16,6 +16,7 @@ Idempotente: pode ser rodado multiplas vezes sem efeitos colaterais.
 Uso:
     python scripts/organizar_layout.py [--dry-run]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -176,7 +177,8 @@ def atualizar_gitignore(dry_run: bool) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         help="So mostra o que faria, sem modificar nada.",
     )
     args = parser.parse_args()

@@ -4,6 +4,7 @@ Gera tabelas CSV + .tex (booktabs) para inclusao na monografia. Le metricas
 dos runs metodologicos latest (closed e openset) e agrega em uma unica
 linha por N. Saida em ``artifacts/tabelas/<modo>/<fonte>/``.
 """
+
 from __future__ import annotations
 
 import json
@@ -27,8 +28,11 @@ def _pasta_artifacts(cfg, modo: str, fonte: str) -> Path:
 
 def _ler_metricas_closed(raiz_runs: Path, fonte: str, perfil_nome: str, n: int) -> dict | None:
     alvo = resolver_latest(
-        modo="metodologico", fonte=fonte, perfil=perfil_nome,
-        protocolo=f"n{n:04d}", raiz_runs=raiz_runs,
+        modo="metodologico",
+        fonte=fonte,
+        perfil=perfil_nome,
+        protocolo=f"n{n:04d}",
+        raiz_runs=raiz_runs,
     )
     if alvo is None:
         return None
@@ -38,8 +42,11 @@ def _ler_metricas_closed(raiz_runs: Path, fonte: str, perfil_nome: str, n: int) 
 
 def _ler_metricas_openset(raiz_runs: Path, fonte: str, perfil_nome: str, n: int) -> dict | None:
     alvo = resolver_latest(
-        modo="metodologico", fonte=fonte, perfil=perfil_nome,
-        protocolo=f"openset_n{n:04d}", raiz_runs=raiz_runs,
+        modo="metodologico",
+        fonte=fonte,
+        perfil=perfil_nome,
+        protocolo=f"openset_n{n:04d}",
+        raiz_runs=raiz_runs,
     )
     if alvo is None:
         return None
@@ -60,7 +67,18 @@ def reid_resumo(
     raiz_runs = raiz_projeto() / (cfg.extras.get("raiz_runs") or "runs")
     valores_n = [int(s) for s in ns.split(",")]
 
-    linhas = [["N", "Top-1", "Top-5", "Top-10", "n_query", "n_galeria"]]
+    linhas = [
+        [
+            "N",
+            "Top-1",
+            "Top-5",
+            "Top-10",
+            "mAP@10",
+            "mAP",
+            "n_query",
+            "n_galeria",
+        ]
+    ]
     for n in valores_n:
         payload = _ler_metricas_closed(raiz_runs, fonte_efetiva, cfg.nome, n)
         if payload is None:
@@ -69,17 +87,24 @@ def reid_resumo(
         rel = payload["relatorio"]
         top_k = rel.get("top_k", {})
         cmc = rel.get("cmc", [])
+        map_at_k = rel.get("mAP_at_k", {})
         top1 = float(top_k.get("1", cmc[0] if cmc else 0.0))
         top5 = float(top_k.get("5", cmc[4] if len(cmc) >= 5 else 0.0))
         top10 = float(top_k.get("10", cmc[9] if len(cmc) >= 10 else 0.0))
-        linhas.append([
-            str(n),
-            f"{top1:.3f}",
-            f"{top5:.3f}",
-            f"{top10:.3f}",
-            str(payload["n_query"]),
-            str(payload["n_galeria"]),
-        ])
+        map10 = float(map_at_k.get("10", 0.0))
+        map_global = float(rel.get("mAP", 0.0))
+        linhas.append(
+            [
+                str(n),
+                f"{top1:.3f}",
+                f"{top5:.3f}",
+                f"{top10:.3f}",
+                f"{map10:.3f}",
+                f"{map_global:.3f}",
+                str(payload["n_query"]),
+                str(payload["n_galeria"]),
+            ]
+        )
 
     pasta = _pasta_artifacts(cfg, "metodologico", fonte_efetiva)
     saida_csv = saida or (pasta / "reid_resumo.csv")
@@ -88,7 +113,8 @@ def reid_resumo(
 
     saida_tex = saida_csv.with_suffix(".tex")
     csv_para_booktabs(
-        saida_csv, saida_tex,
+        saida_csv,
+        saida_tex,
         legenda=f"Avaliacao Re-ID closed-set sobre {fonte_efetiva} para diferentes N.",
         rotulo=f"tab:reid-resumo-{fonte_efetiva}",
     )
@@ -108,7 +134,17 @@ def openset_resumo(
     raiz_runs = raiz_projeto() / (cfg.extras.get("raiz_runs") or "runs")
     valores_n = [int(s) for s in ns.split(",")]
 
-    linhas = [["N", "AUC-ROC (media +/- std)", "TPR@FPR=1%", "TPR@FPR=5%", "n_seeds"]]
+    linhas = [
+        [
+            "N",
+            "AUC-ROC (media +/- std)",
+            "TPR@FPR=1%",
+            "TPR@FPR=5%",
+            "EER",
+            "Rank-1 open",
+            "n_seeds",
+        ]
+    ]
     for n in valores_n:
         payload = _ler_metricas_openset(raiz_runs, fonte_efetiva, cfg.nome, n)
         if payload is None:
@@ -118,13 +154,27 @@ def openset_resumo(
         tpr05 = float(payload.get("tpr_at_fpr_05_media", 0.0))
         auc_media = float(payload.get("auc_media", 0.0))
         auc_desvio = float(payload.get("auc_desvio", 0.0))
-        linhas.append([
-            str(n),
-            f"{auc_media:.3f} +/- {auc_desvio:.3f}",
-            f"{tpr01:.3f}",
-            f"{tpr05:.3f}",
-            str(len(payload.get("seeds", []))),
-        ])
+        # Agregados extras a partir de por_seed (medias entre seeds)
+        por_seed = payload.get("por_seed", [])
+        if por_seed:
+            eers = [float(s["relatorio"].get("eer", 0.0)) for s in por_seed]
+            r1s = [float(s["relatorio"].get("rank1_open_set", 0.0)) for s in por_seed]
+            eer_media = sum(eers) / len(eers)
+            r1_media = sum(r1s) / len(r1s)
+        else:
+            eer_media = float(payload.get("eer_media", 0.0))
+            r1_media = float(payload.get("rank1_open_media", 0.0))
+        linhas.append(
+            [
+                str(n),
+                f"{auc_media:.3f} +/- {auc_desvio:.3f}",
+                f"{tpr01:.3f}",
+                f"{tpr05:.3f}",
+                f"{eer_media:.3f}",
+                f"{r1_media:.3f}",
+                str(len(payload.get("seeds", []))),
+            ]
+        )
 
     pasta = _pasta_artifacts(cfg, "metodologico", fonte_efetiva)
     saida_csv = saida or (pasta / "openset_resumo.csv")
@@ -132,7 +182,8 @@ def openset_resumo(
     saida_csv.write_text("\n".join(",".join(c) for c in linhas), encoding="utf-8")
     saida_tex = saida_csv.with_suffix(".tex")
     csv_para_booktabs(
-        saida_csv, saida_tex,
+        saida_csv,
+        saida_tex,
         legenda=f"Avaliacao Re-ID open-set sobre {fonte_efetiva} (AUC-ROC e TPR@FPR, media entre seeds).",
         rotulo=f"tab:openset-resumo-{fonte_efetiva}",
     )
@@ -152,7 +203,8 @@ def datasets_avaliados(
         raise typer.Exit(code=1)
     saida_tex = fonte.with_suffix(".tex")
     csv_para_booktabs(
-        fonte, saida_tex,
+        fonte,
+        saida_tex,
         legenda="Datasets avaliados durante o desenvolvimento e veredito de uso.",
         rotulo="tab:datasets-avaliados",
     )

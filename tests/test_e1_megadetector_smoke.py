@@ -8,6 +8,7 @@ Requer:
 - ~50 MB de download
 - ~10s de inicialização
 """
+
 from __future__ import annotations
 
 from pathlib import Path

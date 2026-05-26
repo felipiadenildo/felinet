@@ -1,4 +1,5 @@
 """Funções de avaliação Re-ID (closed-set e open-set)."""
+
 from __future__ import annotations
 
 from collections.abc import Sequence
@@ -21,6 +22,10 @@ class ResultadoAvaliacao:
         n_ids: Número de IDs únicos.
         top_k: Dicionário {k: acuracia} para k em 1..k_max.
         cmc: Curva CMC (lista de acertos acumulados normalizados).
+        mAP_at_k: Dicionário {k: mAP@k} -- mean Average Precision @ K.
+            Calculado considerando TODAS as imagens da galeria com o mesmo ID
+            da query como relevantes (multi-relevant retrieval).
+        mAP: mAP global (considera o ranking completo ate Ng).
     """
 
     n_queries: int
@@ -28,6 +33,8 @@ class ResultadoAvaliacao:
     n_ids: int
     top_k: dict[int, float]
     cmc: list[float] = field(default_factory=list)
+    mAP_at_k: dict[int, float] = field(default_factory=dict)
+    mAP: float = 0.0
 
     def como_dicionario(self) -> dict:
         return {
@@ -36,6 +43,8 @@ class ResultadoAvaliacao:
             "n_ids": self.n_ids,
             "top_k": {str(k): v for k, v in self.top_k.items()},
             "cmc": self.cmc,
+            "mAP_at_k": {str(k): v for k, v in self.mAP_at_k.items()},
+            "mAP": self.mAP,
         }
 
 
@@ -79,14 +88,10 @@ def avaliar_top_k(
     ids_galeria = np.asarray(ids_galeria)
 
     if similaridade.ndim != 2:
-        raise ValueError(
-            f"similaridade deve ser 2D (Nq, Ng); recebido shape={similaridade.shape}"
-        )
+        raise ValueError(f"similaridade deve ser 2D (Nq, Ng); recebido shape={similaridade.shape}")
     n_queries_mat, n_galeria_mat = similaridade.shape
     if len(ids_query) != n_queries_mat:
-        raise ValueError(
-            f"len(ids_query)={len(ids_query)} != n_queries da matriz={n_queries_mat}"
-        )
+        raise ValueError(f"len(ids_query)={len(ids_query)} != n_queries da matriz={n_queries_mat}")
     if len(ids_galeria) != n_galeria_mat:
         raise ValueError(
             f"len(ids_galeria)={len(ids_galeria)} != n_galeria da matriz={n_galeria_mat}"
@@ -101,12 +106,17 @@ def avaliar_top_k(
     ordem = np.argsort(-similaridade, axis=1)
     ids_galeria_ord = ids_galeria[ordem]  # (Nq, Ng)
 
-    # Compara top-K com ID verdadeiro
-    acertos = ids_galeria_ord[:, :k_efetivo] == ids_query[:, None]
-    acerto_acumulado = np.cumsum(acertos, axis=1) > 0
-    cmc = acerto_acumulado.mean(axis=0)
+    # Matriz de relevancia binaria sobre o ranking completo (Nq, Ng).
+    relevancia = ids_galeria_ord == ids_query[:, None]
 
+    # CMC (Top-K) -- pelo menos 1 acerto entre os K primeiros
+    acerto_acumulado = np.cumsum(relevancia[:, :k_efetivo], axis=1) > 0
+    cmc = acerto_acumulado.mean(axis=0)
     top_k = {k + 1: float(cmc[k]) for k in range(k_efetivo)}
+
+    # mAP@K e mAP global -- multi-relevant retrieval
+    map_at_k, map_global = _calcular_mAP(relevancia, k_efetivo)
+
     ids_unicos = set(ids_query.tolist()) | set(ids_galeria.tolist())
 
     return ResultadoAvaliacao(
@@ -115,7 +125,67 @@ def avaliar_top_k(
         n_ids=len(ids_unicos),
         top_k=top_k,
         cmc=cmc.tolist(),
+        mAP_at_k=map_at_k,
+        mAP=map_global,
     )
+
+
+def _calcular_mAP(relevancia: np.ndarray, k_max: int) -> tuple[dict[int, float], float]:
+    """Calcula mAP@K para K=1..k_max e mAP global.
+
+    mAP = media (entre queries) da Average Precision (AP) de cada query.
+
+    AP@K = (1/R_K) * sum_{i=1..K} [relevancia(i) * Precisao(i)]
+        onde Precisao(i) = (#relevantes nos top-i) / i
+        e R_K = max(numero de relevantes nos top-K, 1) -- normalizador
+          (algumas convençoes usam total de relevantes globais; aqui
+          usamos a convençao TREC-style limitada ao corte K).
+
+    Para mAP global usamos o total de relevantes na galeria inteira como R.
+
+    Args:
+        relevancia: matriz (Nq, Ng) booleana -- True onde ranking[i,j] eh
+            do mesmo ID que a query i.
+        k_max: K maximo para computar mAP@K.
+
+    Returns:
+        (mAP_at_k, mAP_global): dict {k: float} e float.
+    """
+    nq, ng = relevancia.shape
+    if nq == 0:
+        return {}, 0.0
+
+    # Numero de relevantes acumulado no ranking (1..ng)
+    relev_cum = np.cumsum(relevancia, axis=1).astype(np.float64)
+    posicoes = np.arange(1, ng + 1, dtype=np.float64)
+    precisao_em_i = relev_cum / posicoes  # (Nq, Ng)
+
+    # AP por query no corte K = soma(precisao(i) * relevancia(i)) / R_K
+    map_at_k: dict[int, float] = {}
+    for k in range(1, k_max + 1):
+        prec_x_rel = (precisao_em_i[:, :k] * relevancia[:, :k]).sum(axis=1)
+        r_k = relev_cum[:, k - 1]  # numero de relevantes nos top-K
+        ap_k = np.divide(
+            prec_x_rel,
+            r_k,
+            out=np.zeros_like(prec_x_rel, dtype=np.float64),
+            where=r_k > 0,
+        )
+        map_at_k[k] = float(ap_k.mean())
+
+    # mAP global = AP sobre ranking inteiro, normalizando por total de
+    # relevantes da galeria para aquela query
+    total_relev = relevancia.sum(axis=1).astype(np.float64)
+    prec_x_rel_total = (precisao_em_i * relevancia).sum(axis=1)
+    ap_global = np.divide(
+        prec_x_rel_total,
+        total_relev,
+        out=np.zeros_like(prec_x_rel_total, dtype=np.float64),
+        where=total_relev > 0,
+    )
+    map_global = float(ap_global.mean())
+
+    return map_at_k, map_global
 
 
 # ============================================================
@@ -183,9 +253,7 @@ def _curva_roc(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Calcula curva ROC sem sklearn."""
     todos = np.concatenate([scores_conhecidos, scores_novos])
-    rotulos = np.concatenate(
-        [np.ones(len(scores_conhecidos)), np.zeros(len(scores_novos))]
-    )
+    rotulos = np.concatenate([np.ones(len(scores_conhecidos)), np.zeros(len(scores_novos))])
     ordem = np.argsort(-todos)
     rotulos_ord = rotulos[ordem]
     scores_ord = todos[ordem]
@@ -281,6 +349,7 @@ def avaliar_open_set(
         fpr_curve=fpr.tolist(),
         tpr_curve=tpr.tolist(),
     )
+
 
 def calcular_eer(
     fpr: np.ndarray,

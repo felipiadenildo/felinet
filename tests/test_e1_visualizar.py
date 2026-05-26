@@ -1,5 +1,6 @@
 # 03_codigo/tests/test_e1_visualizar.py
 """Teste do renderizador de bboxes."""
+
 from __future__ import annotations
 
 from pathlib import Path
