@@ -1,6 +1,0 @@
-caminho_relativo,sha256,largura,altura,timestamp,fabricante,modelo
-01_lila_sem_exif.jpg,b77079e40c319851888f206c461af3f415c9f5b43257f9355f6a8d73189cc976,640,480,,,
-02_lila_paisagem_vazia.jpg,3114d7c706c3fa86ab9b714870a29d8a7eba48cd182d5f9af9d04e9c03a2c5f6,640,480,2026-05-20T14:30:00,FelinetDev,PLACEHOLDER
-03_lila_capivara.jpg,03ae8798c80cdb7038a8a3058b2e3159a41df631d569e30b39eeb924c4375060,640,480,2026-05-20T14:30:00,FelinetDev,PLACEHOLDER
-04_lila_borrada_baixa_confianca.jpg,d06a05b27c6da4fd6d5314317764f03b98f52546423ec78a87c31dcc3f7009b1,640,480,2026-05-20T14:30:00,FelinetDev,PLACEHOLDER
-05_lila_gato_aprovado.jpg,348cbb9b5cf2f27b966538e6067b3b3405deb59b875446b5e7dca068c07c8cb3,640,480,2026-05-20T14:30:00,FelinetDev,PLACEHOLDER

@@ -34,7 +34,7 @@ C_INFO  := \033[1;36m
         listar-runs limpar-runs limpar-dev limpar-cache limpar-tudo \
         diff-paths git-status pre-commit \
         smoke smoke-petface smoke-fluxo \
-        ci
+        ci limpar limpar-tudo organizar smoke ambiente
 
 # ============================================================
 # AJUDA
@@ -388,3 +388,35 @@ GALERIA_TOPK   ?= 3
 
 # Atualizar figuras-avancadas:
 figuras-avancadas: figura-cmc-comp figura-dist figura-roc figura-galeria
+
+
+.PHONY: limpar limpar-tudo organizar smoke ambiente
+
+## Limpa caches e temporários (preserva runs e artifacts já gerados)
+limpar:
+	@echo "[limpar] caches e temporarios..."
+	@find . -type d \( -name "__pycache__" -o -name ".pytest_cache" -o -name ".ruff_cache" -o -name ".mypy_cache" -o -name "*.egg-info" \) -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f \( -name "*.pyc" -o -name "*.pyo" -o -name ".coverage" \) -delete 2>/dev/null || true
+	@rm -rf build/ dist/ htmlcov/ coverage.xml
+	@rm -rf tex/build/
+	@echo "[limpar] ok"
+
+## Limpeza profunda: caches + runs + artifacts + processed
+limpar-tudo: limpar
+	@echo "[limpar-tudo] dados gerados e runs..."
+	@rm -rf runs/ artifacts/figuras/ artifacts/relatorios/
+	@rm -rf data/processed/* data/interim/* data/dev/pipeline/02_manifesto/ data/dev/pipeline/03_deteccoes/ data/dev/pipeline/04_classificacoes/ data/dev/pipeline/05_crops_felis_catus/
+	@find data -name "*_latest.json" -delete 2>/dev/null || true
+	@echo "[limpar-tudo] ok"
+
+## Remove arquivos orfaos/duplicados nao alinhados ao projeto v23
+organizar:
+	@python scripts/organizar_repo.py
+
+## Coleta especs do ambiente (1a execucao do dia)
+ambiente:
+	@python scripts/registrar_ambiente.py
+
+## Smoke test rapido: roda pipeline mini + valida saidas + gera RELATORIO_SMOKE.md
+smoke: ambiente
+	@python scripts/smoke_test.py

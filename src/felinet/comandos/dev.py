@@ -131,10 +131,65 @@ def demo(
         "--dev",
     ]
     subprocess.run(cmd, check=False)
-    typer.echo("\n[demo] pronto. Veja dev_visualizacao/ no run mais recente:")
-    typer.echo(
-        f"  ls -la runs/operacional/{fonte}/{perfil}/_/latest/dev_visualizacao/"
+
+    # gera resumo.html ao final, se a pasta dev_visualizacao tiver sido criada
+    cfg = carregar_perfil(perfil)
+    raiz_runs = getattr(cfg, "raiz_runs", Path("runs"))
+    base_run = raiz_runs / "operacional" / fonte / perfil / "_" / "latest"
+    base_dev = base_run / "dev_visualizacao"
+
+    if base_dev.is_dir():
+        from felinet.pipeline.dev_visual import gerar_resumo_html
+
+        try:
+            arq_html = gerar_resumo_html(
+                base_dev, titulo_run=f"fonte={fonte} | perfil={perfil} | n={n}"
+            )
+            typer.echo("\n[demo] pronto. Galeria did\u00e1tica gerada:")
+            typer.echo(f"  {arq_html}")
+            typer.echo("  abrir no navegador: xdg-open ou file://...")
+        except Exception as exc:  # noqa: BLE001
+            typer.echo(f"[demo] aviso: falhou gerar resumo.html: {exc}")
+            typer.echo(f"  pasta bruta: {base_dev}")
+    else:
+        typer.echo("\n[demo] pipeline n\u00e3o gerou dev_visualizacao/. Veja:")
+        typer.echo(f"  ls -la {base_run}")
+
+
+@app.command("gerar-resumo-html")
+def gerar_resumo_html_cmd(
+    fonte: str = typer.Option(..., "--fonte", help="Fonte do run (e.g. kaggle_cats)."),
+    perfil: str = typer.Option("dev", "--perfil"),
+    run: str = typer.Option(
+        "latest",
+        "--run",
+        help="Tag do run (default: 'latest'). Use o nome do diret\u00f3rio em runs/.../_/.",
+    ),
+) -> None:
+    """Gera ``resumo.html`` em ``dev_visualizacao/`` de um run j\u00e1 executado.
+
+    \u00datil quando o pipeline rodou com ``--dev`` mas a fase de gera\u00e7\u00e3o do HTML
+    foi pulada, ou quando voc\u00ea quer regenerar o HTML depois de inspecionar
+    os artefatos manualmente.
+    """
+    from felinet.pipeline.dev_visual import gerar_resumo_html
+
+    cfg = carregar_perfil(perfil)
+    raiz_runs = getattr(cfg, "raiz_runs", Path("runs"))
+    base_run = raiz_runs / "operacional" / fonte / perfil / "_" / run
+    base_dev = base_run / "dev_visualizacao"
+
+    if not base_dev.is_dir():
+        typer.echo(f"[erro] n\u00e3o achei pasta dev_visualizacao em: {base_run}")
+        typer.echo("  certifique-se de ter rodado o pipeline com --dev.")
+        raise typer.Exit(code=1)
+
+    arq = gerar_resumo_html(
+        base_dev,
+        titulo_run=f"fonte={fonte} | perfil={perfil} | run={run}",
     )
+    typer.echo(f"[ok] gerado: {arq}")
+    typer.echo(f"  abrir: xdg-open {arq}")
 
 
 @app.command("limpar-saidas-dev")

@@ -129,9 +129,7 @@ def comparativo_fontes(
         LOG.error("Nenhuma fonte com runs operacionais encontrada.")
         raise typer.Exit(code=1)
 
-    fig, (ax_top, ax_bot) = plt.subplots(
-        2, 1, figsize=(10, 7), constrained_layout=True, dpi=300
-    )
+    fig, (ax_top, ax_bot) = plt.subplots(2, 1, figsize=(10, 7), constrained_layout=True, dpi=300)
     x = np.arange(len(nomes))
     largura = 0.27
 
@@ -168,27 +166,165 @@ def comparativo_fontes(
 @app.command("matriz-confusao-fontes")
 def matriz_confusao_fontes(
     perfil: str = typer.Option("prod", "--perfil", "-p"),
+    fontes: list[str] = typer.Option(
+        None,
+        "--fonte",
+        help="Restringir a um subconjunto de fontes (default: todas com ground truth).",
+    ),
     saida: Path = typer.Option(None, "--saida"),
 ) -> None:
-    """Bloco 9 (esqueleto): matriz de confusão Felis-vs-resto por fonte.
+    """Bloco 9: matriz de confusão Felis-vs-resto por fonte.
 
-    Para cada fonte operacional cruza o manifest de classificação latest com
-    um label-proxy de fonte (kaggle_cats ≈ Felis catus; lila_ena24 ≈ outros)
-    e calcula TP/FP/TN/FN. A versão atual é um esqueleto: sem ground truth
-    por imagem, retorna um aviso indicando que a implementação completa
-    depende de ``extras.classe_origem`` no manifest. Mantido como
-    placeholder para integração futura.
+    Para cada fonte operacional, cruza as predições do classificador de
+    espécie (fase 3) com o rótulo verdadeiro derivado de
+    :mod:`felinet.datasets.labels_proxy`. Fontes monocategoria usam
+    label-proxy de fonte (e.g. kaggle_cats ≈ Felis catus); fontes
+    multicategoria (e.g. felidae) usam ``classe_origem`` registrada na
+    ingestão. Imagens sem ground truth são contadas separadamente e
+    excluídas da matriz.
+
+    Saída: heatmap PNG 300 DPI em
+    ``artifacts/figuras/operacional/_global/matriz_confusao_fontes.png``
+    com painel por fonte (TP/FP/TN/FN normalizados) e tabela lateral com
+    precisão, revocação e F1.
     """
-    LOG.warning(
-        "matriz-confusao-fontes (Bloco 9) está em esqueleto. "
-        "Implementação plena exige rótulo de verdade por imagem; "
-        "a versão atual lê manifests de classificação latest, mas a "
-        "comparação ground-truth-vs-predição ainda não foi habilitada."
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    from felinet.comandos.tabelas import _latest_por_fase
+    from felinet.datasets.labels_proxy import fontes_com_ground_truth
+    from felinet.metricas.confusao_especie import (
+        calcular_matriz,
+        ler_classe_origem_de_run,
+        ler_predicoes_de_run,
     )
-    typer.echo(
-        "matriz-confusao-fontes: esqueleto. Aguardando rótulos por imagem em "
-        "extras.classe_origem das runs de ingestão para gerar a heatmap final."
+
+    cfg = carregar_perfil(perfil)
+    raiz_runs = getattr(cfg, "raiz_runs", raiz_projeto() / "runs")
+    fontes_disponiveis = list((cfg.fontes or {}).keys()) if hasattr(cfg, "fontes") else []
+    if not fontes:
+        fontes = fontes_com_ground_truth(fontes_disponiveis) or [
+            "kaggle_cats",
+            "felidae",
+        ]
+
+    matrizes = []
+    avisos: list[str] = []
+    for f in fontes:
+        run_cls_manifest = _latest_por_fase(
+            raiz_runs, fonte=f, perfil_nome=perfil, prefixo_comando="classificacao"
+        )
+        run_ing_manifest = _latest_por_fase(
+            raiz_runs, fonte=f, perfil_nome=perfil, prefixo_comando="ingestao"
+        )
+        if not run_cls_manifest:
+            avisos.append(f"{f}: sem run de classificação")
+            continue
+        # Caminho da run: usa 'latest' como referencial estável
+        run_dir = raiz_runs / "operacional" / f / perfil / "_" / "latest"
+        predicoes = ler_predicoes_de_run(run_dir)
+        if not predicoes:
+            avisos.append(f"{f}: nenhuma predição lida em {run_dir}")
+            continue
+        classe_origem: dict[str, str] = {}
+        if run_ing_manifest:
+            classe_origem = ler_classe_origem_de_run(run_dir)
+        matriz = calcular_matriz(f, predicoes, classe_origem)
+        if matriz.total == 0:
+            avisos.append(
+                f"{f}: total=0 após cruzamento (todas as predições "
+                f"ficaram sem ground truth — {matriz.sem_ground_truth} imagens)."
+            )
+            continue
+        matrizes.append(matriz)
+
+    if not matrizes:
+        for av in avisos:
+            LOG.warning(av)
+        typer.echo(
+            "matriz-confusao-fontes: nenhuma fonte com dados suficientes. "
+            "Rode primeiro felinet pipeline executar nas fontes desejadas."
+        )
+        for av in avisos:
+            typer.echo(f"  - {av}")
+        return
+
+    # ----- plotagem -----
+    n = len(matrizes)
+    fig, axes = plt.subplots(1, n, figsize=(3.4 * n + 1.6, 3.6), constrained_layout=True)
+    if n == 1:
+        axes = [axes]
+    for ax, m in zip(axes, matrizes, strict=True):
+        cm = np.array([[m.tp, m.fn], [m.fp, m.tn]], dtype=float)
+        # normalizar por linha (taxa por classe verdadeira)
+        soma_linhas = cm.sum(axis=1, keepdims=True)
+        soma_linhas[soma_linhas == 0] = 1.0
+        cm_norm = cm / soma_linhas
+        im = ax.imshow(cm_norm, vmin=0, vmax=1, cmap="Blues")
+        ax.set_xticks([0, 1], ["pred felis", "pred outros"], fontsize=9)
+        ax.set_yticks([0, 1], ["verd felis", "verd outros"], fontsize=9)
+        for i in range(2):
+            for j in range(2):
+                cor = "white" if cm_norm[i, j] > 0.5 else "black"
+                ax.text(
+                    j,
+                    i,
+                    f"{int(cm[i, j])}\n({cm_norm[i, j] * 100:.1f}%)",
+                    ha="center",
+                    va="center",
+                    color=cor,
+                    fontsize=9,
+                )
+        ax.set_title(
+            f"{m.fonte}\n"
+            f"P={m.precisao:.2f}  R={m.revocacao:.2f}  F1={m.f1:.2f}\n"
+            f"n={m.total} (s/GT={m.sem_ground_truth})",
+            fontsize=10,
+        )
+    fig.suptitle(
+        "Matriz de confusão Felis catus vs. outros — por fonte",
+        fontsize=12,
     )
+    fig.colorbar(im, ax=axes, shrink=0.7, label="taxa por classe verdadeira")
+
+    pasta = (
+        cfg.artifacts_figuras_raiz / "operacional" / "_global"
+        if hasattr(cfg, "artifacts_figuras_raiz")
+        else raiz_projeto() / "artifacts" / "figuras" / "operacional" / "_global"
+    )
+    pasta.mkdir(parents=True, exist_ok=True)
+    saida_arq = saida or (pasta / "matriz_confusao_fontes.png")
+    saida_arq.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(saida_arq, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+    # também grava CSV com as métricas (útil para LaTeX)
+    csv_arq = saida_arq.with_suffix(".csv")
+    import csv as _csv
+
+    with csv_arq.open("w", newline="", encoding="utf-8") as f:
+        cabecalho = [
+            "fonte",
+            "tp",
+            "fp",
+            "tn",
+            "fn",
+            "sem_ground_truth",
+            "total",
+            "precisao",
+            "revocacao",
+            "f1",
+            "acuracia",
+        ]
+        w = _csv.DictWriter(f, fieldnames=cabecalho)
+        w.writeheader()
+        for m in matrizes:
+            w.writerow(m.como_dict())
+
+    typer.echo(f"OK: {saida_arq}")
+    typer.echo(f"     {csv_arq}")
+    for av in avisos:
+        typer.echo(f"aviso: {av}")
 
 
 @app.command("reid-cmc")
