@@ -67,12 +67,14 @@ def reid_resumo(
             LOG.warning(f"N={n}: avaliacao ausente em runs/")
             continue
         rel = payload["relatorio"]
+        top_k = rel.get("top_k", {})
         cmc = rel.get("cmc", [])
-        top5 = rel.get("top_5", cmc[4] if len(cmc) >= 5 else 0)
-        top10 = rel.get("top_10", cmc[9] if len(cmc) >= 10 else 0)
+        top1 = float(top_k.get("1", cmc[0] if cmc else 0.0))
+        top5 = float(top_k.get("5", cmc[4] if len(cmc) >= 5 else 0.0))
+        top10 = float(top_k.get("10", cmc[9] if len(cmc) >= 10 else 0.0))
         linhas.append([
             str(n),
-            f"{rel['top_1']:.3f}",
+            f"{top1:.3f}",
             f"{top5:.3f}",
             f"{top10:.3f}",
             str(payload["n_query"]),
@@ -106,18 +108,22 @@ def openset_resumo(
     raiz_runs = raiz_projeto() / (cfg.extras.get("raiz_runs") or "runs")
     valores_n = [int(s) for s in ns.split(",")]
 
-    linhas = [["N", "AUC (media +/- std)", "TAR@FAR=1%", "n_seeds"]]
+    linhas = [["N", "AUC-ROC (media +/- std)", "TPR@FPR=1%", "TPR@FPR=5%", "n_seeds"]]
     for n in valores_n:
         payload = _ler_metricas_openset(raiz_runs, fonte_efetiva, cfg.nome, n)
         if payload is None:
             LOG.warning(f"N={n}: openset ausente em runs/")
             continue
-        tar = payload["por_seed"][0]["relatorio"].get("tar_at_far_01", 0.0)
+        tpr01 = float(payload.get("tpr_at_fpr_01_media", 0.0))
+        tpr05 = float(payload.get("tpr_at_fpr_05_media", 0.0))
+        auc_media = float(payload.get("auc_media", 0.0))
+        auc_desvio = float(payload.get("auc_desvio", 0.0))
         linhas.append([
             str(n),
-            f"{payload['auc_media']:.3f} +/- {payload['auc_desvio']:.3f}",
-            f"{tar:.3f}",
-            str(len(payload["seeds"])),
+            f"{auc_media:.3f} +/- {auc_desvio:.3f}",
+            f"{tpr01:.3f}",
+            f"{tpr05:.3f}",
+            str(len(payload.get("seeds", []))),
         ])
 
     pasta = _pasta_artifacts(cfg, "metodologico", fonte_efetiva)
@@ -127,7 +133,7 @@ def openset_resumo(
     saida_tex = saida_csv.with_suffix(".tex")
     csv_para_booktabs(
         saida_csv, saida_tex,
-        legenda=f"Avaliacao Re-ID open-set sobre {fonte_efetiva} (media de seeds).",
+        legenda=f"Avaliacao Re-ID open-set sobre {fonte_efetiva} (AUC-ROC e TPR@FPR, media entre seeds).",
         rotulo=f"tab:openset-resumo-{fonte_efetiva}",
     )
     typer.echo(f"OK: {saida_csv} + {saida_tex}")
