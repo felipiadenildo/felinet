@@ -1,0 +1,25 @@
+% =============================================================================
+% cap4 §4.3 Protocolo por fase (compactado, 1 parágrafo por fase)
+% =============================================================================
+\section{Protocolo por fase}
+\label{sec:metodologia-protocolo}
+
+O protocolo organiza-se em quatro blocos (um por fase) mais um teste integrador ponta-a-ponta. Cada bloco fixa partição de dados, condições controladas (separação temporal, separação de indivíduos, estratificação de iluminação) e \textbf{baseline mínimo} de comparação. A Tabela~\ref{tab:mapeamento-protocolar} sumariza fase, dataset, modelo principal e baseline. Limiares finais, sementes e hiperparâmetros de inferência são registrados como itens a fixar no momento da execução, dado o caráter conceitual desta etapa.
+
+\input{elementos/tabelas/tab_mapeamento_protocolar}
+
+\subsection*{Fase I --- triagem por movimento}
+Filtro embarcado, sem inferência semântica. A aferição é indireta, pela razão de redução de quadros vazios observada na entrada da Fase~II durante o teste ponta-a-ponta (Seção~\ref{sec:metodologia-end2end}), com a proporção de vazios herdada do Snapshot Serengeti.
+
+\subsection*{Fase II --- detecção de fauna}
+Baseia-se em CCT e Snapshot Serengeti. Modalidade \emph{zero-shot}: o conjunto de teste oficial é usado integralmente, dividido em estratos (dia \emph{vs.}\ noite, positivos \emph{vs.}\ negativos). Limiar inicial conforme documentação do detector, com ajuste local explícito quando o \emph{recall} noturno for excessivamente baixo. O baseline é o YOLOv8 nano pré-treinado em COCO, com mapeamento das classes animais para a meta-classe ``animal''.
+
+\subsection*{Fase III --- triagem de espécie}
+Opera sobre dois subconjuntos: (i) o CCT --- quadros positivos (\emph{F.\,catus} ou equivalentes) para teste de aceitação e demais classes para teste de rejeição --- e (ii) o NACTI, do qual se extrai o par crítico \emph{F.\,catus}/\emph{L.\,rufus}. O \modeloSN{} é avaliado em \emph{zero-shot} sob seu mapeamento taxonômico nativo; o resultado é binarizado \emph{a posteriori} em ``é \emph{F.\,catus}'' \emph{vs.}\ ``não é \emph{F.\,catus}'', preservando a espécie predita para análise qualitativa. O baseline é um classificador binário (gato \emph{vs.}\ não-gato) por \emph{transfer learning} curto sobre ResNet-ImageNet, com partição de treino oficial do CCT.
+
+\subsection*{Fase IV --- re-identificação individual}
+Conduzida sobre os \emph{splits} oficiais de PetFace e WildlifeReID-10k em dois regimes. No \textbf{\emph{closed-set}}, o catálogo é construído a partir dos respectivos \emph{galleries} oficiais e o teste consulta o \emph{query set}; reporta-se Rank-1 e Rank-5. No \textbf{\emph{open-set}}, parte dos indivíduos do \emph{query set} é removida do catálogo e passa a operar como distratora; reporta-se, além de Rank-1, a \textbf{taxa de detecção de novo} (fração de distratores cuja similaridade máxima fica abaixo do limiar de rejeição $\tau$). O controle de vazamento é estrito por indivíduo, nativamente garantido pelos \emph{splits} \emph{time-aware} e \emph{similarity-aware}. Baseline: \emph{embedding} corporal global por ResNet-50 ImageNet \emph{frozen}.
+
+\subsection*{Teste ponta-a-ponta}
+\label{sec:metodologia-end2end}
+Uma \textbf{janela sintética} é montada a partir dos próprios datasets, concatenando quadros vazios e positivos do Snapshot Serengeti (Fases~I e~II), positivos de \emph{F.\,catus} e fauna não-alvo de CCT e NACTI (Fase~III), e indivíduos catalogados e distratores de PetFace e WildlifeReID-10k (Fase~IV). As proporções seguem o padrão empírico recorrente em \emph{camera trapping} urbano peri-natural~\cite{velez2022choosing}: 60--80\% de vazios, 15--30\% de animais, até 10\% de gatos identificáveis. A janela atravessa o pipeline completo; em cada estágio registram-se volume descartado, volume aprovado e custo computacional médio por quadro, gerando a curva de eficiência. Variante de controle: a mesma janela é submetida à aplicação ingênua das fases sobre todos os quadros, e os dois traços são contrastados.

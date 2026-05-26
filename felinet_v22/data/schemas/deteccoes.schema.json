@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://felinet.local/schemas/deteccoes.schema.json",
+  "title": "Deteccoes da Fase II (MegaDetector)",
+  "description": "Saida do P3 do DFD. Bboxes em coordenadas normalizadas [0,1].",
+  "type": "object",
+  "required": ["resultados"],
+  "properties": {
+    "resultados": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["media_path", "largura", "altura", "deteccoes", "modelo", "tempo_ms"],
+        "properties": {
+          "media_path": {"type": "string"},
+          "largura": {"type": "integer"},
+          "altura": {"type": "integer"},
+          "modelo": {"type": "string", "examples": ["MDv6-yolov9-c"]},
+          "tempo_ms": {"type": "number"},
+          "deteccoes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["categoria", "confianca", "bbox"],
+              "properties": {
+                "categoria": {"enum": ["animal", "person", "vehicle"]},
+                "confianca": {"type": "number", "minimum": 0, "maximum": 1},
+                "bbox": {
+                  "type": "object",
+                  "required": ["x", "y", "w", "h"],
+                  "properties": {
+                    "x": {"type": "number", "minimum": 0, "maximum": 1},
+                    "y": {"type": "number", "minimum": 0, "maximum": 1},
+                    "w": {"type": "number", "minimum": 0, "maximum": 1},
+                    "h": {"type": "number", "minimum": 0, "maximum": 1}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

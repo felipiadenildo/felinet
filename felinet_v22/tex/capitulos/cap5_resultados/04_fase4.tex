@@ -1,0 +1,28 @@
+% =============================================================================
+% cap5 §5.4 Resultados Fase IV (re-ID)
+% =============================================================================
+\section{Fase IV --- re-identificação individual}
+\label{sec:resultados-fase4}
+
+A Tabela~\ref{tab:res-fase4-rank} consolida o desempenho estimado da Fase~IV por configuração (face, corpo por partes, fusão tardia e baseline) e por regime (\emph{closed-set} restrito ao catálogo; \emph{open-set} com distratores). A Figura~\ref{fig:res-fase4-cmc} apresenta a curva CMC (Rank-$k$ \emph{vs.}\ $k$) conceitual associada.
+
+\begin{table}[!htb]
+\centering
+\caption{Desempenho estimado da Fase~IV por configuração e regime. \obsfic{faixas teóricas a substituir após execução do protocolo.}}
+\label{tab:res-fase4-rank}
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Configuração} & \textbf{Rank-1 (closed)} & \textbf{Rank-5 (closed)} & \textbf{Rank-1 (open)} \\
+\midrule
+Face (\modeloPetFace)                     & 0{,}75--0{,}85 & 0{,}88--0{,}94 & 0{,}55--0{,}68 \\
+Corpo (partes sobre \modeloWildlife)      & 0{,}68--0{,}80 & 0{,}82--0{,}90 & 0{,}48--0{,}62 \\
+\textbf{Fusão tardia face + corpo}        & \textbf{0{,}82--0{,}90} & \textbf{0{,}92--0{,}96} & \textbf{0{,}60--0{,}72} \\
+Baseline ResNet-50 \emph{frozen}          & 0{,}40--0{,}55 & 0{,}58--0{,}72 & 0{,}25--0{,}40 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\input{elementos/diagramas/cmc_fase4}
+
+A diferença entre fusão tardia e baseline genérico é \textbf{grande} em todos os regimes ($\sim$35\,p.p.\ no Rank-1 \emph{closed} e $\sim$30\,p.p.\ no \emph{open}), o que valida conceitualmente o uso de \emph{embeddings} especializados em pets e em fauna em vez de descritores gerais. A queda esperada do regime \emph{closed} para o \emph{open} ($\sim$22\,p.p.\ na fusão tardia) é o efeito conhecido de introduzir distratores: parte das consultas passa a ter similaridade máxima sobre indivíduos errados quando o verdadeiro está fora do catálogo, e o limiar $\tau$ converte essa similaridade alta-mas-incorreta em rejeição válida. A combinação face + corpo supera cada componente isolado por $\sim$5--7\,p.p., consistente com a complementaridade de pistas: a face é estável em close-ups frontais e sensível a oclusão, enquanto o flanco é robusto a pose e iluminação mas depende de área visível mínima.

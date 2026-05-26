@@ -1,0 +1,154 @@
+{
+  "resultados": [
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/cct_felis_catus_01.jpg",
+      "largura": 3000,
+      "altura": 2000,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 2380.8340610012237,
+      "deteccoes": [
+        {
+          "categoria": "animal",
+          "confianca": 0.6461580991744995,
+          "bbox": {
+            "x": 0.20079176839192708,
+            "y": 0.09250917053222656,
+            "w": 0.44356231689453124,
+            "h": 0.7106064300537109
+          }
+        }
+      ]
+    },
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/fox_01.jpg",
+      "largura": 5184,
+      "altura": 3888,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 744.2124100016372,
+      "deteccoes": [
+        {
+          "categoria": "animal",
+          "confianca": 0.9228779673576355,
+          "bbox": {
+            "x": 0.027770116005414798,
+            "y": 0.2792579745068962,
+            "w": 0.4128999445173476,
+            "h": 0.33584189709321954
+          }
+        },
+        {
+          "categoria": "animal",
+          "confianca": 0.9020651578903198,
+          "bbox": {
+            "x": 0.6965264685360002,
+            "y": 0.3908237724147216,
+            "w": 0.25507001523618344,
+            "h": 0.26847101533363876
+          }
+        }
+      ]
+    },
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/gato_01.jpg",
+      "largura": 2218,
+      "altura": 3327,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 267.73826600037864,
+      "deteccoes": []
+    },
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/gato_02.jpg",
+      "largura": 4000,
+      "altura": 6000,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 1008.5977330018068,
+      "deteccoes": [
+        {
+          "categoria": "animal",
+          "confianca": 0.5530231595039368,
+          "bbox": {
+            "x": 0.2994398193359375,
+            "y": 0.0007498741149902343,
+            "w": 0.7005601806640624,
+            "h": 0.4618669471740723
+          }
+        },
+        {
+          "categoria": "animal",
+          "confianca": 0.5170062780380249,
+          "bbox": {
+            "x": 0.6613258666992188,
+            "y": 0.34356807454427085,
+            "w": 0.141864501953125,
+            "h": 0.14785477701822916
+          }
+        }
+      ]
+    },
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/gato_03.jpg",
+      "largura": 4200,
+      "altura": 4200,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 600.4925769993861,
+      "deteccoes": [
+        {
+          "categoria": "animal",
+          "confianca": 0.556354820728302,
+          "bbox": {
+            "x": 0.4247171165829613,
+            "y": 0.27129391624813987,
+            "w": 0.45366800944010416,
+            "h": 0.48273080008370534
+          }
+        }
+      ]
+    },
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/guaxinim_01.jpg",
+      "largura": 6270,
+      "altura": 4180,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 711.8166060026851,
+      "deteccoes": [
+        {
+          "categoria": "animal",
+          "confianca": 0.9212796688079834,
+          "bbox": {
+            "x": 0.29055236134993023,
+            "y": 0.210247131055622,
+            "w": 0.4245090515039374,
+            "h": 0.684655119243421
+          }
+        }
+      ]
+    },
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/quati_01.jpg",
+      "largura": 3000,
+      "altura": 4000,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 455.35775199823547,
+      "deteccoes": [
+        {
+          "categoria": "animal",
+          "confianca": 0.9473951458930969,
+          "bbox": {
+            "x": 0.1987645467122396,
+            "y": 0.3982165222167969,
+            "w": 0.47386069742838544,
+            "h": 0.2624333801269531
+          }
+        }
+      ]
+    },
+    {
+      "media_path": "04_dados/raw/lila_bc_dev/vazia_01.jpg",
+      "largura": 4000,
+      "altura": 6000,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 751.4039359994058,
+      "deteccoes": []
+    }
+  ]
+}

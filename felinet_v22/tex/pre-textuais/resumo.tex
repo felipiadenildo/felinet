@@ -1,0 +1,24 @@
+% =============================================================================
+% pre-textuais/resumo.tex  --  Resumo em português e abstract em inglês
+% =============================================================================
+
+% ----- Resumo em português -----
+\begin{resumoumacoluna}
+Este projeto trata da concepção de um sistema de monitoramento e apoio ao manejo, baseado em visão computacional, para a colônia de gatos comunitários do Campus 2 da Universidade de São Paulo em São Carlos, conduzido em articulação com a atividade de extensão Gatosdoc2. O trabalho parte de um diagnóstico operacional dos dez pontos de observação identificados no campus, sistematiza requisitos de aquisição de imagem (resolução, geometria de captura, autonomia energética, conectividade e armazenamento), e propõe uma arquitetura modular de aquisição assentada em câmeras de \emph{camera trapping} comerciais operando em modo \emph{offline-first}. Sobre essa aquisição, especifica-se um pipeline de visão computacional em quatro fases ---  triagem por movimento, detecção genérica de fauna, classificação de espécie e reidentificação individual --- ancorado em modelos abertos pré-treinados de referência (MegaDetector, SpeciesNet, PetFace e CatFLW). O protocolo experimental adota datasets públicos como condições de contorno representativas do cenário real do Campus 2 (LILA BC, iNaturalist, GBIF, PetFace, CatFLW e WildlifeReID-10k), define baselines mínimos de comparação por fase e consolida instruções operacionais que permitem a reprodução integral do protocolo após a defesa. As contribuições deste projeto situam-se em três planos: técnico (especificação de um pipeline modular sobre modelos abertos), metodológico (protocolo experimental reprodutível) e contextual (vínculo deliberado com a rotina operacional do Gatosdoc2). Trabalhos futuros incluem coleta supervisionada de dados locais, \emph{fine-tuning} dos modelos sobre o catálogo individual da colônia, integração com plataforma de gestão (cadastro, vacinação, castração e adoção responsável) e enriquecimento dos registros com instrumentos automatizáveis de bem-estar animal.
+
+\vspace{\onelineskip}
+\noindent
+\textbf{Palavras-chave:} visão computacional. \emph{camera trapping}. reidentificação animal. monitoramento de fauna. gatos comunitários. USP São Carlos. extensão universitária.
+\end{resumoumacoluna}
+
+% ----- Abstract em inglês -----
+\begin{otherlanguage*}{english}
+\renewcommand{\resumoname}{ABSTRACT}
+\begin{resumoumacoluna}
+This project addresses the design of a computer-vision-based monitoring and management support system for the community cat colony of Campus 2 of the University of São Paulo at São Carlos, conducted in cooperation with the Gatosdoc2 university extension activity. The work begins with an operational assessment of the ten observation points identified on campus, formalises image-acquisition requirements (resolution, capture geometry, energy autonomy, connectivity and storage), and proposes a modular acquisition architecture grounded on commercial \emph{camera trapping} units operating under an \emph{offline-first} regime. Building on this acquisition, a four-stage computer-vision pipeline is specified --- motion-based triage, generic fauna detection, species classification and individual re-identification --- anchored on open pre-trained reference models (MegaDetector, SpeciesNet, PetFace and CatFLW). The experimental protocol uses public datasets as boundary conditions representative of the Campus 2 scenario (LILA BC, iNaturalist, GBIF, PetFace, CatFLW and WildlifeReID-10k), defines minimal per-stage comparison baselines and consolidates operational instructions enabling full protocol reproduction after the defence. The contributions of this project fall in three planes: technical (specification of a modular pipeline over open models), methodological (a reproducible experimental protocol), and contextual (deliberate coupling to the operational routine of Gatosdoc2 and the Humanitarian Coexistence Center). Future work includes supervised local data collection, model \emph{fine-tuning} on the colony individual catalogue, integration with a colony management platform (registration, vaccination, neutering and responsible adoption), and enrichment of individual records with automatable animal-welfare instruments.
+
+\vspace{\onelineskip}
+\noindent
+\textbf{Keywords:} computer vision. \emph{camera trapping}. animal re-identification. wildlife monitoring. community cats. USP São Carlos. university extension.
+\end{resumoumacoluna}
+\end{otherlanguage*}

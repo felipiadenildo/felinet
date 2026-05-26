@@ -1,0 +1,85 @@
+# ---------------------------------------------------------------------------
+# .gitignore - felinet (TCC Gatos Campus 2)
+# ---------------------------------------------------------------------------
+
+# Python -----------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Ambientes virtuais ---------------------------------------------
+.venv/
+venv/
+.env
+.envrc
+
+# Editores -------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Jupyter --------------------------------------------------------
+.ipynb_checkpoints/
+
+# uv -------------------------------------------------------------
+.uv-cache/
+
+# Dados externos (SSD via symlink) -------------------------------
+# Tudo dentro de data/raw/ exceto README e .gitkeep e o symlink do
+# proprio link (que aparece como arquivo simbolico)
+data/raw/petface
+data/raw/lila_bc
+data/raw/campus2
+data/raw/*/
+
+# Cache intermediario regeneravel --------------------------------
+data/interim/*
+!data/interim/.gitkeep
+!data/interim/README.md
+
+# Pesos de modelo (symlinks p/ cache HF/torch) -------------------
+modelos/pesos/megadetector_*
+modelos/pesos/speciesnet_*
+modelos/pesos/megadescriptor_*
+
+# LaTeX build (regeneravel) --------------------------------------
+tex/build/
+tex/*.aux
+tex/*.bbl
+tex/*.blg
+tex/*.fls
+tex/*.fdb_latexmk
+tex/*.log
+tex/*.out
+tex/*.toc
+tex/*.lof
+tex/*.lot
+tex/*.synctex.gz
+tex/*.run.xml
+tex/*-blx.bib
+
+# Artefatos pesados regeneraveis ---------------------------------
+artifacts/figuras/exemplos/*.jpg
+artifacts/figuras/exemplos/*.jpeg
+
+# Saidas regeneraveis da cascata dev -----------------------------
+# (manifesto.csv, deteccoes.json, classificacoes.json sao versionados
+# para permitir reproduzir testes sem rodar a cascata inteira.
+# Crops e embeddings sao regeneraveis.)
+data/dev/pipeline/05_crops_felis_catus/*.png
+data/dev/pipeline/05_crops_felis_catus/*.jpg
+data/dev/pipeline/07_embeddings.npz
+data/dev/pipeline/08_avaliacao_pipeline.json
+
+# MLflow / DVC ---------------------------------------------------
+mlruns/
+.dvc/cache
+.dvc/tmp

@@ -1,0 +1,5 @@
+{
+  "_comentario": "Pre-preenchimento dev: simula a saida do P5 (anotacao humana) do DFD. Para o subset placeholder atual, apenas a imagem 05 (gato aprovado) deve chegar ao final da cascata; portanto so ela tem rotulo. Em prod, este arquivo eh gerado pela interface de anotacao (NAO IMPLEMENTADA neste TCC -- ver docs/escopo/nao_implementado.md).",
+  "_schema": "data/schemas/anotacao_identidade.schema.json",
+  "data/dev/pipeline/01_brutas/05_lila_gato_aprovado.jpg#bbox0": "gato_alpha"
+}

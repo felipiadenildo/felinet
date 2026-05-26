@@ -1,0 +1,1 @@
+"""Subcomandos do CLI felinet."""

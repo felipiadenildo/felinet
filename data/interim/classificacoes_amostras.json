@@ -1,0 +1,315 @@
+{
+  "total_imagens": 8,
+  "imagens": [
+    {
+      "arquivo": "cct_felis_catus_01.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/cct_felis_catus_01.jpg",
+      "largura": 3000,
+      "altura": 2000,
+      "n_deteccoes": 1,
+      "n_crops_animal": 1,
+      "classificacoes": [
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/cct_felis_catus_01.jpg",
+          "bbox_indice": 0,
+          "top_k": [
+            {
+              "especie": "domestic cat",
+              "probabilidade": 0.7204636335372925
+            },
+            {
+              "especie": "wild cat",
+              "probabilidade": 0.1955534964799881
+            },
+            {
+              "especie": "pampas cat",
+              "probabilidade": 0.018147248774766922
+            },
+            {
+              "especie": "felis species",
+              "probabilidade": 0.016830576583743095
+            },
+            {
+              "especie": "southern tiger cat",
+              "probabilidade": 0.01345145981758833
+            }
+          ],
+          "status": "felis_catus",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 397.5026660009462
+        }
+      ]
+    },
+    {
+      "arquivo": "fox_01.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/fox_01.jpg",
+      "largura": 5184,
+      "altura": 3888,
+      "n_deteccoes": 2,
+      "n_crops_animal": 2,
+      "classificacoes": [
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/fox_01.jpg",
+          "bbox_indice": 0,
+          "top_k": [
+            {
+              "especie": "red fox",
+              "probabilidade": 0.9989882111549377
+            },
+            {
+              "especie": "bird",
+              "probabilidade": 0.00018786234431900084
+            },
+            {
+              "especie": "coyote",
+              "probabilidade": 0.00011869445006595924
+            },
+            {
+              "especie": "vulpes species",
+              "probabilidade": 9.597338794264942e-05
+            },
+            {
+              "especie": "hoary fox",
+              "probabilidade": 5.204435365158133e-05
+            }
+          ],
+          "status": "outra_especie",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 233.66175199771533
+        },
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/fox_01.jpg",
+          "bbox_indice": 1,
+          "top_k": [
+            {
+              "especie": "red fox",
+              "probabilidade": 0.9962459206581116
+            },
+            {
+              "especie": "coyote",
+              "probabilidade": 0.0017468316946178675
+            },
+            {
+              "especie": "bird",
+              "probabilidade": 0.0002703424252104014
+            },
+            {
+              "especie": "mammal",
+              "probabilidade": 0.00013375826529227197
+            },
+            {
+              "especie": "canine family",
+              "probabilidade": 0.00012604914081748575
+            }
+          ],
+          "status": "outra_especie",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 211.0745109966956
+        }
+      ]
+    },
+    {
+      "arquivo": "gato_01.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/gato_01.jpg",
+      "largura": 2218,
+      "altura": 3327,
+      "n_deteccoes": 0,
+      "n_crops_animal": 0,
+      "classificacoes": []
+    },
+    {
+      "arquivo": "gato_02.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/gato_02.jpg",
+      "largura": 4000,
+      "altura": 6000,
+      "n_deteccoes": 2,
+      "n_crops_animal": 2,
+      "classificacoes": [
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/gato_02.jpg",
+          "bbox_indice": 0,
+          "top_k": [
+            {
+              "especie": "bobcat",
+              "probabilidade": 0.6289113163948059
+            },
+            {
+              "especie": "iberian lynx",
+              "probabilidade": 0.08842805027961731
+            },
+            {
+              "especie": "domestic cat",
+              "probabilidade": 0.03536796197295189
+            },
+            {
+              "especie": "wild cat",
+              "probabilidade": 0.03471442684531212
+            },
+            {
+              "especie": "wild goat",
+              "probabilidade": 0.03237184137105942
+            }
+          ],
+          "status": "outra_especie",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 340.0119270008872
+        },
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/gato_02.jpg",
+          "bbox_indice": 1,
+          "top_k": [
+            {
+              "especie": "coyote",
+              "probabilidade": 0.9329237937927246
+            },
+            {
+              "especie": "bobcat",
+              "probabilidade": 0.02526959218084812
+            },
+            {
+              "especie": "red fox",
+              "probabilidade": 0.017489660531282425
+            },
+            {
+              "especie": "canis species",
+              "probabilidade": 0.0034145310055464506
+            },
+            {
+              "especie": "canada lynx",
+              "probabilidade": 0.003218672936782241
+            }
+          ],
+          "status": "outra_especie",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 202.90438200026983
+        }
+      ]
+    },
+    {
+      "arquivo": "gato_03.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/gato_03.jpg",
+      "largura": 4200,
+      "altura": 4200,
+      "n_deteccoes": 1,
+      "n_crops_animal": 1,
+      "classificacoes": [
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/gato_03.jpg",
+          "bbox_indice": 0,
+          "top_k": [
+            {
+              "especie": "domestic cat",
+              "probabilidade": 0.9874469637870789
+            },
+            {
+              "especie": "felis species",
+              "probabilidade": 0.007275861222296953
+            },
+            {
+              "especie": "domestic dog",
+              "probabilidade": 0.0006835641688667238
+            },
+            {
+              "especie": "cat family",
+              "probabilidade": 0.000662731530610472
+            },
+            {
+              "especie": "wild cat",
+              "probabilidade": 0.000575648678932339
+            }
+          ],
+          "status": "felis_catus",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 248.19700599982752
+        }
+      ]
+    },
+    {
+      "arquivo": "guaxinim_01.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/guaxinim_01.jpg",
+      "largura": 6270,
+      "altura": 4180,
+      "n_deteccoes": 1,
+      "n_crops_animal": 1,
+      "classificacoes": [
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/guaxinim_01.jpg",
+          "bbox_indice": 0,
+          "top_k": [
+            {
+              "especie": "northern raccoon",
+              "probabilidade": 0.9814199805259705
+            },
+            {
+              "especie": "white-tailed deer",
+              "probabilidade": 0.0034373924136161804
+            },
+            {
+              "especie": "bird",
+              "probabilidade": 0.0028980521019548178
+            },
+            {
+              "especie": "blank",
+              "probabilidade": 0.001180720515549183
+            },
+            {
+              "especie": "mammal",
+              "probabilidade": 0.0009705036645755172
+            }
+          ],
+          "status": "outra_especie",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 280.24672100218595
+        }
+      ]
+    },
+    {
+      "arquivo": "quati_01.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/quati_01.jpg",
+      "largura": 3000,
+      "altura": 4000,
+      "n_deteccoes": 1,
+      "n_crops_animal": 1,
+      "classificacoes": [
+        {
+          "media_path": "04_dados/raw/lila_bc_dev/quati_01.jpg",
+          "bbox_indice": 0,
+          "top_k": [
+            {
+              "especie": "south american coati",
+              "probabilidade": 0.9521816372871399
+            },
+            {
+              "especie": "crab-eating raccoon",
+              "probabilidade": 0.045240916311740875
+            },
+            {
+              "especie": "procyonidae family",
+              "probabilidade": 0.0013975667534396052
+            },
+            {
+              "especie": "nasua species",
+              "probabilidade": 0.0005792082520201802
+            },
+            {
+              "especie": "white-nosed coati",
+              "probabilidade": 0.0003072451800107956
+            }
+          ],
+          "status": "outra_especie",
+          "modelo": "SpeciesNet (Google v4.0.2a)",
+          "tempo_ms": 274.39731000049505
+        }
+      ]
+    },
+    {
+      "arquivo": "vazia_01.jpg",
+      "media_path": "04_dados/raw/lila_bc_dev/vazia_01.jpg",
+      "largura": 4000,
+      "altura": 6000,
+      "n_deteccoes": 0,
+      "n_crops_animal": 0,
+      "classificacoes": []
+    }
+  ]
+}

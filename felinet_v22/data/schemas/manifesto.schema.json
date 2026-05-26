@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://felinet.local/schemas/manifesto.schema.json",
+  "title": "Manifesto de Ingestao (Fase I)",
+  "description": "Linha do manifesto CSV gerado pelo P2 do DFD (felinet.pipeline.fase1_ingestao). Uma linha por imagem aceita; rejeitadas vao para 02_manifesto/rejeitadas_*/.",
+  "type": "object",
+  "required": ["caminho_relativo", "sha256", "timestamp_captura", "make", "model"],
+  "properties": {
+    "caminho_relativo": {"type": "string", "description": "Caminho relativo a 01_brutas/."},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp_captura": {"type": "string", "format": "date-time"},
+    "make": {"type": "string"},
+    "model": {"type": "string"},
+    "largura": {"type": "integer"},
+    "altura": {"type": "integer"}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://felinet.local/schemas/avaliacao_reid.schema.json",
+  "title": "Avaliacao Re-ID (Fase IV)",
+  "description": "Saida do P7 do DFD. Versao closed-set: Top-K + CMC. Versao open-set: AUC + thresholds.",
+  "type": "object",
+  "required": ["n_individuos", "n_query", "n_galeria", "relatorio", "timestamp"],
+  "properties": {
+    "n_individuos": {"type": "integer", "minimum": 1},
+    "n_query": {"type": "integer", "minimum": 0},
+    "n_galeria": {"type": "integer", "minimum": 0},
+    "timestamp": {"type": "string"},
+    "relatorio": {
+      "type": "object",
+      "properties": {
+        "top_1": {"type": "number", "minimum": 0, "maximum": 1},
+        "top_5": {"type": "number", "minimum": 0, "maximum": 1},
+        "top_10": {"type": "number", "minimum": 0, "maximum": 1},
+        "cmc": {
+          "type": "array",
+          "items": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "auc": {"type": "number", "minimum": 0, "maximum": 1},
+        "tar_at_far_01": {"type": "number"},
+        "limiar_otimo": {"type": "number"}
+      }
+    }
+  }
+}
