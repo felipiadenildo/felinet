@@ -1,21 +1,18 @@
-# 08 — Modelos
+# `modelos/` -- pesos pre-treinados
 
-Pesos baixados de modelos pré-treinados e exports para deploy.
+Esta pasta esta no `.gitignore` (modelos pesam centenas de MB cada).
 
-| Pasta | Conteúdo |
-|---|---|
-| `pesos/` | Checkpoints originais (`.pt`, `.pth`) — **não versionar no Git, usar DVC** |
-| `exports/` | Versões otimizadas para deploy (`.onnx`, TorchScript) |
+Cada subpasta contem um modelo:
 
-## Pesos esperados
+- `megadetector/MDV6-yolov9-c.pt` (~250 MB)
+- `speciesnet/<versao>/` (~400 MB)
+- `megadescriptor/` (cache do HuggingFace; ~110 MB)
 
-- `megadetector_v6c.pt` — MegaDetector v6-compact (MIT, [release](https://github.com/microsoft/CameraTraps/releases))
-- `miew_id_multispecies.pt` — MiewID multispecies ([Wild Me](https://wildbook.docs.wildme.org/))
-- `megadescriptor_b224.pt` — MegaDescriptor-B-224 ([Hugging Face](https://huggingface.co/BVRA/MegaDescriptor-B-224))
-- `yolo11n.pt` — YOLO11n (Ultralytics)
-- (Opcional) `ppgnet_cat.pt` — PPGNet-Cat (Akbar 2025) se disponibilizado pelos autores
+Para baixar, ver `docs/runbooks/baixar_modelos.md`.
 
-## Política
+## Estrategia zero-shot
 
-- Cada peso tem `<nome>.LICENSE.md` documentando licença e citação obrigatória.
-- Pesos NÃO entram em `09_artefatos_entrega/`.
+O `felinet` **nao treina nenhum modelo**. Todos os pesos sao versoes
+oficiais pre-treinadas, conforme decisao arquitetural da §2.5 da
+monografia (baixo custo computacional para o operador final). A
+justificativa esta em `docs/escopo/nao_implementado.md` (item 5).

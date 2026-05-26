@@ -84,3 +84,28 @@ def salvar_resultados_json(
     arquivo_saida.parent.mkdir(parents=True, exist_ok=True)
     payload = {"resultados": [r.to_dict() for r in resultados]}
     arquivo_saida.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+
+
+def carregar_resultados_json(arquivo: Path | str) -> list[ResultadoDeteccao]:
+    """Le um JSON de deteccoes serializado por ``salvar_resultados_json``."""
+    arquivo = Path(arquivo)
+    raw = json.loads(arquivo.read_text(encoding="utf-8"))
+    resultados: list[ResultadoDeteccao] = []
+    for r in raw.get("resultados", []):
+        deteccoes = [
+            Deteccao(
+                categoria=d["categoria"],
+                confianca=float(d["confianca"]),
+                bbox=BoundingBox(**d["bbox"]),
+            )
+            for d in r.get("deteccoes", [])
+        ]
+        resultados.append(ResultadoDeteccao(
+            media_path=r["media_path"],
+            largura=int(r["largura"]),
+            altura=int(r["altura"]),
+            deteccoes=deteccoes,
+            modelo=r["modelo"],
+            tempo_ms=float(r["tempo_ms"]),
+        ))
+    return resultados

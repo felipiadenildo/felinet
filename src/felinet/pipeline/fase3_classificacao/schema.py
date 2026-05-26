@@ -68,3 +68,21 @@ def salvar_resultados_json(
     arquivo_saida.parent.mkdir(parents=True, exist_ok=True)
     payload = {"resultados": [r.to_dict() for r in resultados]}
     arquivo_saida.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+
+
+def carregar_resultados_json(arquivo: Path | str) -> list[ResultadoClassificacao]:
+    """Le um JSON de classificacoes serializado por ``salvar_resultados_json``."""
+    arquivo = Path(arquivo)
+    raw = json.loads(arquivo.read_text(encoding="utf-8"))
+    resultados: list[ResultadoClassificacao] = []
+    for r in raw.get("resultados", []):
+        top_k = [PrediccaoEspecie(**p) for p in r.get("top_k", [])]
+        resultados.append(ResultadoClassificacao(
+            media_path=r["media_path"],
+            bbox_indice=int(r["bbox_indice"]),
+            top_k=top_k,
+            status=r["status"],
+            modelo=r["modelo"],
+            tempo_ms=float(r["tempo_ms"]),
+        ))
+    return resultados
