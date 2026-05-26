@@ -59,6 +59,138 @@ def _pasta_artifacts(cfg, modo: str, fonte: str, protocolo: str | None = None) -
     return raiz.joinpath(*partes)
 
 
+@app.command("comparativo-fontes")
+def comparativo_fontes(
+    perfil: str = typer.Option("prod", "--perfil", "-p"),
+    fontes: str = typer.Option(
+        None,
+        "--fontes",
+        help="Lista separada por virgula (ex.: 'kaggle_cats,felidae'). "
+        "Default: todas as fontes do perfil.",
+    ),
+    saida: Path = typer.Option(None, "--saida"),
+) -> None:
+    """Figura comparativa multifonte (Bloco 7).
+
+    Gera PNG 300 DPI com dois painéis verticais. O painel superior mostra
+    contagens absolutas (entradas, animais detectados, felis_catus) em
+    escala simétrico-log; o painel inferior mostra as taxas relativas
+    (animal/entradas e felis/animais) em percentual. Saída em
+    ``artifacts/figuras/operacional/_global/comparativo_fontes.png``.
+    """
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    from felinet.comandos.tabelas import _latest_por_fase
+
+    cfg = carregar_perfil(perfil)
+    raiz_runs = raiz_projeto() / (cfg.extras.get("raiz_runs") or "runs")
+
+    if fontes:
+        lista_fontes = [s.strip() for s in fontes.split(",") if s.strip()]
+    else:
+        lista_fontes = sorted((cfg.extras.get("fontes") or {}).keys())
+
+    nomes: list[str] = []
+    n_entradas: list[int] = []
+    n_animais: list[int] = []
+    n_felis: list[int] = []
+    taxa_animal: list[float] = []
+    taxa_felis: list[float] = []
+
+    for fonte in lista_fontes:
+        man_ing = _latest_por_fase(
+            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="ingestao"
+        )
+        man_det = _latest_por_fase(
+            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="deteccao"
+        )
+        man_cls = _latest_por_fase(
+            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="classificacao"
+        )
+        if man_ing is None and man_det is None and man_cls is None:
+            LOG.warning(f"Fonte '{fonte}': sem runs operacionais (skip).")
+            continue
+
+        m_ing = (man_ing or {}).get("metricas_resumo") or {}
+        m_det = (man_det or {}).get("metricas_resumo") or {}
+        m_cls = (man_cls or {}).get("metricas_resumo") or {}
+        ne = int(m_ing.get("n_entradas", 0) or 0)
+        na = int(m_det.get("n_animais_detectados", 0) or 0)
+        nc = int(m_cls.get("n_felis_catus", 0) or 0)
+        nomes.append(fonte)
+        n_entradas.append(ne)
+        n_animais.append(na)
+        n_felis.append(nc)
+        taxa_animal.append(100.0 * na / ne if ne else 0.0)
+        taxa_felis.append(100.0 * nc / na if na else 0.0)
+
+    if not nomes:
+        LOG.error("Nenhuma fonte com runs operacionais encontrada.")
+        raise typer.Exit(code=1)
+
+    fig, (ax_top, ax_bot) = plt.subplots(
+        2, 1, figsize=(10, 7), constrained_layout=True, dpi=300
+    )
+    x = np.arange(len(nomes))
+    largura = 0.27
+
+    ax_top.bar(x - largura, n_entradas, largura, label="entradas")
+    ax_top.bar(x, n_animais, largura, label="animais detectados")
+    ax_top.bar(x + largura, n_felis, largura, label="felis_catus")
+    ax_top.set_yscale("symlog")
+    ax_top.set_xticks(x, nomes, rotation=15)
+    ax_top.set_ylabel("contagem (symlog)")
+    ax_top.set_title("Volumes absolutos por fonte e fase")
+    ax_top.legend(loc="upper right", fontsize=8)
+    ax_top.grid(True, alpha=0.3, axis="y")
+
+    ax_bot.bar(x - largura / 2, taxa_animal, largura, label="taxa animal (%)")
+    ax_bot.bar(x + largura / 2, taxa_felis, largura, label="taxa felis_catus (%)")
+    ax_bot.set_xticks(x, nomes, rotation=15)
+    ax_bot.set_ylabel("taxa (%)")
+    ax_bot.set_title("Taxas relativas (eficiência do filtro)")
+    ax_bot.legend(loc="upper right", fontsize=8)
+    ax_bot.grid(True, alpha=0.3, axis="y")
+    ax_bot.set_ylim(0, 110)
+
+    fig.suptitle("Comparativo entre fontes — pipeline operacional", fontsize=12)
+
+    pasta = _pasta_artifacts(cfg, "operacional", "_global")
+    pasta.mkdir(parents=True, exist_ok=True)
+    saida_arq = saida or (pasta / "comparativo_fontes.png")
+    saida_arq.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(saida_arq, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    typer.echo(f"OK: {saida_arq}")
+
+
+@app.command("matriz-confusao-fontes")
+def matriz_confusao_fontes(
+    perfil: str = typer.Option("prod", "--perfil", "-p"),
+    saida: Path = typer.Option(None, "--saida"),
+) -> None:
+    """Bloco 9 (esqueleto): matriz de confusão Felis-vs-resto por fonte.
+
+    Para cada fonte operacional cruza o manifest de classificação latest com
+    um label-proxy de fonte (kaggle_cats ≈ Felis catus; lila_ena24 ≈ outros)
+    e calcula TP/FP/TN/FN. A versão atual é um esqueleto: sem ground truth
+    por imagem, retorna um aviso indicando que a implementação completa
+    depende de ``extras.classe_origem`` no manifest. Mantido como
+    placeholder para integração futura.
+    """
+    LOG.warning(
+        "matriz-confusao-fontes (Bloco 9) está em esqueleto. "
+        "Implementação plena exige rótulo de verdade por imagem; "
+        "a versão atual lê manifests de classificação latest, mas a "
+        "comparação ground-truth-vs-predição ainda não foi habilitada."
+    )
+    typer.echo(
+        "matriz-confusao-fontes: esqueleto. Aguardando rótulos por imagem em "
+        "extras.classe_origem das runs de ingestão para gerar a heatmap final."
+    )
+
+
 @app.command("reid-cmc")
 def reid_cmc(
     perfil: str = typer.Option("prod", "--perfil", "-p"),

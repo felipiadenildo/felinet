@@ -18,6 +18,129 @@ app = typer.Typer(no_args_is_help=True)
 LOG = obter_logger("comandos.datasets")
 
 
+def _status_dataset(ds, raiz_projeto_path: Path) -> str:
+    """Retorna o glifo de status de um DatasetLocal."""
+    if not ds.caminho.exists():
+        return "⚠ caminho ausente"
+    link = raiz_projeto_path / ds.link_destino
+    if link.is_symlink():
+        try:
+            destino = link.resolve(strict=False)
+        except OSError:
+            return "✗ caminho quebrado"
+        if destino == ds.caminho.resolve():
+            return "✓ linkado"
+        if not destino.exists():
+            return "✗ caminho quebrado"
+        return "✓ linkado (outro destino)"
+    if link.exists():
+        return "⚠ existe não-symlink"
+    return "— não linkado"
+
+
+@app.command("listar")
+def listar() -> None:
+    """Mostra status dos datasets configurados em configs/datasets_locais.yaml."""
+    from felinet.config import raiz_projeto
+    from felinet.datasets.registro import carregar_datasets_locais
+
+    raiz = raiz_projeto()
+    arquivo = raiz / "configs" / "datasets_locais.yaml"
+    datasets = carregar_datasets_locais(arquivo)
+    if not datasets:
+        typer.echo(
+            "Configure seus datasets em configs/datasets_locais.yaml. "
+            "Veja configs/datasets_locais.example.yaml para o formato."
+        )
+        return
+
+    cabecalho = f"{'nome':16s} {'tipo':36s} {'layout':14s} {'status':22s} fases"
+    typer.echo(cabecalho)
+    typer.echo("-" * len(cabecalho))
+    for nome, ds in datasets.items():
+        status = _status_dataset(ds, raiz)
+        fases = ",".join(str(f) for f in ds.fases_aplicaveis)
+        typer.echo(f"{nome:16s} {ds.tipo:36s} {ds.layout:14s} {status:22s} {fases}")
+
+
+@app.command("linkar")
+def linkar(
+    nome: str = typer.Option(
+        None, "--nome", help="Linkar apenas o dataset com este nome."
+    ),
+    apenas_planejar: bool = typer.Option(
+        False, "--apenas-planejar", help="Imprime o que faria, sem executar."
+    ),
+    forcar: bool = typer.Option(
+        False, "--forcar", help="Sobrescreve symlink/diretório existente."
+    ),
+) -> None:
+    """Cria symlinks data/raw/<categoria>/<nome>/ → caminho_local."""
+    from felinet.config import raiz_projeto
+    from felinet.datasets.registro import carregar_datasets_locais
+
+    raiz = raiz_projeto()
+    arquivo = raiz / "configs" / "datasets_locais.yaml"
+    datasets = carregar_datasets_locais(arquivo)
+    if not datasets:
+        typer.echo(
+            "Configure seus datasets em configs/datasets_locais.yaml. "
+            "Veja configs/datasets_locais.example.yaml para o formato."
+        )
+        raise typer.Exit(code=1)
+
+    if nome is not None and nome not in datasets:
+        disponiveis = ", ".join(sorted(datasets))
+        typer.echo(f"[erro] dataset '{nome}' não configurado. Disponíveis: {disponiveis}")
+        raise typer.Exit(code=2)
+
+    alvos = {nome: datasets[nome]} if nome else datasets
+
+    for nome_ds, ds in alvos.items():
+        link = raiz / ds.link_destino
+        if not ds.caminho.exists():
+            typer.echo(
+                f"[skip] {nome_ds}: caminho local não existe: {ds.caminho}"
+            )
+            continue
+        if not ds.caminho.is_dir():
+            typer.echo(
+                f"[skip] {nome_ds}: caminho local não é diretório: {ds.caminho}"
+            )
+            continue
+        if link.is_symlink() or link.exists():
+            try:
+                destino_atual = link.resolve(strict=False)
+            except OSError:
+                destino_atual = None
+            if destino_atual == ds.caminho.resolve():
+                typer.echo(f"[ok ] {nome_ds}: já linkado → {ds.caminho}")
+                continue
+            if not forcar:
+                typer.echo(
+                    f"[skip] {nome_ds}: {link} já existe. Use --forcar para sobrescrever."
+                )
+                continue
+            if apenas_planejar:
+                typer.echo(f"[plano] {nome_ds}: substituiria {link} → {ds.caminho}")
+                continue
+            if link.is_symlink() or link.is_file():
+                link.unlink()
+            else:
+                typer.echo(
+                    f"[skip] {nome_ds}: {link} é diretório regular; remova manualmente."
+                )
+                continue
+
+        if apenas_planejar:
+            typer.echo(f"[plano] {nome_ds}: criaria {link} → {ds.caminho}")
+            continue
+
+        link.parent.mkdir(parents=True, exist_ok=True)
+        link.symlink_to(ds.caminho)
+        typer.echo(f"[link] {nome_ds}: {link} → {ds.caminho}")
+
+
 @app.command("baixar-felidae")
 def baixar_felidae(
     destino: Path = typer.Option(

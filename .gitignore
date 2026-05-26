@@ -90,6 +90,12 @@ runs/
 !runs/.gitkeep
 !runs/README.md
 
+# Mapeamento por-usuário de datasets locais (config sensivel ao disco) -----
+configs/datasets_locais.yaml
+
+# Pasta de quarentena (arquivos em revisão para deleção) -------------------
+_quarentena/
+
 # Datasets externos (pontos de montagem) -------------------------
 data/raw/
 !data/raw/camera_trap/.gitkeep

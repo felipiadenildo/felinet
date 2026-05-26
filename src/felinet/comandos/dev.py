@@ -90,6 +90,53 @@ def validar_ambiente() -> None:
     typer.echo(f"  [OK] Perfil dev raiz: {cfg_dev.raw_camera_trap.parent}")
 
 
+@app.command("demo")
+def demo(
+    fonte: str = typer.Option(
+        "kaggle_cats",
+        "--fonte",
+        help="Fonte para a demo (precisa estar linkada via 'datasets linkar').",
+    ),
+    n: int = typer.Option(
+        50,
+        "--n",
+        help="Número de imagens a processar (recomendado 30-100 para ver tudo).",
+    ),
+    perfil: str = typer.Option("dev", "--perfil"),
+) -> None:
+    """Roda o pipeline em modo dev com amostra pequena.
+
+    Equivale a ``felinet pipeline executar --perfil <perfil> --fonte <fonte>
+    --max-amostras <n> --dev``. Ao final aponta a pasta
+    ``dev_visualizacao/`` onde estão os artefatos visuais.
+    """
+    import subprocess
+    import sys
+
+    typer.echo(
+        f"[demo] rodando pipeline em {fonte} ({n} imagens, perfil {perfil}, modo --dev)..."
+    )
+    cmd = [
+        sys.executable,
+        "-m",
+        "felinet",
+        "pipeline",
+        "executar",
+        "--perfil",
+        perfil,
+        "--fonte",
+        fonte,
+        "--max-amostras",
+        str(n),
+        "--dev",
+    ]
+    subprocess.run(cmd, check=False)
+    typer.echo("\n[demo] pronto. Veja dev_visualizacao/ no run mais recente:")
+    typer.echo(
+        f"  ls -la runs/operacional/{fonte}/{perfil}/_/latest/dev_visualizacao/"
+    )
+
+
 @app.command("limpar-saidas-dev")
 def limpar_saidas_dev(
     confirmar: bool = typer.Option(False, "--confirmar", help="Confirmacao explicita."),

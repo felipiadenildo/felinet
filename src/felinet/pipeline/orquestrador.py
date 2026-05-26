@@ -23,6 +23,7 @@ docs/arquitetura/layout_runs.md.
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -31,6 +32,23 @@ import numpy as np
 from felinet.logging_setup import obter_logger
 from felinet.runs import RunDir
 from felinet.utils.io import gravar_json, gravar_npz, ler_json
+
+
+def _amostrar_deterministico(
+    brutas: list[Path], n: int, seed: int
+) -> list[Path]:
+    """Amostra deterministicamente ``n`` itens de ``brutas``.
+
+    Quando ``n <= 0`` ou ``n >= len(brutas)``, devolve a lista original
+    sem alteração. Caso contrário, executa ``random.Random(seed).sample`` e
+    reordena para manter determinismo de leitura.
+    """
+    if n <= 0 or n >= len(brutas):
+        return list(brutas)
+    rng = random.Random(seed)
+    amostra = rng.sample(brutas, n)
+    amostra.sort()
+    return amostra
 
 LOG = obter_logger("orquestrador")
 
@@ -67,6 +85,9 @@ def executar_cascata(
     run: RunDir,
     confianca_min_deteccao: float = 0.20,
     anotacao_identidade_origem: Path | None = None,
+    max_amostras: int = 0,
+    seed_amostragem: int = 42,
+    dev_visual: bool = False,
 ) -> RelatorioCascata:
     """Executa I -> II -> III -> IV gravando dentro de ``run.raiz``.
 
@@ -120,15 +141,34 @@ def executar_cascata(
     )
     from felinet.pipeline.fase4_reid.megadescriptor import ExtratorMegaDescriptor
 
+    dev_base = None
+    if dev_visual:
+        from felinet.pipeline.dev_visual import preparar_estrutura
+
+        dev_base = preparar_estrutura(run.raiz)
+        LOG.info(f"Modo --dev ativo: galeria em {dev_base}")
+
     extensoes = {".jpg", ".jpeg", ".png", ".tif", ".tiff"}
     brutas = sorted(p for p in pasta_brutas.rglob("*") if p.suffix.lower() in extensoes)
+    n_total = len(brutas)
+    brutas = _amostrar_deterministico(brutas, max_amostras, seed_amostragem)
+    if max_amostras and max_amostras < n_total:
+        LOG.info(
+            f"Amostragem determinística: {len(brutas)}/{n_total} "
+            f"(seed={seed_amostragem})"
+        )
     LOG.info(f"Cascata iniciada: {len(brutas)} imagens em {pasta_brutas}")
 
     # ----- FASE I: Ingestao -----
     run.manifesto_dir.mkdir(parents=True, exist_ok=True)
     arquivo_manifesto = run.manifesto_dir / "manifesto.csv"
-    entradas_manifesto = gerar_manifesto(pasta_brutas, arquivo_manifesto)
+    entradas_manifesto = gerar_manifesto(pasta_brutas, arquivo_manifesto, midias=brutas)
     LOG.info(f"Fase I OK: {len(entradas_manifesto)} entradas -> {arquivo_manifesto}")
+    if dev_base is not None:
+        from felinet.pipeline.dev_visual import registrar_ingestao
+
+        for entrada in entradas_manifesto:
+            registrar_ingestao(dev_base, entrada.caminho_relativo, "aceita")
 
     # ----- FASE II: Deteccao -----
     run.deteccoes_dir.mkdir(parents=True, exist_ok=True)
@@ -144,6 +184,25 @@ def executar_cascata(
     salvar_deteccoes_json(resultados_det, arquivo_det)
     n_animal = sum(1 for r in resultados_det for d in r.deteccoes if d.categoria == "animal")
     LOG.info(f"Fase II OK: {n_animal} bboxes 'animal' -> {arquivo_det}")
+    if dev_base is not None:
+        from felinet.pipeline.dev_visual import registrar_deteccao
+
+        for r in resultados_det:
+            n_bbox = len(r.deteccoes)
+            max_score = max((d.confianca for d in r.deteccoes), default=0.0)
+            if n_bbox == 0:
+                decisao = "sem_animal"
+            elif max_score < confianca_min_deteccao:
+                decisao = "abaixo_limiar"
+            else:
+                decisao = "com_animal"
+            registrar_deteccao(
+                dev_base,
+                Path(r.media_path).name,
+                n_bbox,
+                max_score,
+                decisao,
+            )
 
     # ----- FASE III: Classificacao + Crops -----
     run.classificacoes_dir.mkdir(parents=True, exist_ok=True)
@@ -163,6 +222,15 @@ def executar_cascata(
     salvar_classificacoes_json(classificacoes, arquivo_clf)
     n_felis = sum(1 for c in classificacoes if c.status == STATUS_FELIS_CATUS)
     LOG.info(f"Fase III OK: {n_felis} crops felis_catus -> {arquivo_clf}")
+    if dev_base is not None:
+        from felinet.pipeline.dev_visual import registrar_classificacao
+
+        for c in classificacoes:
+            classe = getattr(c, "classe", None) or getattr(c, "status", "")
+            score = float(getattr(c, "score", 0.0) or 0.0)
+            idx = int(getattr(c, "indice", 0) or 0)
+            nome_arq = Path(getattr(c, "media_path", "")).name
+            registrar_classificacao(dev_base, nome_arq, idx, str(classe), score)
 
     # ----- Recorte de crops aprovados (ponte para Fase IV) -----
     crops = persistir_crops_felis_catus(

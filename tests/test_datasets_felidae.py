@@ -215,6 +215,7 @@ def test_cli_baixar_felidae_aceita_preset_smoke(
         result = runner.invoke(
             datasets_app,
             [
+                "baixar-felidae",
                 "--destino",
                 str(tmp_path / "felidae_out"),
                 "--preset",
@@ -236,6 +237,7 @@ def test_cli_baixar_felidae_rejeita_preset_invalido(tmp_path: Path) -> None:
     result = runner.invoke(
         datasets_app,
         [
+            "baixar-felidae",
             "--destino",
             str(tmp_path / "felidae_out"),
             "--preset",

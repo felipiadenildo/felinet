@@ -49,6 +49,22 @@ def executar(
         "--anotacao",
         help="Caminho opcional para arquivo de anotacao de identidade (dev).",
     ),
+    max_amostras: int = typer.Option(
+        0,
+        "--max-amostras",
+        help="Limite de imagens amostradas da fonte (0 = todas). Amostragem determinística.",
+    ),
+    seed_amostragem: int = typer.Option(
+        42,
+        "--seed-amostragem",
+        help="Seed para amostragem determinística quando --max-amostras > 0.",
+    ),
+    dev_visual: bool = typer.Option(
+        False,
+        "--dev",
+        help="Modo dev: gera galeria visual de descartes/bbox/crops em "
+        "runs/.../dev_visualizacao/.",
+    ),
 ) -> None:
     """Roda a cascata completa I -> II -> III -> IV sobre a fonte selecionada.
 
@@ -68,6 +84,9 @@ def executar(
         "comando": "pipeline executar",
         "confianca_deteccao": confianca_deteccao,
         "anotacao_origem": str(anotacao) if anotacao else None,
+        "max_amostras": max_amostras,
+        "seed_amostragem": seed_amostragem,
+        "dev_visual": dev_visual,
     }
     run = criar_run(
         perfil=cfg,
@@ -85,6 +104,9 @@ def executar(
             run=run,
             confianca_min_deteccao=confianca_deteccao,
             anotacao_identidade_origem=anotacao_path,
+            max_amostras=max_amostras,
+            seed_amostragem=seed_amostragem,
+            dev_visual=dev_visual,
         )
     except Exception as exc:  # noqa: BLE001
         finalizar_run(run, sucesso=False, mensagem=str(exc))

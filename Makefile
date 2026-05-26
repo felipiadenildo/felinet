@@ -112,6 +112,9 @@ instalar-prod:
 sync-deps:
 	uv sync
 
+pre-commit-install:
+	pre-commit install --hook-type pre-commit --hook-type pre-push
+
 organizar-layout:
 	python scripts/organizar_layout.py
 

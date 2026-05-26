@@ -21,6 +21,7 @@ from felinet.comandos import (
     datasets,
     deteccao,
     dev,
+    easyrun,
     figuras,
     ingestao,
     reid,
@@ -49,6 +50,11 @@ app.add_typer(tabelas.app, name="tabelas", help="Gera tabelas (CSV + booktabs .t
 app.add_typer(pipeline_cmd.app, name="pipeline", help="Orquestrador da cascata I->II->III->IV.")
 app.add_typer(dev.app, name="dev", help="Utilitarios de desenvolvimento (cascata dev, validacao).")
 app.add_typer(datasets.app, name="datasets", help="Download e preparo de datasets externos.")
+app.add_typer(
+    easyrun.app,
+    name="easyrun",
+    help="Wizard interativo. RECOMENDADO para começar.",
+)
 
 
 def _versao_callback(valor: bool) -> None:

@@ -67,7 +67,27 @@ class Perfil:
     extras: dict[str, Any] = field(default_factory=dict)
 
 
-def _resolver_path(raiz: Path, valor: str) -> Path:
+def _resolver_path(raiz: Path, valor: str | dict) -> Path:
+    """Resolve um caminho relativo a raiz do projeto.
+
+    Aceita string (caminho direto) ou dict com chave 'raiz' (preferida) ou
+    'path' (compatibilidade). Em dict, demais chaves sao metadados (tipo,
+    layout, etc.) tratados em outro nivel.
+    """
+    if isinstance(valor, dict):
+        if "raiz" in valor:
+            valor = valor["raiz"]
+        elif "path" in valor:
+            valor = valor["path"]
+        else:
+            raise TypeError(
+                f"Entrada de path como dict requer chave 'raiz' ou 'path'. "
+                f"Recebido: {sorted(valor.keys())}"
+            )
+    if not isinstance(valor, str):
+        raise TypeError(
+            f"_resolver_path espera str ou dict, recebeu {type(valor).__name__}: {valor!r}"
+        )
     p = Path(valor).expanduser()
     if not p.is_absolute():
         p = raiz / p

@@ -60,10 +60,15 @@ def gerar_entrada(caminho: Path, raiz: Path) -> EntradaManifesto:
 def gerar_manifesto(
     pasta_origem: Path | str,
     arquivo_saida: Path | str,
+    midias: list[Path] | None = None,
 ) -> list[EntradaManifesto]:
     """Percorre uma pasta de mídias e grava o manifesto em CSV.
 
     Apenas imagens são processadas — vídeos ficam fora desta versão.
+
+    Quando ``midias`` é fornecida, usa a lista pré-amostrada (preservando
+    ordem) em vez de varrer ``pasta_origem``. Caminho útil para amostragem
+    determinística no orquestrador.
 
     Returns
     -------
@@ -74,11 +79,12 @@ def gerar_manifesto(
     arquivo_saida = Path(arquivo_saida)
     arquivo_saida.parent.mkdir(parents=True, exist_ok=True)
 
-    midias = [
-        m
-        for m in listar_midias(pasta_origem)
-        if m.suffix.lower() in {".jpg", ".jpeg", ".png", ".tif", ".tiff"}
-    ]
+    if midias is None:
+        midias = [
+            m
+            for m in listar_midias(pasta_origem)
+            if m.suffix.lower() in {".jpg", ".jpeg", ".png", ".tif", ".tiff"}
+        ]
     entradas = [gerar_entrada(m, pasta_origem) for m in midias]
 
     with arquivo_saida.open("w", newline="", encoding="utf-8") as f:

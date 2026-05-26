@@ -1,94 +1,94 @@
-# felinet
+# felinet — monitoramento de gatos ferais por visão computacional
 
-Sistema de monitoramento por visao computacional da colonia de gatos do
-Campus 2 da USP Sao Carlos. Pipeline em cascata de quatro fases:
-ingestao, deteccao (MegaDetector), classificacao (SpeciesNet) e
-re-identificacao (MegaDescriptor).
+Sistema do TCC de Felipi Soares Sousa (USP São Carlos). Pipeline em cascata
+de quatro fases para detectar, classificar e re-identificar gatos ferais a
+partir de armadilhas fotográficas instaladas no Campus 2 da USP em
+São Carlos.
 
-Codigo do TCC de Felipi Adenildo Soares Sousa, Engenharia de Computacao
-ICMC/USP
-
-## Modos de operacao
-
-| Modo            | Comando                                            | Quando usar                         |
-|-----------------|----------------------------------------------------|-------------------------------------|
-| **Operacional** | `felinet pipeline executar --perfil dev`           | Demonstrar cascata I -> II -> III -> IV |
-| **Metodologico**| `felinet reid avaliar-closed --perfil prod --n 200`| Gerar metricas para a monografia    |
-
-## Setup rapido (dev)
+## Instalação rápida
 
 ```bash
-uv pip install -e ".[dev]"           # instala pacote + ferramentas
-make validar                         # sanity-check do ambiente
-make pipeline-dev                    # cascata sobre 5 imagens placeholder
+git clone https://github.com/felipiadenildo/tcc-gatos-campus2
+cd tcc-gatos-campus2
+make instalar     # uv pip install -e '.[dev]'
+make pre-commit-install   # opcional: hooks ruff + pytest
 ```
+
+## Primeiros passos
+
+A configuração de datasets é feita uma única vez por máquina. O arquivo
+``configs/datasets_locais.yaml`` é versionado apenas como exemplo; cada
+usuário copia o template e ajusta os caminhos do próprio disco.
+
+```bash
+cp configs/datasets_locais.example.yaml configs/datasets_locais.yaml
+# editar configs/datasets_locais.yaml com seus caminhos
+felinet datasets linkar           # cria symlinks em data/raw/
+felinet datasets listar           # confirma status de cada fonte
+felinet easyrun                   # wizard interativo
+```
+
+## Validar pipeline didaticamente (~10 min)
+
+```bash
+felinet dev demo --fonte kaggle_cats --n 50
+# inspecionar runs/operacional/kaggle_cats/dev/_/latest/dev_visualizacao/
+```
+
+A galeria visual produzida pelo modo ``--dev`` agrupa as imagens
+aceitas/rejeitadas na ingestão, as bbox sobrepostas após a detecção e os
+crops classificados como Felis catus ou outras espécies. É a forma mais
+rápida de validar visualmente se o pipeline está funcionando após mudanças
+de modelo, limiar ou fonte.
 
 ## Estrutura
 
 ```
-felinet/
-├── src/felinet/         # pacote Python (CLI + modulos por fase)
-├── configs/             # paths.yaml, modelos.yaml, pipeline.yaml
-├── data/
-│   ├── dev/             # subset minimo versionado (cascata + petface_mini)
-│   ├── raw/             # symlinks para datasets externos (gitignored)
-│   ├── interim/         # intermediarios prod (gitignored)
-│   ├── processed/       # JSONs finais (versionados)
-│   └── schemas/         # JSON Schema dos artefatos
-├── artifacts/           # figuras + tabelas gerados (vao para o LaTeX)
-├── modelos/             # pesos pre-treinados (gitignored)
-├── tex/                 # fontes LaTeX da monografia
-├── docs/                # arquitetura, escopo, runbooks, governanca
-├── anexos/              # autorizacoes, datasheets, protocolos
-├── tests/               # pytest (sem GPU por default)
-├── Makefile             # atalhos para tarefas comuns
-└── pyproject.toml
+src/felinet/         pacote principal (CLI, fases, datasets, runs)
+configs/             YAMLs versionados (paths.yaml, modelos.yaml, ...)
+docs/                documentação técnica (arquitetura, debugging, ...)
+data/                fontes locais (data/raw/*) e amostras dev
+runs/                saídas rastreáveis de cada execução
+artifacts/           figuras e tabelas geradas para a monografia
+tests/               suíte pytest (~150 testes)
+tex/                 manuscrito LaTeX (intocado pelo código)
 ```
 
-## Documentacao
+## Documentação
 
-Comece por:
+A documentação técnica fica em ``docs/``. Os arquivos centrais são:
 
-1. [`docs/arquitetura/padrao_src_layout.md`](docs/arquitetura/padrao_src_layout.md)
-   -- visao geral do codigo.
-2. [`docs/arquitetura/mapeamento_dfd_pipeline.md`](docs/arquitetura/mapeamento_dfd_pipeline.md)
-   -- correspondencia DFD da monografia com modulos Python.
-3. [`docs/arquitetura/fluxo_cascata.md`](docs/arquitetura/fluxo_cascata.md)
-   -- como a cascata dev exercita todos os caminhos de rejeicao.
-4. [`docs/escopo/nao_implementado.md`](docs/escopo/nao_implementado.md)
-   -- o que esta fora do TCC (P5 humano, P8 blur, fine-tuning, etc.).
-5. [`docs/datasets/justificativa_uso.md`](docs/datasets/justificativa_uso.md)
-   -- por que apenas LILA-BC e PetFace foram usados.
+- ``docs/ARQUITETURA.md`` — visão técnica do pipeline e dos conceitos de
+  perfil, modo, fonte, protocolo, run e latest.
+- ``docs/DEBUGGING.md`` — onde olhar logs, como inspecionar manifests e
+  como rastrear uma imagem específica através das fases.
+- ``docs/REPRODUCAO_MONOGRAFIA.md`` — sequência exata de comandos para
+  gerar cada artefato citado na monografia.
+- ``docs/DATASETS.md`` — datasets suportados, como obter e como adicionar
+  um novo.
+- ``docs/governanca/MIGRACAO_v22_para_v23.md`` — registro de todas as
+  mudanças entre versões.
 
-## Comandos disponiveis
+## Comandos principais
 
-```
-felinet ingestao executar         Fase I: manifesto + EXIF
-felinet deteccao executar         Fase II: MegaDetector
-felinet classificacao executar    Fase III: SpeciesNet + Decisor
-felinet classificacao recortar    Fase III: crops felis_catus
-felinet reid extrair-embeddings   Fase IV: embeddings PetFace
-felinet reid avaliar-closed       Avaliacao closed-set (Top-K + CMC)
-felinet reid avaliar-openset      Avaliacao open-set (AUC + thresholds)
-felinet pipeline executar         Cascata I -> II -> III -> IV
-felinet pipeline resumir          Status dos artefatos
-felinet figuras reid-cmc          Curva CMC 300 DPI
-felinet figuras matriz-similaridade  Heatmap query x galeria
-felinet tabelas reid-resumo       Resumo closed-set CSV + .tex
-felinet tabelas openset-resumo    Resumo open-set CSV + .tex
-felinet tabelas datasets-avaliados   Tabela datasets do Capitulo 4
-felinet dev preparar-petface-mini    Cria subset PetFace dev
-felinet dev validar-ambiente         Diagnostico de ambiente
-felinet dev limpar-saidas-dev        Reseta cascata dev
+```bash
+felinet --help
+felinet easyrun                                    # wizard interativo
+felinet datasets {linkar,listar}                   # gestão de datasets locais
+felinet pipeline executar --fonte X --max-amostras N [--dev]
+felinet reid {avaliar-closed,avaliar-openset}
+felinet tabelas {comparativo-fontes,fontes-resumo,...}
+felinet figuras {comparativo-fontes,reid-cmc,...}
+felinet dev demo                                   # demo curta com galeria
 ```
 
-Cada subcomando aceita `--help`.
+## Hardware testado
 
-## Citacao
+NVIDIA MX250 com 2 GB de VRAM, CUDA 12.1. Modos sem GPU funcionam para a
+geração de tabelas, figuras e a configuração de datasets; as fases de
+detecção, classificação e Re-ID dependem dos pesos de
+MegaDetector v6 (PytorchWildlife), SpeciesNet e MegaDescriptor.
 
-Se este codigo for util para outros trabalhos, cite a monografia
-correspondente (referencia completa em `tex/main.tex`).
-
-## Licenca
+## Licença
 
 MIT.
