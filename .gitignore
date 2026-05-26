@@ -83,3 +83,24 @@ data/dev/pipeline/08_avaliacao_pipeline.json
 mlruns/
 .dvc/cache
 .dvc/tmp
+data/dev/pipeline/01_brutas
+
+# Layout runs/ ---------------------------------------------------
+runs/
+!runs/.gitkeep
+!runs/README.md
+
+# Datasets externos (pontos de montagem) -------------------------
+data/raw/
+!data/raw/camera_trap/.gitkeep
+!data/raw/camera_trap/README.md
+!data/raw/reid/.gitkeep
+!data/raw/reid/README.md
+data/dev/interim/
+data/dev/processed/
+data/dev/reid_mini/*
+!data/dev/reid_mini/README.md
+
+# Reports gerados (exceto os curados) ----------------------------
+reports/_tmp_*.md
+reports/_tmp_*.html

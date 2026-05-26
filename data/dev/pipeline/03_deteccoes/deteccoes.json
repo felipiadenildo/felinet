@@ -1,0 +1,65 @@
+{
+  "resultados": [
+    {
+      "media_path": "/home/felipi/Desktop/tcc/tcc_gatos_campus2_v22/data/dev/pipeline/01_brutas/01_lila_sem_exif.jpg",
+      "largura": 640,
+      "altura": 480,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 1887.3921369959135,
+      "deteccoes": []
+    },
+    {
+      "media_path": "/home/felipi/Desktop/tcc/tcc_gatos_campus2_v22/data/dev/pipeline/01_brutas/02_lila_paisagem_vazia.jpg",
+      "largura": 640,
+      "altura": 480,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 110.36780199356144,
+      "deteccoes": []
+    },
+    {
+      "media_path": "/home/felipi/Desktop/tcc/tcc_gatos_campus2_v22/data/dev/pipeline/01_brutas/03_lila_capivara.jpg",
+      "largura": 640,
+      "altura": 480,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 111.43753399665002,
+      "deteccoes": []
+    },
+    {
+      "media_path": "/home/felipi/Desktop/tcc/tcc_gatos_campus2_v22/data/dev/pipeline/01_brutas/04_lila_borrada_baixa_confianca.jpg",
+      "largura": 640,
+      "altura": 480,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 195.27979900158243,
+      "deteccoes": [
+        {
+          "categoria": "person",
+          "confianca": 0.518152117729187,
+          "bbox": {
+            "x": 0.5110234260559082,
+            "y": 0.0009974161783854166,
+            "w": 0.4886031150817871,
+            "h": 0.6352789560953777
+          }
+        },
+        {
+          "categoria": "person",
+          "confianca": 0.442460834980011,
+          "bbox": {
+            "x": 0.0,
+            "y": 0.041686630249023436,
+            "w": 0.47730302810668945,
+            "h": 0.6284474690755208
+          }
+        }
+      ]
+    },
+    {
+      "media_path": "/home/felipi/Desktop/tcc/tcc_gatos_campus2_v22/data/dev/pipeline/01_brutas/05_lila_gato_aprovado.jpg",
+      "largura": 640,
+      "altura": 480,
+      "modelo": "MDv6 (MDV6-yolov10-c)",
+      "tempo_ms": 121.05810699722497,
+      "deteccoes": []
+    }
+  ]
+}
