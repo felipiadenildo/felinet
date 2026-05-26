@@ -22,9 +22,11 @@ from felinet.comandos import (
     dev,
     figuras,
     ingestao,
-    pipeline as pipeline_cmd,
     reid,
     tabelas,
+)
+from felinet.comandos import (
+    pipeline as pipeline_cmd,
 )
 from felinet.logging_setup import configurar_logging
 

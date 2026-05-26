@@ -6,6 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from PIL import Image
+
 from felinet.pipeline.fase2_deteccao.schema import (
     BoundingBox,
     Deteccao,

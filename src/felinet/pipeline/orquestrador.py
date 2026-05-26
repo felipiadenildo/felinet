@@ -102,14 +102,18 @@ def executar_cascata(
     from felinet.pipeline.fase2_deteccao.schema import (
         BoundingBox,
         ResultadoDeteccao,
+    )
+    from felinet.pipeline.fase2_deteccao.schema import (
         salvar_resultados_json as salvar_deteccoes_json,
     )
     from felinet.pipeline.fase3_classificacao.crops import persistir_crops_felis_catus
+    from felinet.pipeline.fase3_classificacao.decisor import ConfigDecisor
     from felinet.pipeline.fase3_classificacao.schema import (
         STATUS_FELIS_CATUS,
+    )
+    from felinet.pipeline.fase3_classificacao.schema import (
         salvar_resultados_json as salvar_classificacoes_json,
     )
-    from felinet.pipeline.fase3_classificacao.decisor import ConfigDecisor
     from felinet.pipeline.fase3_classificacao.speciesnet import (
         ClassificadorSpeciesNet,
         CropEntrada,

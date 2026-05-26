@@ -28,6 +28,8 @@ def executar(
     """
     from felinet.pipeline.fase2_deteccao.schema import (
         ResultadoDeteccao,
+    )
+    from felinet.pipeline.fase2_deteccao.schema import (
         carregar_resultados_json as carregar_deteccoes,
     )
     from felinet.pipeline.fase3_classificacao.decisor import ConfigDecisor

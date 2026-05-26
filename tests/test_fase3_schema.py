@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from felinet.pipeline.fase3_classificacao.schema import (
     STATUS_FELIS_CATUS,
     PrediccaoEspecie,

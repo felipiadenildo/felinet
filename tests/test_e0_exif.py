@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
+
 from felinet.pipeline.fase1_ingestao.exif import extrair_metadados
 
 

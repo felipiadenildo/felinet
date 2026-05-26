@@ -14,9 +14,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .schema import ResultadoClassificacao, STATUS_FELIS_CATUS
-from .speciesnet import cortar_crop
 from ..fase2_deteccao.schema import BoundingBox
+from .schema import STATUS_FELIS_CATUS, ResultadoClassificacao
+from .speciesnet import cortar_crop
 
 
 @dataclass(frozen=True)

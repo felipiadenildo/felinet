@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from felinet.pipeline.fase2_deteccao.schema import (
     BoundingBox,
     Deteccao,

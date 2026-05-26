@@ -357,7 +357,7 @@ def _resolver_raiz_runs(perfil: Perfil) -> Path:
     """Resolve raiz de runs (campo do perfil ou default ``runs/``)."""
     raiz = perfil.extras.get("raiz_runs") if perfil.extras else None
     if raiz:
-        from felinet.config import raiz_projeto, _resolver_path
+        from felinet.config import _resolver_path, raiz_projeto
 
         return _resolver_path(raiz_projeto(), raiz)
     from felinet.config import raiz_projeto
@@ -371,7 +371,7 @@ def _resolver_fonte_path(perfil: Perfil, fonte: str, modo: str) -> str | None:
     entrada = fontes.get(fonte)
     if entrada is None:
         return None
-    from felinet.config import raiz_projeto, _resolver_path
+    from felinet.config import _resolver_path, raiz_projeto
 
     caminho = _resolver_path(raiz_projeto(), entrada)
     try:

@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from felinet.pipeline.fase4_reid.schema import (
     Embedding,
     carregar_embeddings_json,
