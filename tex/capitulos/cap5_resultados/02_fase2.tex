@@ -1,0 +1,29 @@
+% =============================================================================
+% cap5 §5.2 Resultados Fase II (detecção)
+% =============================================================================
+\section{Fase II --- detecção genérica de fauna}
+\label{sec:resultados-fase2}
+
+A Tabela~\ref{tab:res-fase2} consolida o desempenho estimado do \modeloMD{} sobre os \emph{splits} de teste oficiais do CCT e do Snapshot Serengeti, estratificado por iluminação. O baseline YOLOv8 nano genérico segue a mesma estratificação.
+
+\begin{table}[!htb]
+\centering
+\caption{Desempenho estimado da Fase~II por modelo e estrato. \obsfic{faixas teóricas a substituir após execução.}}
+\label{tab:res-fase2}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Modelo / estrato} & \textbf{mAP$@0.5$} & \textbf{mAP$@0.5{:}0.95$} & \textbf{Recall (nom.)} & \textbf{Recall (ajust.)} \\
+\midrule
+\modeloMD{} --- diurno    & 0{,}85--0{,}92 & 0{,}60--0{,}70 & 0{,}82--0{,}90 & 0{,}88--0{,}94 \\
+\modeloMD{} --- noturno   & 0{,}70--0{,}80 & 0{,}45--0{,}55 & 0{,}65--0{,}78 & 0{,}75--0{,}85 \\
+\modeloMD{} --- total     & 0{,}78--0{,}86 & 0{,}52--0{,}62 & 0{,}75--0{,}84 & 0{,}82--0{,}90 \\
+\midrule
+YOLOv8 gen. --- diurno    & 0{,}55--0{,}70 & 0{,}35--0{,}50 & 0{,}50--0{,}68 & 0{,}58--0{,}72 \\
+YOLOv8 gen. --- noturno   & 0{,}40--0{,}55 & 0{,}25--0{,}38 & 0{,}35--0{,}52 & 0{,}45--0{,}58 \\
+YOLOv8 gen. --- total     & 0{,}48--0{,}62 & 0{,}30--0{,}44 & 0{,}42--0{,}60 & 0{,}52--0{,}65 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A diferença estimada na mAP$@0.5{:}0.95$ total ($\sim$0{,}55 \emph{vs.}\ $\sim$0{,}37) configura-se como \textbf{grande} pelo critério da Seção~\ref{sec:metodologia-metricas}, consistente com a expectativa arquitetural de que um detector treinado especificamente em \emph{camera trapping} supere um detector generalista de objetos no mesmo regime de iluminação variável. A queda de desempenho entre estratos diurno e noturno --- estimada em $\sim$10\,p.p.\ para o \modeloMD{} e $\sim$15\,p.p.\ para o baseline --- reflete a dificuldade conhecida de detecção sob iluminação infravermelha próxima, e justifica a possibilidade de ajuste local do limiar noturno prevista no protocolo.

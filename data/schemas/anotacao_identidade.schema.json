@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://felinet.local/schemas/anotacao_identidade.schema.json",
+  "title": "Anotacao de identidade (P5 do DFD)",
+  "description": "Mapeamento crop -> ID animal, produzido por anotacao humana (operacional) ou pre-preenchido (dev). Chave: '<media_path>#bbox<indice>'. Valor: rotulo de identidade do animal.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "string",
+    "description": "Rotulo do individuo (ex.: 'gato_alpha', 'gato_001')."
+  },
+  "examples": [
+    {
+      "data/dev/pipeline/01_brutas/IMG_0004.jpg#bbox0": "gato_alpha",
+      "data/dev/pipeline/01_brutas/IMG_0005.jpg#bbox0": "gato_alpha"
+    }
+  ]
+}

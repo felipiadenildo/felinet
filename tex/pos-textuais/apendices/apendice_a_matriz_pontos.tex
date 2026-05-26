@@ -1,0 +1,76 @@
+% =====================================================================
+% Apêndice A -- Matriz bruta de infraestrutura dos pontos P01--P10
+%   Reprodução em LaTeX da planilha de levantamento de campo.
+% =====================================================================
+
+\chapter{Matriz bruta de infraestrutura dos pontos P01--P10}
+\label{ap:matriz-pontos}
+
+A Tabela~\ref{tab:matriz-pontos} reproduz, em formato tabular, a matriz bruta de levantamento de infraestrutura dos dez pontos candidatos a instalação de câmeras de \emph{camera trapping} no Campus~2 da USP São Carlos. Cada linha corresponde a um ponto identificado durante o reconhecimento de campo conduzido em conjunto com voluntários da AEX Gatosdoc2; as colunas registram atributos físicos do local (cobertura, iluminação, edifício), atributos operacionais (movimento de pessoas, vandalismo) e atributos de infraestrutura técnica (tomada elétrica, cobertura Wi-Fi USP, cobertura 4G, insolação direta para painel solar, presença prévia de câmeras de segurança institucionais, presença de outros animais). As coordenadas geográficas aproximadas obtidas por GPS de telefone celular são apresentadas separadamente na Tabela~\ref{tab:coordenadas-pontos}. Essa matriz alimenta a discussão de tipologias do Capítulo~\ref{cap:hardware} e a decisão arquitetural consolidada na Seção~\ref{sec:decisao-arquitetural}.
+
+\begin{landscape}
+\begin{footnotesize}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}p{0.6cm}p{2.4cm}p{1.9cm}p{1.5cm}p{1.3cm}p{1.0cm}p{1.0cm}p{0.9cm}p{1.4cm}p{1.0cm}p{0.7cm}p{1.0cm}p{1.0cm}p{1.1cm}@{}}
+\caption{Matriz bruta de infraestrutura dos pontos P01--P10 do Campus~2 da USP São Carlos. Atributos físicos, operacionais e de infraestrutura técnica.}
+\label{tab:matriz-pontos}\\
+\toprule
+\textbf{ID} & \textbf{Local} & \textbf{Edifício} & \textbf{Cobert.} & \textbf{Luz not.} & \textbf{Mov.} & \textbf{Vand.} & \textbf{Tom.} & \textbf{Dist. tom.} & \textbf{Wi-Fi USP} & \textbf{4G} & \textbf{Sol $>$4h} & \textbf{Câm. seg.} & \textbf{Outros anim.} \\
+\midrule
+\endfirsthead
+\multicolumn{14}{c}{{\bfseries Tabela~\thetable\ -- Continuação da página anterior}} \\
+\toprule
+\textbf{ID} & \textbf{Local} & \textbf{Edifício} & \textbf{Cobert.} & \textbf{Luz not.} & \textbf{Mov.} & \textbf{Vand.} & \textbf{Tom.} & \textbf{Dist. tom.} & \textbf{Wi-Fi USP} & \textbf{4G} & \textbf{Sol $>$4h} & \textbf{Câm. seg.} & \textbf{Outros anim.} \\
+\midrule
+\endhead
+\midrule \multicolumn{14}{r}{{Continua na próxima página}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+P01 & Atrás cantina Eng.\ Comp.       & Eng.\ Comp.      & Semi-coberto & Fraca   & Médio       & Baixo & Sim & 5\,m  & Sim & Sim & Sim & Sim & Sim \\
+P02 & Atrás prédio Eng.\ Comp.        & Eng.\ Comp.      & Aberto       & Fraca   & Quase nulo  & Baixo & Não & ---   & Sim & Sim & Sim & Não & Sim \\
+P03 & Atrás Anfiteatro                & Bloco didático   & Aberto       & Fraca   & Médio       & Baixo & Não & ---   & Sim & Sim & Sim & Não & Sim \\
+P04 & Lado Anfiteatro                 & Bloco didático   & Semi-coberto & Boa     & Alto        & Médio & Não & ---   & Sim & Sim & Sim & Não & Sim \\
+P05 & Corredor Anfiteatro / WCs       & Bloco didático   & Coberto      & Ausente & Alto        & Médio & Sim & 10\,m & Sim & Sim & Não & Não & Sim \\
+P06 & Corredor Biblioteca             & Biblioteca       & Coberto      & Boa     & Alto        & Médio & Sim & 5\,m  & Sim & Sim & Sim & Não & Sim \\
+P07 & Entre prédios Bloco Laranja     & Bloco didático   & Semi-coberto & Boa     & Baixo       & Baixo & Não & ---   & Sim & Sim & Sim & Não & Sim \\
+P08 & Bloco Amarelo / Entre prédios   & Bloco didático   & Semi-coberto & Fraca   & Quase nulo  & Baixo & Não & ---   & Sim & Sim & Sim & Não & Sim \\
+P09 & Atrás prédio Aero 1             & Aeronáutica      & Aberto       & Ausente & Quase nulo  & Baixo & Não & ---   & Sim & Sim & Sim & Não & Sim \\
+P10 & Atrás prédio Aero 2             & Aeronáutica      & Aberto       & Fraca   & Quase nulo  & Baixo & Não & ---   & Sim & Sim & Sim & Não & Sim \\
+\end{longtable}
+\end{footnotesize}
+\end{landscape}
+
+\begin{table}[!htb]
+\centering
+\caption{Coordenadas geográficas aproximadas dos pontos P01--P10, obtidas por GPS de telefone celular. Precisão limitada à do dispositivo; não devem ser tomadas como referência cartográfica oficial.}
+\label{tab:coordenadas-pontos}
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{ID} & \textbf{Latitude} & \textbf{Longitude} & \textbf{Altitude (m)} \\
+\midrule
+P01 & $-22{,}0000$ & $-47{,}9333$ & 832{,}8 \\
+P02 & $-22{,}0023$ & $-47{,}9324$ & 845{,}0 \\
+P03 & $-22{,}0019$ & $-47{,}9314$ & 847{,}1 \\
+P04 & $-22{,}0015$ & $-47{,}9312$ & 846{,}5 \\
+P05 & $-22{,}0012$ & $-47{,}9310$ & 844{,}0 \\
+P06 & $-21{,}9995$ & $-47{,}9335$ & 848{,}0 \\
+P07 & $-21{,}9988$ & $-47{,}9340$ & 850{,}5 \\
+P08 & $-21{,}9982$ & $-47{,}9348$ & 852{,}0 \\
+P09 & $-22{,}0040$ & $-47{,}9355$ & 855{,}0 \\
+P10 & $-22{,}0045$ & $-47{,}9362$ & 856{,}2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A leitura cruzada da matriz com a discussão de tipologias revela três agrupamentos operacionais bem definidos. Em primeiro lugar, P01, P05 e P06 são pontos com tomada elétrica próxima, cobertura física e fluxo médio a alto de pessoas, candidatos naturais a tipologia IPCAM com alimentação por rede elétrica e armazenamento em cartão microSD. Em segundo lugar, P02, P03 e P07 a P10 são pontos sem tomada próxima, com cobertura aberta ou semi-coberta e insolação direta suficiente para alimentação por painel solar de pequeno porte, candidatos a câmera autônoma alimentada por bateria. Em terceiro lugar, P04 isola-se como ponto de movimento alto, cobertura semi-coberta e iluminação noturna boa, candidato a tipologia híbrida com possibilidade de instalação de SBC para processamento em borda caso a disponibilidade de tomada seja resolvida pela equipe da Prefeitura do Campus~2. Esses agrupamentos são a base operacional da Seção~\ref{sec:decisao-arquitetural} e devem orientar a escolha de equipamento na fase de implantação.
+
+Cabe registrar que as coordenadas declaradas na Tabela~\ref{tab:coordenadas-pontos} têm precisão limitada à do GPS do telefone celular utilizado em campo e não devem ser tomadas como referência cartográfica oficial. Uma planta georreferenciada precisa dos pontos P01--P10 sobre o mapa institucional do Campus~2 está prevista como item de implantação --- a Figura~\ref{fig:mapa-pontos-placeholder} reserva o espaço dessa planta como \emph{placeholder} para inclusão futura.
+
+\begin{figure}[h]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{4cm}\textit{Placeholder} --- planta georreferenciada do Campus~2 da USP São Carlos com os dez pontos P01--P10 marcados sobre o mapa institucional. A figura definitiva será produzida em conjunto com a Prefeitura do Campus~2 na fase de implantação.\vspace{4cm}}}
+\caption{Planta georreferenciada dos pontos P01--P10 sobre o mapa institucional do Campus~2 (a produzir).}
+\label{fig:mapa-pontos-placeholder}
+\end{figure}

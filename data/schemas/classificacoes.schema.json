@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://felinet.local/schemas/classificacoes.schema.json",
+  "title": "Classificacoes da Fase III (SpeciesNet + Decisor)",
+  "description": "Saida do P4 e P4.1 do DFD. Status indica o caminho do crop na cascata.",
+  "type": "object",
+  "required": ["resultados"],
+  "properties": {
+    "resultados": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["media_path", "bbox_indice", "top_k", "status", "modelo", "tempo_ms"],
+        "properties": {
+          "media_path": {"type": "string"},
+          "bbox_indice": {"type": "integer", "minimum": 0},
+          "status": {"enum": ["felis_catus", "outra_especie", "validacao_humana"]},
+          "modelo": {"type": "string"},
+          "tempo_ms": {"type": "number"},
+          "top_k": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["especie", "probabilidade"],
+              "properties": {
+                "especie": {"type": "string"},
+                "probabilidade": {"type": "number", "minimum": 0, "maximum": 1}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

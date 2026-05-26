@@ -1,0 +1,37 @@
+# ============================================================
+# pipeline.yaml - Parametros operacionais do pipeline
+# ============================================================
+
+ingestao:
+  extensoes_aceitas: [".jpg", ".jpeg", ".png", ".tif", ".tiff"]
+  exigir_exif: false       # imagens sem EXIF nao sao rejeitadas em dev
+  campos_exif_obrigatorios: ["DateTime"]
+
+deteccao:
+  confianca_minima: 0.20   # threshold do MegaDetector
+  categorias_aceitas: ["animal"]  # person e vehicle filtrados aqui
+
+classificacao:
+  confianca_minima_felis_catus: 0.50  # threshold do decisor
+  status_aceitos: ["felis_catus"]
+
+reid:
+  modelo: "megadescriptor_t_224"
+  batch_size: 16
+  dispositivo: "auto"      # cuda se disponivel, senao cpu
+  open_set:
+    frac_novos: 0.50
+    seeds: [42, 7, 123]
+    fprs_alvo: [0.01, 0.05]
+
+avaliacao:
+  k_max_cmc: 10
+  metricas_obrigatorias:
+    - top_1
+    - top_5
+    - top_10
+    - cmc
+    - eer
+    - auc_roc
+    - tpr_at_fpr_01
+    - tpr_at_fpr_05

@@ -1,0 +1,24 @@
+# Normalizacao de quebras de linha (LF universal)
+*           text=auto eol=lf
+
+# Tipos textuais explicitos
+*.py        text eol=lf
+*.md        text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.json      text eol=lf
+*.toml      text eol=lf
+*.tex       text eol=lf
+*.bib       text eol=lf
+*.csv       text eol=lf
+*.sh        text eol=lf
+
+# Binarios
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.pdf       binary
+*.npz       binary
+*.pt        binary
+*.bin       binary
+*.zip       binary

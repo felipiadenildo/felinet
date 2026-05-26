@@ -1,0 +1,56 @@
+# ============================================================
+# paths.yaml - Mapeamento de caminhos por perfil de execucao
+# ============================================================
+# Carregado por felinet.config.carregar_perfil()
+# Selecionar perfil via variavel de ambiente FELINET_PERFIL ou
+# argumento --perfil dos comandos CLI.
+#
+# Convencao: todos os paths sao RELATIVOS a raiz do projeto.
+# Os datasets brutos pesados (PetFace, LILA-BC, Campus 2) ficam
+# fora do repositorio e sao acessados via symlinks em data/raw/.
+# Ver docs/runbooks/conectar_ssd_symlinks.md.
+# ============================================================
+
+perfis:
+
+  # ----------------------------------------------------------
+  # DEV - Smoke test, CI, demonstracao
+  # ----------------------------------------------------------
+  # Tudo cabe no repositorio. Roda em < 1 min sem GPU.
+  # ----------------------------------------------------------
+  dev:
+    raw_camera_trap:    data/dev/pipeline/01_brutas
+    raw_petface:        data/dev/petface_mini
+    interim:            data/dev/pipeline
+    processed:          data/dev/pipeline
+    artifacts_figuras:  artifacts/figuras
+    artifacts_tabelas:  artifacts/tabelas
+    # Saidas intermediarias da cascata (subdiretorios em interim)
+    saida_manifesto:           data/dev/pipeline/02_manifesto
+    saida_deteccoes:           data/dev/pipeline/03_deteccoes
+    saida_classificacoes:      data/dev/pipeline/04_classificacoes
+    saida_crops:               data/dev/pipeline/05_crops_felis_catus
+    anotacao_identidade:       data/dev/pipeline/06_anotacao_identidade.json
+    saida_embeddings:          data/dev/pipeline/07_embeddings.npz
+    saida_avaliacao_pipeline:  data/dev/pipeline/08_avaliacao_pipeline.json
+
+  # ----------------------------------------------------------
+  # PROD - Execucao oficial (geracao de metricas da monografia)
+  # ----------------------------------------------------------
+  # Datasets via symlinks ao SSD externo.
+  # ----------------------------------------------------------
+  prod:
+    raw_camera_trap:    data/raw/lila_bc
+    raw_petface:        data/raw/petface
+    raw_campus2:        data/raw/campus2
+    interim:            data/interim
+    processed:          data/processed
+    artifacts_figuras:  artifacts/figuras
+    artifacts_tabelas:  artifacts/tabelas
+    saida_manifesto:           data/processed
+    saida_deteccoes:           data/interim
+    saida_classificacoes:      data/interim
+    saida_crops:               data/interim/crops_felis_catus
+    anotacao_identidade:       data/processed/anotacao_identidade.json
+    saida_embeddings:          data/interim
+    saida_avaliacao_pipeline:  data/processed

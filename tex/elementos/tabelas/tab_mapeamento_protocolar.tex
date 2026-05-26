@@ -1,0 +1,18 @@
+% Tabela 4.2 — Mapeamento protocolar
+\begin{table}[!htb]
+\centering
+\caption{Mapeamento protocolar entre fase, dataset, modelo principal e baseline.}
+\label{tab:mapeamento-protocolar}
+\small
+\begin{tabular}{@{}p{0.8cm}p{2.4cm}p{2.5cm}p{3.0cm}p{3.2cm}@{}}
+\toprule
+\textbf{Fase} & \textbf{Tarefa} & \textbf{Dataset(s)} & \textbf{Modelo principal} & \textbf{Baseline} \\
+\midrule
+I    & Triagem por movimento & janela sintética & filtro embarcado & --- \\
+II   & Detecção de fauna     & CCT, Snapshot Ser. & \modeloMD{} (\emph{zero-shot}) & YOLOv8n (COCO $\to$ ``animal'') \\
+III  & Triagem de espécie    & CCT, NACTI         & \modeloSN{} (\emph{zero-shot})  & ResNet binário (\emph{transfer}) \\
+IV   & Re-ID individual      & PetFace, WildlifeReID-10k & \modeloPetFace{} + partes (sobre \modeloWildlife) & ResNet-50 ImageNet \emph{frozen} \\
+E2E  & Cascata completa      & janela sintética    & Pipeline I$\to$IV & aplicação ingênua \\
+\bottomrule
+\end{tabular}
+\end{table}

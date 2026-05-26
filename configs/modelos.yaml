@@ -1,0 +1,35 @@
+# ============================================================
+# modelos.yaml - Versoes fixadas dos modelos pre-treinados
+# ============================================================
+# Mantem rastreabilidade entre runs e a monografia. Cada entrada
+# documenta versao, URL oficial e hash do peso usado.
+# ============================================================
+
+megadetector:
+  versao: "v6.0.0"
+  arquitetura: "yolov9-c"
+  fonte: "PytorchWildlife"
+  identificador: "MDV6-yolov9-c.pt"
+  url_oficial: "https://github.com/microsoft/CameraTraps"
+  cache_local: "~/.cache/torch/hub/checkpoints/MDV6-yolov9-c.pt"
+  classes_saida: ["animal", "person", "vehicle"]
+
+speciesnet:
+  versao: "v4.0.2a"
+  fonte: "Kaggle"
+  identificador: "google/speciesnet/pyTorch/v4.0.2a/1"
+  url_oficial: "https://www.kaggle.com/models/google/speciesnet"
+  cache_local: "~/.cache/kaggle/models/google/speciesnet"
+  classe_alvo: "felis catus"
+  taxonomia_referencia: "GBIF"
+
+megadescriptor:
+  versao: "T-224"
+  arquitetura: "swin-tiny"
+  fonte: "HuggingFace"
+  identificador: "hf-hub:BVRA/MegaDescriptor-T-224"
+  url_oficial: "https://huggingface.co/BVRA/MegaDescriptor-T-224"
+  cache_local: "~/.cache/huggingface/hub/models--BVRA--MegaDescriptor-T-224"
+  parametros_milhoes: 27.5
+  dimensao_embedding: 768
+  normalizacao: "L2"
