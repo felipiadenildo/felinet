@@ -14,6 +14,9 @@ N         ?= 50
 NS        ?= 50,200,500
 SEEDS     ?= 42,1337,2024
 SUBSET    ?= 100
+GALERIA_PIORES ?= 5
+GALERIA_TOPK   ?= 3
+
 
 # Cores (para output legivel)
 C_RESET := \033[0m
@@ -354,8 +357,8 @@ smoke-petface:
 smoke-fluxo: smoke-petface
 	$(MAKE) listar-runs
 
-smoke: doctor debug-imports testes
-	@printf "$(C_OK)>>> Smoke ok$(C_RESET)\n"
+# smoke: doctor debug-imports testes
+# 	@printf "$(C_OK)>>> Smoke ok$(C_RESET)\n"
 
 # ============================================================
 # CI
@@ -382,15 +385,10 @@ figura-galeria:  ## Galeria qualitativa de erros (top-3 candidatos)
 	$(FELINET) figuras galeria-erros --perfil $(PERFIL) --fonte $(FONTE) --n $(N) \
 		--piores $(GALERIA_PIORES) --top-k $(GALERIA_TOPK)
 
-# Variáveis padrão (adicionar no topo do Makefile):
-GALERIA_PIORES ?= 5
-GALERIA_TOPK   ?= 3
 
 # Atualizar figuras-avancadas:
 figuras-avancadas: figura-cmc-comp figura-dist figura-roc figura-galeria
 
-
-.PHONY: limpar limpar-tudo organizar smoke ambiente
 
 ## Limpa caches e temporários (preserva runs e artifacts já gerados)
 limpar:

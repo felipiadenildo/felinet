@@ -34,9 +34,7 @@ from felinet.runs import RunDir
 from felinet.utils.io import gravar_json, gravar_npz, ler_json
 
 
-def _amostrar_deterministico(
-    brutas: list[Path], n: int, seed: int
-) -> list[Path]:
+def _amostrar_deterministico(brutas: list[Path], n: int, seed: int) -> list[Path]:
     """Amostra deterministicamente ``n`` itens de ``brutas``.
 
     Quando ``n <= 0`` ou ``n >= len(brutas)``, devolve a lista original
@@ -49,6 +47,7 @@ def _amostrar_deterministico(
     amostra = rng.sample(brutas, n)
     amostra.sort()
     return amostra
+
 
 LOG = obter_logger("orquestrador")
 
@@ -65,17 +64,29 @@ class RelatorioCascata:
     n_embeddings: int
     sucesso: bool
     mensagem: str = ""
+    # Novos contadores (v23) usados por figuras/tabelas comparativo-fontes:
+    n_imagens_com_animal: int = 0
+    n_classificacoes_total: int = 0
 
     def como_dicionario(self) -> dict:
         return {
+            # nomes canonicos
             "n_brutas": self.n_brutas,
             "n_manifesto": self.n_manifesto,
             "n_deteccoes_animal": self.n_deteccoes_animal,
             "n_classificacoes_felis_catus": self.n_classificacoes_felis_catus,
             "n_crops_gerados": self.n_crops_gerados,
             "n_embeddings": self.n_embeddings,
+            "n_imagens_com_animal": self.n_imagens_com_animal,
+            "n_classificacoes_total": self.n_classificacoes_total,
             "sucesso": self.sucesso,
             "mensagem": self.mensagem,
+            # aliases legados (consumidos por figuras/tabelas comparativo_fontes)
+            "n_entradas":           self.n_manifesto,
+            "n_animais_detectados": self.n_deteccoes_animal,
+            "n_imagens":            self.n_imagens_com_animal or self.n_manifesto,
+            "n_classificacoes":     self.n_classificacoes_total,
+            "n_felis_catus":        self.n_classificacoes_felis_catus,
         }
 
 
@@ -153,10 +164,7 @@ def executar_cascata(
     n_total = len(brutas)
     brutas = _amostrar_deterministico(brutas, max_amostras, seed_amostragem)
     if max_amostras and max_amostras < n_total:
-        LOG.info(
-            f"Amostragem determinística: {len(brutas)}/{n_total} "
-            f"(seed={seed_amostragem})"
-        )
+        LOG.info(f"Amostragem determinística: {len(brutas)}/{n_total} (seed={seed_amostragem})")
     LOG.info(f"Cascata iniciada: {len(brutas)} imagens em {pasta_brutas}")
 
     # ----- FASE I: Ingestao -----
@@ -183,6 +191,10 @@ def executar_cascata(
     arquivo_det = run.deteccoes_dir / "deteccoes.json"
     salvar_deteccoes_json(resultados_det, arquivo_det)
     n_animal = sum(1 for r in resultados_det for d in r.deteccoes if d.categoria == "animal")
+    n_imagens_com_animal = sum(
+        1 for r in resultados_det
+        if any(d.categoria == "animal" for d in r.deteccoes)
+    )
     LOG.info(f"Fase II OK: {n_animal} bboxes 'animal' -> {arquivo_det}")
     if dev_base is not None:
         from felinet.pipeline.dev_visual import registrar_deteccao
@@ -221,6 +233,7 @@ def executar_cascata(
     arquivo_clf = run.classificacoes_dir / "classificacoes.json"
     salvar_classificacoes_json(classificacoes, arquivo_clf)
     n_felis = sum(1 for c in classificacoes if c.status == STATUS_FELIS_CATUS)
+    n_class_total = len(classificacoes)
     LOG.info(f"Fase III OK: {n_felis} crops felis_catus -> {arquivo_clf}")
     if dev_base is not None:
         from felinet.pipeline.dev_visual import registrar_classificacao
@@ -291,6 +304,8 @@ def executar_cascata(
         n_classificacoes_felis_catus=n_felis,
         n_crops_gerados=len(crops),
         n_embeddings=n_emb,
+        n_imagens_com_animal=n_imagens_com_animal,
+        n_classificacoes_total=n_class_total,
         sucesso=True,
     )
 

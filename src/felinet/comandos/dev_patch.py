@@ -292,97 +292,56 @@ def gerar_resumo_html_cmd(
     run: str = typer.Option(
         "latest",
         "--run",
-        help="Tag do run (default: 'latest'). Use o nome do diret\u00f3rio em runs/.../_/.",
+        help="Tag do run (default: 'latest'). Use o nome do diretorio em runs/.../_/.",
     ),
 ) -> None:
-    """Gera ``resumo.html`` em ``dev_visualizacao/`` de um run j\u00e1 executado.
-
-    Resolucao do run:
-
-    * ``--run latest`` (default): usa ``resolver_latest()`` para encontrar o
-      run mais recente via symlink ``runs/latest/<chave>``. Se o symlink nao
-      existe, faz fallback para ``listar_runs()`` filtrado por
-      modo/fonte/perfil e pega o mais recente.
-    * ``--run <tag>``: busca em ``listar_runs()`` o run cuja ``tag`` ou cujo
-      nome de diretorio bate com o valor.
-    """
+    """Gera ``resumo.html`` em ``dev_visualizacao/`` de um run ja' executado."""
+    from felinet.config import raiz_projeto
     from felinet.pipeline.dev_visual import gerar_resumo_html
     from felinet.runs import listar_runs, resolver_latest
 
     cfg = carregar_perfil(perfil)
-    raiz_runs = getattr(cfg, "raiz_runs", Path("runs"))
+    raiz_runs = raiz_projeto() / (cfg.extras.get("raiz_runs") or "runs")
 
-    base_run: Path | None = None
+    base_run = None
     if run == "latest":
+        # 1) tenta symlink runs/latest/<chave> via resolver_latest
         base_run = resolver_latest(
-            modo="operacional", fonte=fonte, perfil=perfil, raiz_runs=raiz_runs
+            modo="operacional",
+            fonte=fonte,
+            perfil=cfg.nome,
+            raiz_runs=raiz_runs,
         )
+        # 2) fallback: ultimo run em runs/operacional/<fonte>/<perfil>/_/
         if base_run is None:
             registros = listar_runs(
-                raiz_runs, modo="operacional", fonte=fonte, perfil=perfil
+                raiz_runs,
+                modo="operacional",
+                fonte=fonte,
+                perfil=cfg.nome,
             )
             if registros:
                 base_run = registros[0].raiz
     else:
-        registros = listar_runs(
-            raiz_runs, modo="operacional", fonte=fonte, perfil=perfil
-        )
-        for reg in registros:
-            tag = reg.manifest.get("tag") or ""
-            if tag == run or reg.raiz.name == run or reg.raiz.name.endswith(f"__{run}"):
-                base_run = reg.raiz
-                break
+        base_run = raiz_runs / "operacional" / fonte / cfg.nome / "_" / run
 
     if base_run is None or not base_run.is_dir():
         typer.echo(
-            f"[erro] n\u00e3o achei run para modo=operacional fonte={fonte} "
-            f"perfil={perfil} run={run}"
+            f"[erro] nao encontrei run operacional para fonte={fonte}, "
+            f"perfil={cfg.nome}, run={run}."
         )
         typer.echo("  certifique-se de ter rodado o pipeline com --dev.")
         raise typer.Exit(code=1)
 
     base_dev = base_run / "dev_visualizacao"
     if not base_dev.is_dir():
-        typer.echo(f"[erro] n\u00e3o achei pasta dev_visualizacao em: {base_run}")
+        typer.echo(f"[erro] nao achei pasta dev_visualizacao em: {base_run}")
         typer.echo("  certifique-se de ter rodado o pipeline com --dev.")
         raise typer.Exit(code=1)
 
     arq = gerar_resumo_html(
         base_dev,
-        titulo_run=f"fonte={fonte} | perfil={perfil} | run={run}",
+        titulo_run=f"fonte={fonte} | perfil={cfg.nome} | run={base_run.name}",
     )
     typer.echo(f"[ok] gerado: {arq}")
     typer.echo(f"  abrir: xdg-open {arq}")
-
-
-@app.command("limpar-saidas-dev")
-def limpar_saidas_dev(
-    confirmar: bool = typer.Option(False, "--confirmar", help="Confirmacao explicita."),
-) -> None:
-    """Remove artefatos gerados pela cascata em ``data/dev/pipeline/0[2-8]_*``.
-
-    NAO apaga ``01_brutas/`` (origem da cascata dev).
-    """
-    import shutil
-
-    if not confirmar:
-        typer.echo("Use --confirmar para prosseguir.")
-        raise typer.Exit(code=0)
-
-    cfg = carregar_perfil("dev")
-    alvos = [
-        cfg.saida_manifesto,
-        cfg.saida_deteccoes,
-        cfg.saida_classificacoes,
-        cfg.saida_crops,
-        cfg.saida_embeddings,
-        cfg.saida_avaliacao_pipeline,
-    ]
-    for alvo in alvos:
-        if alvo.is_dir():
-            shutil.rmtree(alvo)
-            typer.echo(f"removido: {alvo}/")
-        elif alvo.is_file():
-            alvo.unlink()
-            typer.echo(f"removido: {alvo}")
-    typer.echo("OK: saidas dev limpas (01_brutas preservada).")

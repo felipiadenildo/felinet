@@ -249,6 +249,19 @@ def _resumir_manifesto(linhas: list[dict[str, str]]) -> dict[str, str]:
     }
 
 
+def _resolver_manifesto_path(latest: Path) -> Path | None:
+    """Localiza o manifesto.csv dentro de um run, suportando run unificado
+    (subpasta ``02_manifesto/``) ou layout legado (raiz do run)."""
+    candidatos = [
+        latest / "02_manifesto" / "manifesto.csv",
+        latest / "manifesto.csv",
+    ]
+    for c in candidatos:
+        if c.exists():
+            return c
+    return None
+
+
 @app.command("fontes-resumo")
 def fontes_resumo(
     perfil: str = typer.Option("prod", "--perfil", "-p"),
@@ -288,10 +301,14 @@ def fontes_resumo(
             perfil=cfg.nome,
             raiz_runs=raiz_runs,
         )
-        if latest is None or not (latest / "manifesto.csv").exists():
+        if latest is None:
             LOG.warning(f"Fonte '{fonte}': manifesto ausente em runs/ (skip).")
             continue
-        resumo = _resumir_manifesto(_ler_manifesto_csv(latest / "manifesto.csv"))
+        manifesto_path = _resolver_manifesto_path(latest)
+        if manifesto_path is None:
+            LOG.warning(f"Fonte '{fonte}': manifesto ausente em runs/ (skip).")
+            continue
+        resumo = _resumir_manifesto(_ler_manifesto_csv(manifesto_path))
         linhas.append(
             [
                 fonte,
@@ -386,9 +403,21 @@ def run_inventory(
     )
     typer.echo(f"OK: {saida_csv} + {saida_tex}")
 
+
 # ============================================================
 # Bloco 6 — Tabela comparativa entre fontes
 # ============================================================
+
+
+# Mapeia o prefixo logico (usado pelas figuras/tabelas legadas) para os
+# comandos reais que podem satisfazer aquela fase. A partir de v23 o
+# pipeline grava um unico run com extras.comando = 'pipeline executar'
+# contendo todas as fases — esse comando satisfaz qualquer fase logica.
+_COMANDOS_POR_FASE = {
+    "ingestao":      ("ingestao", "pipeline executar"),
+    "deteccao":      ("deteccao", "pipeline executar"),
+    "classificacao": ("classificacao", "pipeline executar"),
+}
 
 
 def _latest_por_fase(
@@ -398,17 +427,21 @@ def _latest_por_fase(
     perfil_nome: str,
     prefixo_comando: str,
 ) -> dict | None:
-    """Retorna o ``manifest`` do run mais recente cuja ``extras.comando``
-    comeca com ``prefixo_comando`` (ex.: 'ingestao', 'deteccao',
-    'classificacao'), filtrado por modo=operacional + fonte + perfil.
+    """Retorna o ``manifest`` do run mais recente compativel com a fase.
 
-    Em modo operacional os tres runs (ingestao/deteccao/classificacao)
-    compartilham a mesma chave latest, portanto ``resolver_latest`` nao
-    discrimina por fase. Aqui usa-se ``listar_runs`` (ordenado por
-    ``data_inicio`` desc) e filtra-se pelo prefixo do comando.
+    Aceita:
+      - runs antigos (um por fase, ``extras.comando`` = 'ingestao'/'deteccao'/...);
+      - runs unificados v23 (``extras.comando`` = 'pipeline executar').
+
+    Em modo operacional os runs compartilham a mesma chave latest, portanto
+    ``resolver_latest`` nao discrimina por fase. Aqui usa-se ``listar_runs``
+    (ordenado por ``data_inicio`` desc) e filtra-se pelos comandos validos.
     """
     from felinet.runs import listar_runs
 
+    comandos_validos = _COMANDOS_POR_FASE.get(
+        prefixo_comando, (prefixo_comando,)
+    )
     registros = listar_runs(
         raiz_runs,
         modo="operacional",
@@ -417,7 +450,9 @@ def _latest_por_fase(
     )
     for reg in registros:
         comando = (reg.manifest.get("extras") or {}).get("comando", "")
-        if comando.startswith(prefixo_comando) and reg.manifest.get("sucesso") is True:
+        if reg.manifest.get("sucesso") is not True:
+            continue
+        if any(comando.startswith(p) for p in comandos_validos):
             return reg.manifest
     return None
 
