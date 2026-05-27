@@ -1,22 +1,277 @@
 % =============================================================================
 % capitulos/cap3_pipeline.tex
-%   Cap. 3 -- Pipeline de Visão Computacional (wrapper)
-%   Assume que a imagem já chegou ao servidor a partir da infraestrutura de
-%   aquisição descrita no Capítulo 2. Aqui está o NÚCLEO técnico do trabalho.
+%   Cap. 3 -- Pipeline de visão computacional (arquivo consolidado)
+%   Substitui a estrutura anterior de 6 subarquivos + wrapper.
 %   Estrutura:
-%     §3.1 Visão geral do pipeline (postura, formas de chegada, fases)
-%     §3.2 Fase I -- Ingestão e pré-tratamento dos dados
-%     §3.3 Fase II -- Detecção generalista (MegaDetector)
-%     §3.4 Fase III -- Classificação multi-espécie (SpeciesNet)
-%     §3.5 Fase IV -- Reidentificação individual (PetFace + bodypart)
-%     §3.6 Síntese e ponte com a metodologia e os testes
+%     3.1 Arquitetura em quatro fases  (DFD + funil + decisão "as-is")
+%     3.2 Fase I  -- Ingestão e triagem
+%     3.3 Fase II -- Detecção generalista (MegaDetector)
+%     3.4 Fase III -- Classificação de espécie (SpeciesNet)
+%     3.5 Fase IV  -- Reidentificação individual (PetFace + partes do corpo)
+%     3.6 Síntese e ponte com a metodologia (Tabela 3.1)
 % =============================================================================
 \chapter{Pipeline de visão computacional}
 \label{cap:pipeline}
 
-\input{capitulos/cap3_pipeline/01_visao_geral}
-\input{capitulos/cap3_pipeline/02_fase1_ingestao}
-\input{capitulos/cap3_pipeline/03_fase2_deteccao}
-\input{capitulos/cap3_pipeline/04_fase3_classificacao}
-\input{capitulos/cap3_pipeline/05_fase4_reid}
-\input{capitulos/cap3_pipeline/06_sintese_ponte_cap4}
+% -----------------------------------------------------------------------------
+\section{Arquitetura em quatro fases}
+\label{sec:pipeline-visao-geral}
+
+Consolidado o quadro de aquisição no Capítulo~\ref{cap:hardware}, com tipologia única padronizada de câmeras IP comerciais adaptadas, gravação local em cartão microSD industrial, operação \textit{offline} e alimentação por \textit{powerbank}, o problema central deixa de ser capturar o quadro e passa a ser extrair dele a informação útil ao manejo da colônia. Esta etapa concentra a contribuição de engenharia de software e de visão computacional do trabalho. O pipeline aqui descrito incorpora como parâmetros de entrada a posição fixa do sensor por abrigo, a presença sistemática de fauna não-alvo no Campus~2, a ausência de canal de transmissão contínuo e a cadência de chegada de dados ditada pelo ciclo logístico de retirada de cartões pelos voluntários da AEX Gatos do C2.
+
+\subsection*{Forma de chegada dos dados}
+
+A tipologia padronizada definida na Seção~\ref{sec:decisao-arquitetural} fixa a forma de chegada dos dados ao pipeline. Cada um dos dez pontos entrega vídeo comprimido em padrões \textit{H.264} ou \textit{H.265} gravado no cartão microSD da IPCAM, retirado periodicamente em campo e transferido para um diretório de trabalho do servidor, organizado por ponto e por janela de coleta. A homogeneidade da entrada decorre da decisão arquitetural anterior e simplifica o tratamento na Fase~I, que passa a operar sobre um único formato canônico em vez de absorver heterogeneidade de sensores diferentes. Eventuais unidades experimentais paralelas reservadas a testes, como \textit{trail cameras}, SBC com NPU ou ESP32-CAM (Seção~\ref{sec:decisao-arquitetural}), produzem mídia em formatos distintos, tratada por adaptadores dedicados de ingestão sem alterar a lógica das fases subsequentes. Em todos os casos a ingestão se dá por retirada física dos cartões, e não por \textit{streaming} contínuo, de modo que o pipeline opera em \textbf{regime de lote} sobre janelas históricas de mídia.
+
+\subsection*{Justificativa das quatro fases}
+
+A partir desse ponto, o pipeline se organiza em quatro fases sequenciais cuja ordem é ditada pela natureza do problema, e não por uma arquitetura genérica de visão computacional. A Fase~I (Seção~\ref{sec:pipeline-fase1}) realiza a ingestão e o pré-tratamento das mídias, convertendo vídeo H.264/H.265 em um conjunto canônico de quadros prontos para inferência, com extração a baixa taxa, normalização leve e anexação de metadados de proveniência por ponto. A Fase~II (Seção~\ref{sec:pipeline-fase2}) executa a detecção generalista de animais, descartando o volume majoritário de \textit{ghost frames} e quadros vazios antes que qualquer custo computacional adicional seja incorrido, estratégia consolidada na literatura de \textit{camera trapping} em larga escala~\cite{bruce2025largescale,velasco2024smartcameratraps,mulero2025addressing}. A Fase~III (Seção~\ref{sec:pipeline-fase3}) é especialmente pertinente ao caso do Campus~2: a presença sistemática de fauna não-alvo discutida na Seção~\ref{sec:caracterizacao-pontos} torna necessária uma etapa de classificação multi-espécie que filtre gambás, quatis, aves, lagartos e felinos silvestres antes do estágio seguinte. Somente os quadros confirmados como \textit{Felis catus} prosseguem para a Fase~IV (Seção~\ref{sec:pipeline-fase4}), que executa a reidentificação individual (re-ID) contra o catálogo de indivíduos da colônia, finalidade declarada de todo o sistema.
+
+A pertinência das quatro fases pode ser lida em chave informacional: cada uma consome o volume residual filtrado pela anterior, reduzindo o custo computacional global em comparação a um único modelo monolítico que tentasse re-ID direta sobre o fluxo bruto. Em termos de risco de engenharia, essa decomposição isola os modos de falha: uma queda de desempenho na detecção é diagnosticável separadamente de uma queda na classificação ou na re-ID, informação relevante para o procedimento de avaliação do Capítulo~\ref{cap:metodologia}. A Figura~\ref{fig:dfd-pipeline} consolida em forma de Diagrama de Fluxo de Dados (DFD) a arquitetura descrita, explicitando os ramos de descarte (quadros vazios e fauna não-alvo), o passo de anonimização em conformidade com a Lei Geral de Proteção de Dados (LGPD) discutido na Seção~\ref{sec:pipeline-fase2} e o catálogo de indivíduos da colônia como reservatório do estado do sistema. A Figura~\ref{fig:funil-pipeline} ilustra, de forma quantitativa esquemática, a redução em ordens de grandeza que cada fase produz sobre o volume de dados que recebe.
+
+\input{elementos/diagramas/dfd_pipeline}
+
+% ---- Figura 3.2: Funil de redução de volume entre fases --------------------
+\begin{figure}[!htb]
+\centering
+\caption[Funil de redução de volume de dados entre as fases do pipeline.]{Funil de redução do volume de dados entre as fases do pipeline. Cada fase consome o resíduo da anterior, de modo que a re-ID opera sobre fração reduzida do volume bruto coletado em campo.}
+\label{fig:funil-pipeline}
+
+\begin{tikzpicture}[
+    >=stealth,
+    every node/.style={font=\footnotesize},
+    funilbloco/.style={
+        draw=black!60, line width=0.4pt,
+        fill=black!5,
+        minimum height=8mm,
+        align=center,
+        inner sep=2pt
+    },
+    rotulo/.style={font=\scriptsize\itshape, text=black!60}
+]
+
+% blocos do funil (largura decrescente)
+\node[funilbloco, minimum width=85mm] (bruto)
+    {Mídia bruta dos cartões microSD};
+\node[funilbloco, minimum width=70mm, below=3mm of bruto] (canon)
+    {Quadros canônicos amostrados (Fase~I)};
+\node[funilbloco, minimum width=55mm, below=3mm of canon] (anim)
+    {Quadros com animal detectado (Fase~II)};
+\node[funilbloco, minimum width=40mm, below=3mm of anim] (felis)
+    {Recortes de \textit{F.\,catus} (Fase~III)};
+\node[funilbloco, minimum width=28mm, below=3mm of felis] (id)
+    {Identidades atribuídas (Fase~IV)};
+
+% setas verticais (suaves)
+\draw[->, black!50] (bruto.south)  -- ($(canon.north)+(0,0)$);
+\draw[->, black!50] (canon.south)  -- ($(anim.north)+(0,0)$);
+\draw[->, black!50] (anim.south)   -- ($(felis.north)+(0,0)$);
+\draw[->, black!50] (felis.south)  -- ($(id.north)+(0,0)$);
+
+% rótulos de descarte à direita
+\node[rotulo, right=4mm of canon.east, anchor=west]
+    {descarte: vazios e duplicatas};
+\node[rotulo, right=4mm of anim.east, anchor=west]
+    {descarte: fauna não-alvo};
+\node[rotulo, right=4mm of felis.east, anchor=west]
+    {curadoria: novos indivíduos};
+
+\end{tikzpicture}
+
+\fonte{Elaborado pelo autor.}
+\end{figure}
+
+\subsection*{Regime de execução e decisão de escopo}
+
+O regime de execução é deliberadamente simples e alinhado às condições materiais do Capítulo~\ref{cap:hardware}: o pipeline é executado integralmente em um único servidor, sobre janelas de mídia já consolidadas pelo ciclo de retirada de cartões. Não há requisito de latência baixa ou de processamento em tempo quase real; a cadência de análise é semanal ou quinzenal, compatível com a rotina de manejo do grupo Gatos do C2 e suficiente para os fins de monitoramento populacional pretendidos. Esse desenho mantém o sistema reprodutível em uma única máquina e elimina a necessidade de orquestração de filas, microsserviços ou sincronização contínua entre nós de campo. A divisão borda-servidor explorada em~\citeonline{velasco2024smartcameratraps} e~\citeonline{pishdast2025smartcameratraps} permanece como otimização opcional, restrita às eventuais unidades-piloto com SBC e NPU mencionadas na Seção~\ref{sec:decisao-arquitetural}; a descrição que se segue não pressupõe esse deslocamento, e a otimização completa por ponto é remetida aos trabalhos futuros do Capítulo~\ref{cap:conclusao}.
+
+Os modelos de visão empregados (MegaDetector na Fase~II, SpeciesNet na Fase~III, PetFace e o método de re-ID por partes do corpo na Fase~IV) são utilizados em modo pré-treinado (\textit{as-is}), sem \textit{fine-tuning} sobre dados locais do Campus~2 no escopo deste projeto. Três razões sustentam a decisão. A primeira é o foco do trabalho na concepção do sistema e na sua viabilidade técnica integrada, e não na criação de um novo modelo de visão. A segunda é a maturidade documentada dos modelos generalistas escolhidos, que cobrem as classes ecológicas observadas na Seção~\ref{sec:caracterizacao-pontos}. A terceira é o limite prático imposto pelo cronograma: coleta sistemática de dataset local, anotação manual em volume e treinamento supervisionado são incompatíveis com o prazo de defesa e com o porte da equipe. A possibilidade de \textit{fine-tuning} leve, em especial da re-ID sobre um pequeno conjunto local de gatos cadastrados pelos voluntários, é discutida como trabalho futuro no Capítulo~\ref{cap:conclusao}; o Capítulo~\ref{cap:metodologia} propõe, em consequência, testes focados no problema e nos objetivos, sem experimentos de retreinamento.
+
+% -----------------------------------------------------------------------------
+\section{Fase I --- Ingestão e triagem}
+\label{sec:pipeline-fase1}
+
+A Fase~I converte a heterogeneidade de entrada descrita na Seção~\ref{sec:pipeline-visao-geral} em um conjunto canônico de quadros sobre o qual as fases seguintes possam operar sem precisar conhecer a origem específica de cada item. Sua função não é melhorar a qualidade fotográfica das imagens, mas garantir que o pipeline opere sobre uma representação uniforme e rastreável dos dados de campo, na qual cada quadro carrega a informação necessária para que falhas possam ser diagnosticadas \textit{a posteriori}. Em projetos de \textit{camera trapping} em larga escala, esta etapa costuma absorver mais tempo de engenharia que as fases de inferência, porque dela depende a coerência de todo o restante~\cite{velez2022choosing,bruce2025largescale}.
+
+\subsection*{Ingestão e extração de quadros}
+
+A ingestão começa pela transferência das mídias gravadas em cartões microSD para um diretório de trabalho do servidor, organizado por ponto e por janela de coleta. No caso operacional fixado pela Seção~\ref{sec:decisao-arquitetural}, com IPCAM comercial doméstica adaptada em modo \textit{offline}, as mídias chegam como arquivos de vídeo em formatos \textit{H.264} ou \textit{H.265}, em contêineres \texttt{.mp4} ou \texttt{.mkv}. Eventuais unidades experimentais paralelas (\textit{trail camera}, SBC com câmera, ESP32-CAM) entregam mídia em formatos distintos, como \textit{JPEG} estático, sequências numéricas ou clipes proprietários, tratados por adaptadores dedicados de ingestão que produzem a mesma representação lógica de quadro a jusante. Sobre os arquivos de vídeo, o pipeline executa uma extração de quadros com taxa de amostragem ajustada à dinâmica observada nos pontos: gatos comunitários permanecem junto aos potes de ração por janelas de segundos a alguns minutos, com movimentos relativamente lentos, o que permite amostrar em taxa inferior à do vídeo nativo, da ordem de poucos quadros por segundo, configurável por ponto, sem perda apreciável de informação relevante para detecção e re-ID. Essa decisão reduz o volume de dados encaminhado às fases seguintes e elimina, já na entrada, quadros sucessivos quase idênticos.
+
+Quando provenientes de unidades experimentais paralelas, imagens \textit{JPEG} estáticas são tratadas como quadros já amostrados e ingressam diretamente no estágio seguinte da Fase~I, sem extração adicional. Ao fim deste sub-estágio, o pipeline trabalha sobre um único formato lógico, um quadro de imagem com metadados associados, independentemente da rota física pela qual o dado foi adquirido.
+
+\subsection*{Filtragem de quadros não utilizáveis}
+
+Antes de invocar qualquer modelo de visão, a Fase~I aplica duas filtragens baratas, baseadas em estatísticas simples sobre histogramas, que eliminam quadros estruturalmente não utilizáveis e evitam que esses casos consumam custo computacional nas fases seguintes. A primeira é o descarte de quadros completamente escuros ou saturados, comuns em pontos onde a iluminação ativa por infravermelho próximo (NIR) (Seção~\ref{sec:acondicionamento-geometria}) gera quadros próximos ao módulo saturados e quadros distantes inteiramente pretos; essa filtragem é feita por inspeção da média e do desvio padrão de luminância do quadro. A segunda é o descarte de quadros sucessivos quase idênticos (deduplicação intra-evento), implementada por uma medida de diferença grosseira entre quadros adjacentes, por exemplo a soma de diferenças absolutas em uma versão reduzida do quadro. Essa deduplicação reconhece que um único evento de visitação ao pote, capturado em vídeo, pode gerar dezenas de quadros amostrados quase indistinguíveis, e que apenas alguns deles agregam informação efetiva ao pipeline.
+
+Ambas as filtragens são conservadoras: o objetivo é eliminar apenas os casos cuja inutilidade é estatisticamente evidente, repassando qualquer quadro com alguma chance de conter informação útil para o detector da Fase~II. Falsos positivos da Fase~I, quadros não úteis que escapem desta filtragem inicial, têm custo modesto, porque serão descartados na Fase~II; falsos negativos, quadros úteis erroneamente descartados, são irrecuperáveis, e por isso a Fase~I privilegia recall sobre precisão.
+
+\subsection*{Normalização e metadados por ponto}
+
+Selecionados os quadros candidatos, a Fase~I executa uma normalização leve cujo objetivo é compensar diferenças sistemáticas entre pontos, como regimes distintos de exposição automática entre unidades, presença ou ausência de iluminação ativa por NIR e variações de \textit{white balance} sob luz mista, sem alterar o conteúdo semântico do quadro. A normalização restringe-se a operações simples e reversíveis: equalização leve de histograma, ajuste de \textit{white balance} sob NIR e redimensionamento para a resolução de entrada esperada pelos modelos da Fase~II. O procedimento segue diretrizes comuns em projetos de aquisição heterogênea com câmeras de armadilha~\cite{velez2022choosing,velasco2024smartcameratraps}. A intenção é harmonizar a entrada, e não embelezar os quadros: artefatos de iluminação NIR, granulação noturna e variações angulares por ponto são informações úteis para a detecção e a classificação posteriores e devem ser preservados.
+
+A cada quadro canônico que sai da Fase~I é anexado um conjunto mínimo de metadados de proveniência: identificador do ponto (P01 a P10), tipologia da unidade que gerou a mídia (operacional ou experimental), \textit{timestamp} extraído do nome do arquivo ou dos cabeçalhos EXIF, e parâmetros de extração e normalização aplicados. Esses metadados não fazem parte da inferência em si, mas são instrumentais para o procedimento de avaliação descrito no Capítulo~\ref{cap:metodologia} e para o diagnóstico de falhas por ponto: sem eles, um decaimento de desempenho restrito a um determinado abrigo ou a uma determinada tipologia de hardware seria invisível à análise agregada. Ao final da Fase~I, portanto, o que segue para a Fase~II é uma coleção de quadros canônicos anotados com a informação mínima necessária para que o restante do pipeline opere e seja avaliável.
+
+% -----------------------------------------------------------------------------
+\section{Fase II --- Detecção generalista}
+\label{sec:pipeline-fase2}
+
+A Fase~II decide, para cada quadro canônico recebido da Fase~I, se há ou não um animal presente e, em caso afirmativo, localiza a sua \textit{bounding box}. Opera como uma válvula entre uma entrada potencialmente abundante, com cartões contendo milhares de quadros amostrados, e uma saída relativamente escassa, restrita a quadros que efetivamente contêm um animal junto ao ponto de alimentação. Em projetos de \textit{camera trapping} em larga escala é convergente o achado de que a maior parte do volume bruto coletado consiste em \textit{ghost frames} acionados por vento, sombra ou variação térmica, e que filtrar esse volume antes de qualquer etapa de classificação fina é condição para a viabilidade do restante do pipeline~\cite{bruce2025largescale,velez2022choosing,swanson2015snapshot,mulero2025addressing}.
+
+\subsection*{Escolha do modelo}
+
+O modelo adotado nesta fase é o MegaDetector, integrado por meio da pilha \textit{PyTorch-Wildlife} mantida pelo grupo \textit{AI for Wildlife} da Microsoft Research~\cite{hernandez2024pytorchwildlife,microsoft_cameratraps_repo}. Trata-se de um detector treinado em grande volume de dados de \textit{camera trapping} de diferentes biomas, projetado para detecção generalista de fauna em três classes amplas: animal, pessoa e veículo. Sua adoção é justificada por três fatores convergentes: disponibilidade pública dos pesos e da rotina de inferência, maturidade documentada em campo e alinhamento natural com a Fase~III, que assume para si a classificação multi-espécie. Esse desenho evita misturar em um único modelo o problema de rejeição de vazio e o de classificação fina, com modos de falha distintos e avaliação separável. Em coerência com a Seção~\ref{sec:pipeline-visao-geral}, o MegaDetector é utilizado sem \textit{fine-tuning} sobre dados do Campus~2; eventuais adaptações de domínio, em particular sobre quadros NIR noturnos, ficam registradas como trabalhos futuros no Capítulo~\ref{cap:conclusao}.
+
+\subsection*{Operação da fase no pipeline}
+
+Para cada quadro canônico entregue pela Fase~I, o MegaDetector produz uma lista de detecções, cada uma composta por uma \textit{bounding box}, uma classe macroscópica e um \textit{score} de confiança. A Fase~II aplica sobre essa saída um limiar de confiança configurável: quadros sem detecção acima do limiar são considerados negativos e removidos do fluxo; quadros com ao menos uma detecção válida da classe animal são marcados como positivos e seguem para a Fase~III, acompanhados das coordenadas da \textit{bounding box}, o que permite recortar a região de interesse e poupar à Fase~III o custo de processar o quadro inteiro. Detecções das classes pessoa e veículo, quando presentes, são registradas apenas como metadado de diagnóstico (causa provável de disparo) e não propagam como entrada para a Fase~III.
+
+\subsection*{Anonimização de pessoas na origem}
+
+A presença incidental de transeuntes nos quadros é tratada por um passo de mascaramento automático aplicado imediatamente após a inferência do MegaDetector e antes de qualquer persistência em disco: as regiões correspondentes a detecções da classe pessoa são submetidas a um filtro gaussiano de alta intensidade, de modo que apenas versões anonimizadas dos quadros sejam gravadas no acervo do projeto. As coordenadas da \textit{bounding box} permanecem como metadado operacional, sem qualquer associação a indivíduos identificáveis. O arranjo é coerente com o princípio de \textit{privacy-by-design} adotado pelo projeto e atende, na origem, às obrigações decorrentes da LGPD (Lei n\textsuperscript{o}~13.709/2018); o detalhamento jurídico-operacional foge ao escopo técnico deste capítulo.
+
+\subsection*{Limites conhecidos e mitigações}
+
+A literatura aponta dois limites principais do MegaDetector em configuração padrão. O primeiro é o desempenho inferior em quadros noturnos sob iluminação NIR, em que o contraste entre animal e fundo é menor e o detector tende a produzir mais falsos negativos~\cite{velasco2024smartcameratraps,mulero2025addressing}; a mitigação adotada é configurar o limiar de confiança por modo de captura (diurno e noturno) e estratificar a avaliação do Capítulo~\ref{cap:metodologia} por horário, para que eventuais quedas de \mAP\ em regime noturno apareçam explicitamente nos resultados. O segundo é o comportamento em \textit{full-frame} contra \textit{crop}: quando o animal ocupa fração muito pequena ou muito grande da imagem, o detector pode produzir caixas imprecisas ou falhar; a mitigação é parametrizar tamanhos mínimo e máximo de \textit{bounding box} e estratificar a avaliação por distância média ao animal por ponto, sem alteração do modelo em si. Ao final da Fase~II, o que segue para a Fase~III é um subconjunto menor de quadros, cada um acompanhado da região de interesse sobre a qual a classificação multi-espécie precisa operar.
+
+% -----------------------------------------------------------------------------
+\section{Fase III --- Classificação de espécie}
+\label{sec:pipeline-fase3}
+
+A Fase~III recebe da Fase~II quadros com detecções da classe macroscópica animal e tem como função única discriminar a espécie de cada detecção. Por estarem dispostos no solo e em formato aberto, os potes de ração do Campus~2 atraem rotineiramente fauna não-alvo: gambás (\textit{Didelphis albiventris}), quatis (\textit{Nasua nasua}), lagartos teiú, pombos, aves nativas e o felino silvestre gato-mourisco (\textit{Herpailurus yagouaroundi})~\cite{goncalves2025wildcat,cove2022capital}. Submeter indiscriminadamente essas espécies à re-ID da Fase~IV, validada apenas para \textit{F.\,catus}, produziria identificações falsas e contaminação persistente do histórico da colônia.
+
+\subsection*{Escolha do modelo}
+
+O modelo adotado nesta fase é o SpeciesNet, classificador hierárquico de espécies treinado em centenas de datasets de \textit{camera trapping} ao redor do mundo, liberado em código aberto pelo \textit{Google Research}~\cite{google_speciesnet_blog}. Três fatores justificam sua escolha. Primeiro, foi desenhado para a tarefa exata desta fase: classificação de espécies sobre recortes de animais previamente detectados, em condições típicas de \textit{camera trapping}, e não em fotografia controlada. Segundo, sua hierarquia taxonômica interna permite consumir a saída em diferentes níveis de generalidade, da família ao indivíduo, o que é útil ao filtro deste pipeline: quando o modelo não chega à espécie com confiança suficiente, ainda assim entrega a família ou a ordem. Terceiro, sua disponibilidade pública e integração com a pilha \textit{PyTorch-Wildlife} usada na Fase~II tornam a adoção operacionalmente simples. Em linha com a Seção~\ref{sec:pipeline-visao-geral}, o SpeciesNet é utilizado sem \textit{fine-tuning} sobre dados do Campus~2; a cobertura do modelo abrange as espécies de fauna não-alvo observadas em campo e \textit{F.\,catus} é classe abundante no treinamento global.
+
+\subsection*{Operação da fase no pipeline}
+
+Para cada detecção recebida da Fase~II, o SpeciesNet é aplicado sobre o recorte da \textit{bounding box} e produz uma distribuição de probabilidade sobre seu vocabulário taxonômico. A política de decisão é conservadora: apenas detecções classificadas como \textit{F.\,catus} com confiança acima de um limiar configurável seguem para a Fase~IV. Quadros classificados com confiança em outra espécie são registrados em uma base de fauna não-alvo, subproduto científico do projeto retomado nos trabalhos futuros do Capítulo~\ref{cap:conclusao}, mas não avançam no pipeline. Quadros sem classificação confiante, com alta entropia distribuída entre várias classes plausíveis ou baixa confiança concentrada em \textit{F.\,catus}, são roteados para uma fila de validação humana, em que voluntários do grupo Gatos do C2 podem confirmar ou rejeitar a classificação por uma interface mínima de revisão.
+
+A fila de validação humana cumpre dupla função: impede que casos duvidosos sigam para a re-ID e contaminem o histórico da colônia (papel operacional) e, ao longo do tempo, constitui um pequeno dataset rotulado do domínio do Campus~2 (papel metodológico), que poderia, em trabalho futuro, alimentar \textit{fine-tuning} leve do SpeciesNet ou reavaliação dos limiares de confiança das Fases~II e III. No escopo deste projeto, a fila é tratada apenas como camada de contenção, sem que as decisões algorítmicas das fases posteriores dependam dela.
+
+\subsection*{Espécies próximas e o gato-mourisco}
+
+Caso particular é o de \textit{H.\,yagouaroundi}: felino silvestre nativo, de porte similar ao do gato doméstico em alguns indivíduos, presente em fragmentos urbanos da região central de São Paulo~\cite{goncalves2025wildcat}. Trata-se do cenário em que uma classificação binária gato contra não-gato seria semanticamente correta mas operacionalmente desastrosa, por misturar duas espécies distintas no estágio de re-ID. O SpeciesNet, treinado sobre vocabulário taxonômico abrangente, contempla a espécie no seu repertório e a distingue em condições adequadas de iluminação e ângulo. Em condições degradadas (NIR, ângulo oblíquo, oclusão parcial), é razoável esperar saídas de baixa confiança e, portanto, encaminhamento para a fila de validação humana, comportamento aceitável para os fins do projeto.
+
+Ao final da Fase~III, segue para a Fase~IV um subconjunto menor de quadros: aqueles em que houve detecção válida de animal na Fase~II, a classificação multi-espécie convergiu de forma confiante para \textit{F.\,catus} e, quando acionada, a validação humana confirmou essa classificação. É sobre esse subconjunto que a re-ID pode operar com taxas de falso positivo aceitáveis.
+
+% -----------------------------------------------------------------------------
+\section{Fase IV --- Reidentificação individual}
+\label{sec:pipeline-fase4}
+
+A Fase~IV é o objetivo último do pipeline e a justificativa de existência do sistema. Recebida do estágio anterior uma coleção depurada de quadros confiantemente classificados como \textit{F.\,catus}, seu objetivo é, para cada quadro, atribuir um identificador individual ao animal, ou registrar que o indivíduo observado não é compatível com nenhum dos cadastrados, hipótese que aciona o protocolo de curadoria humana descrito ao final desta seção. A re-ID é o passo que transforma um detector genérico de fauna em um sistema de monitoramento populacional, permitindo responder às perguntas que interessam ao manejo da colônia: quantos indivíduos distintos visitam cada ponto, com que frequência, com que sobreposição entre pontos e com que continuidade temporal.
+
+\subsection*{Decomposição da tarefa: face e flanco}
+
+A literatura recente em re-ID de carnívoros pequenos converge em recomendar que a tarefa não seja tratada como problema único de \textit{embedding} corporal global, mas decomposta em conjuntos de \textit{features} discriminativas distintas, combináveis em decisão final ponderada. Para \textit{F.\,catus} em ambiente comunitário, dois conjuntos têm sustentação empírica direta: a face, com sua estrutura ocular, nasal e auricular específica, e o flanco, com seu padrão de pelagem, contorno corporal e, no caso de colônias submetidas a captura, esterilização e devolução (CED), a marcação por corte reto da ponta da orelha (\textit{ear-tipping}). Essa decomposição é a abordagem proposta por \citeonline{akbar2025bodypart} para re-ID por partes do corpo em felinos pequenos, alinhada à disponibilização do dataset PetFace, focado em reconhecimento facial de animais de companhia~\cite{shinoda2024petface}. A robustez da pelagem como atributo de re-ID é validada em larga escala no dataset \modeloWildlife~\cite{adam2024wildlifereid10k}. A Figura~\ref{fig:reid-face-flanco} sintetiza a decomposição adotada e a regra de fusão que combina os dois subprocessos.
+
+% ---- Figura 3.3: Decomposição face + flanco e fusão -------------------------
+\begin{figure}[!htb]
+\centering
+\caption[Decomposição da reidentificação em face e flanco com fusão ranqueada.]{Decomposição da reidentificação em dois subprocessos paralelos sobre o mesmo recorte de \textit{F.\,catus}: face, baseada em PetFace; e flanco, baseado no método de partes do corpo de \citeonline{akbar2025bodypart}. Os ranqueamentos individuais são combinados por fusão simples de \textit{scores} contra o catálogo da colônia.}
+\label{fig:reid-face-flanco}
+
+\begin{tikzpicture}[
+    >=stealth,
+    every node/.style={font=\footnotesize},
+    bloco/.style={
+        draw=black!60, line width=0.4pt,
+        fill=black!5,
+        minimum width=30mm, minimum height=10mm,
+        align=center, inner sep=2pt
+    },
+    entrada/.style={
+        draw=black!60, line width=0.4pt,
+        fill=black!10,
+        minimum width=34mm, minimum height=10mm,
+        align=center, inner sep=2pt
+    },
+    saida/.style={
+        draw=black!60, line width=0.4pt,
+        fill=black!10,
+        minimum width=38mm, minimum height=10mm,
+        align=center, inner sep=2pt
+    },
+    catalogo/.style={
+        draw=black!60, line width=0.4pt, dashed,
+        fill=white,
+        minimum width=30mm, minimum height=8mm,
+        align=center, inner sep=2pt, font=\scriptsize
+    }
+]
+
+% entrada (recorte da Fase III)
+\node[entrada] (in) {Recorte de \textit{F.\,catus}\\\scriptsize(da Fase III)};
+
+% dois ramos paralelos
+\node[bloco, above right=4mm and 16mm of in] (face)
+    {Re-ID por face\\\scriptsize(PetFace)};
+\node[bloco, below right=4mm and 16mm of in] (flanco)
+    {Re-ID por flanco\\\scriptsize\citeonline{akbar2025bodypart}};
+
+% fusão
+\node[bloco, right=16mm of in, xshift=46mm] (fusao)
+    {Fusão de \textit{scores}\\\scriptsize(face $\oplus$ flanco)};
+
+% catálogo (referência lateral, tracejada)
+\node[catalogo, above=8mm of fusao] (cat)
+    {Catálogo da colônia\\\scriptsize(embeddings cadastrais)};
+
+% saída
+\node[saida, right=16mm of fusao] (out)
+    {Ranqueamento\\\scriptsize\RankK{1}, \RankK{2}, $\ldots$};
+
+% setas
+\draw[->, black!60] (in.east) -- (face.west);
+\draw[->, black!60] (in.east) -- (flanco.west);
+\draw[->, black!60] (face.east)   -- (fusao.west);
+\draw[->, black!60] (flanco.east) -- (fusao.west);
+\draw[->, black!60, dashed] (cat.south) -- (fusao.north);
+\draw[->, black!60] (fusao.east) -- (out.west);
+
+\end{tikzpicture}
+
+\fonte{Elaborado pelo autor.}
+\end{figure}
+
+A Fase~IV é, portanto, composta por dois subprocessos paralelos sobre o mesmo quadro recortado: re-ID por face, baseado em PetFace, e re-ID por flanco, baseado no método de partes do corpo de \citeonline{akbar2025bodypart}. Cada subprocesso produz um ranqueamento dos indivíduos do catálogo da colônia, ordenado por similaridade ao quadro analisado; a decisão final combina os dois ranqueamentos por regra simples de fusão (média ponderada de \textit{scores} normalizados, ou eleição quando há concordância no topo do \RankK{1}), priorizando o subprocesso cuja entrada esteja em condições geometricamente mais favoráveis (face frontal disponível contra apenas flanco visível).
+
+\subsection*{Modelos pré-treinados e catálogo da colônia}
+
+Em coerência com a Seção~\ref{sec:pipeline-visao-geral}, ambos os subprocessos são executados com modelos pré-treinados sem \textit{fine-tuning} sobre dados do Campus~2. A rotina pública do PetFace e a implementação de referência de \citeonline{akbar2025bodypart} são aplicadas \textit{as-is} sobre os recortes da Fase~III, produzindo \textit{embeddings}, vetores de características densos, comparados por distância no espaço de \textit{embedding} contra o catálogo de \textit{embeddings} dos indivíduos cadastrados. O catálogo é construído a partir de fotografias cadastrais dos animais já submetidos ao protocolo CED do grupo Gatos do C2 (resumido na Seção~\ref{sec:caracterizacao-pontos}), processadas uma única vez pelos mesmos modelos e armazenadas como referência permanente no servidor. A atualização do catálogo, com inclusão de novos indivíduos e retirada de animais que deixaram a colônia, é tarefa operacional dos voluntários, mediada pela mesma interface da fila de validação humana da Fase~III. Eventual \textit{fine-tuning} leve dos dois modelos sobre o conjunto cadastral local fica registrado como trabalho futuro no Capítulo~\ref{cap:conclusao}.
+
+\subsection*{Saída da fase: \RankK{} e tratamento de novos indivíduos}
+
+Para cada quadro processado, a Fase~IV produz uma lista ranqueada dos $k$ indivíduos do catálogo mais similares ao animal observado, acompanhada de seus \textit{scores} de similaridade fundidos entre face e flanco. A política de decisão é cautelosa, em linha com a postura conservadora das fases anteriores. Quando o indivíduo do \RankK{1} apresenta similaridade acima de um limiar configurável e margem sobre o \RankK{2}, o pipeline atribui automaticamente o identificador correspondente e o adiciona ao histórico do indivíduo. Quando a similaridade do \RankK{1} é alta mas a margem para o \RankK{2} é estreita, caso típico em colônias com forte parentesco e padrões de pelagem similares, o registro é encaminhado para curadoria humana, com a lista ranqueada exibida ao voluntário para decisão. Quando nenhum indivíduo do catálogo supera o limiar mínimo, o registro é marcado como novo indivíduo candidato e fica retido para curadoria, em que a equipe do grupo Gatos do C2 decide se corresponde a um animal recém-incorporado ainda não cadastrado ou a um falso negativo do filtro multi-espécie da Fase~III.
+
+O arranjo evita que o pipeline invente identidades, restringindo a atribuição automática a casos de alta confiança, e mantém o catálogo auditável: cada identidade atribuída automaticamente fica acompanhada do \textit{score} de similaridade e da margem para o segundo colocado, e cada decisão humana fica registrada com data e identificador do voluntário, formando uma trilha mínima de auditoria que será incorporada à implementação futura do sistema. A confiabilidade dos modelos isoladamente e do pipeline integrado é estimada no Capítulo~\ref{cap:metodologia} por meio de \mAP, \Fscore\ e \RankK{k} apurados sobre datasets públicos representativos das condições esperadas no Campus~2.
+
+% -----------------------------------------------------------------------------
+\section{Síntese e ponte com a metodologia}
+\label{sec:pipeline-sintese}
+
+As quatro fases formam um pipeline cuja lógica de conjunto é mais relevante que qualquer um de seus modelos individuais. Cada fase consome o resíduo da anterior, transforma uma massa bruta de mídia em série temporal estruturada de visitas individuais por ponto e isola seus modos de falha, o que torna a avaliação por etapa do Capítulo~\ref{cap:metodologia} diretamente apurável. A Tabela~\ref{tab:pipeline-resumo} resume entrada, saída, modelo e critério de descarte de cada fase.
+
+% ---- Tabela 3.1: Resumo das quatro fases -----------------------------------
+\begin{table}[!htb]
+\centering
+\caption[Resumo das quatro fases do pipeline.]{Resumo das quatro fases do pipeline: função, modelo de referência e critério de descarte ou contenção em cada estágio.}
+\label{tab:pipeline-resumo}
+\small
+\begin{tabular}{@{}p{16mm} p{32mm} p{32mm} p{30mm} p{32mm}@{}}
+\toprule
+\textbf{Fase} & \textbf{Entrada} & \textbf{Saída} & \textbf{Modelo} & \textbf{Descarte / contenção} \\
+\midrule
+I  & Mídia bruta (vídeo H.264/H.265, JPEG) & Quadros canônicos com metadados & --- (heurísticas) & Vazios, saturados, duplicatas \\
+\addlinespace
+II & Quadros canônicos & Recortes com \textit{bounding box} de animal & MegaDetector & \textit{Ghost frames}; pessoas anonimizadas (LGPD) \\
+\addlinespace
+III & Recortes da Fase~II & Recortes confirmados como \textit{F.\,catus} & SpeciesNet & Fauna não-alvo; fila de validação humana \\
+\addlinespace
+IV & Recortes de \textit{F.\,catus} & \RankK{} contra o catálogo e identidade atribuída & PetFace + \citeonline{akbar2025bodypart} & Curadoria humana para margem estreita e novos indivíduos \\
+\bottomrule
+\end{tabular}
+\fonte{Elaborado pelo autor.}
+\end{table}
+
+Em coerência com a decisão arquitetural por tipologia única (Seção~\ref{sec:decisao-arquitetural}), o pipeline é executado integralmente em servidor único, sobre janelas históricas já consolidadas pelo ciclo \textit{offline-first} de retirada de cartões. Nenhuma das quatro fases pressupõe processamento em borda, e a sequência de execução é estritamente serial. A possibilidade de deslocar a Fase~II para a borda permanece como otimização opcional, retomada como trabalho futuro no Capítulo~\ref{cap:conclusao}; sua eventual adoção alteraria somente onde a Fase~II é executada, não como o restante do pipeline opera. Essa simplicidade arquitetural mantém o sistema reprodutível em uma única máquina e está alinhada à escala e ao prazo de um projeto de graduação. Com o pipeline assim consolidado, o Capítulo~\ref{cap:metodologia} desenvolve o protocolo de avaliação correspondente, restrito a datasets públicos já disponíveis e organizado em torno das quatro fases aqui descritas; o Capítulo~\ref{cap:resultados} apresenta os resultados preliminares dessa avaliação e o Capítulo~\ref{cap:conclusao} retoma as limitações e os trabalhos futuros decorrentes, em particular a coleta sistemática de dados no Campus~2.

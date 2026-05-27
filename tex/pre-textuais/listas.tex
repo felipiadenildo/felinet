@@ -1,5 +1,7 @@
 % =============================================================================
-% pre-textuais/listas.tex  --  Lista de Figuras, Tabelas, Abreviaturas e Símbolos
+% pre-textuais/listas.tex  --  Listas pré-textuais
+%   Lista de figuras, lista de tabelas, lista única de abreviaturas, siglas
+%   e símbolos e sumário.
 % =============================================================================
 
 % --- Lista de figuras ---
@@ -12,44 +14,94 @@
 \listoftables*
 \cleardoublepage
 
-% --- Lista de abreviaturas e siglas ---
+% --- Lista de abreviaturas, siglas e símbolos ---
+% Lista única conforme padronização editorial do projeto.
+% Termos estrangeiros em \textit{}; expansão em português entre parênteses
+% quando aplicável.
 \begin{siglas}
-  \item[AEX] Atividade de Extensão
   \item[ABNT] Associação Brasileira de Normas Técnicas
+  \item[AEX] Atividade de Extensão
+  \item[API] \textit{Application Programming Interface}
+  \item[AUC] \textit{Area Under the Curve} (área sob a curva)
+  \item[AUC-ROC] Área sob a curva ROC
+  \item[CatFLW] \textit{Cat Facial Landmarks in the Wild}
+  \item[CC-BY] \textit{Creative Commons -- Attribution}
+  \item[CCT] \textit{Caltech Camera Traps}
+  \item[CDLA] \textit{Community Data License Agreement}
+  \item[CED] Centro de Educação e Difusão
   \item[CEUA] Comissão de Ética no Uso de Animais
-  \item[CSV] \emph{Comma-Separated Values}
+  \item[CFMV] Conselho Federal de Medicina Veterinária
+  \item[CMC] \textit{Cumulative Match Characteristic} (curva de acerto cumulativo)
+  \item[CSV] \textit{Comma-Separated Values}
+  \item[CT] \textit{Camera Trapping} (armadilhamento fotográfico)
+  \item[CUDA] \textit{Compute Unified Device Architecture}
   \item[DFD] Diagrama de Fluxo de Dados
+  \item[EER] \textit{Equal Error Rate} (taxa de erro equivalente)
   \item[ER] Entidade-Relacionamento (modelo de Chen)
-  \item[FOV] \emph{Field of View} (campo de visão)
-  \item[GBIF] \emph{Global Biodiversity Information Facility}
+  \item[ESP32-CAM] Microcontrolador ESP32 com módulo de câmera
+  \item[EXIF] \textit{Exchangeable Image File Format}
+  \item[FOV] \textit{Field of View} (campo de visão)
+  \item[FPR] \textit{False Positive Rate} (taxa de falsos positivos)
+  \item[GBIF] \textit{Global Biodiversity Information Facility}
+  \item[GPIO] \textit{General-Purpose Input/Output}
+  \item[GPU] \textit{Graphics Processing Unit} (unidade de processamento gráfico)
+  \item[HTTPS] \textit{Hypertext Transfer Protocol Secure}
+  \item[IA] Inteligência Artificial
   \item[ICMC] Instituto de Ciências Matemáticas e de Computação
-  \item[IoU] \emph{Intersection over Union}
-  \item[IPCAM] Câmera IP (\emph{IP Camera})
-  \item[JSON] \emph{JavaScript Object Notation}
+  \item[iNaturalist] Plataforma colaborativa de registros de biodiversidade
+  \item[IoU] \textit{Intersection over Union} (intersecção sobre união)
+  \item[IP] \textit{Ingress Protection} (grau de proteção)
+  \item[IP66/IP67] Graus de proteção contra poeira e jatos/imersão d'água
+  \item[IPCAM] Câmera IP (\textit{IP Camera})
+  \item[JPEG] \textit{Joint Photographic Experts Group}
+  \item[JSON] \textit{JavaScript Object Notation}
   \item[LGPD] Lei Geral de Proteção de Dados
-  \item[LILA BC] \emph{Labeled Information Library of Alexandria: Biology and Conservation}
-  \item[mAP] \emph{mean Average Precision}
-  \item[NIR] \emph{Near-Infrared} (infravermelho próximo)
-  \item[NPU] \emph{Neural Processing Unit}
-  \item[PoE] \emph{Power over Ethernet}
-  \item[Re-ID] Reidentificação individual (\emph{Re-Identification})
-  \item[SBC] \emph{Single-Board Computer}
+  \item[LILA BC] \textit{Labeled Information Library of Alexandria: Biology and Conservation}
+  \item[LTE] \textit{Long-Term Evolution} (telefonia móvel 4G)
+  \item[mAP] \textit{mean Average Precision} (precisão média)
+  \item[MegaDetector] Detector aberto de fauna em \textit{camera trapping}
+  \item[MegaDescriptor] Modelo aberto de \textit{embeddings} para re-ID de fauna
+  \item[MIT] \textit{Massachusetts Institute of Technology} (licença MIT)
+  \item[MQTT] \textit{Message Queuing Telemetry Transport}
+  \item[NACTI] \textit{North American Camera Trap Images}
+  \item[NIR] \textit{Near-Infrared} (infravermelho próximo)
+  \item[NPU] \textit{Neural Processing Unit} (unidade de processamento neural)
+  \item[NVIDIA] Fabricante de processadores gráficos
+  \item[PetFace] Conjunto de dados de reconhecimento facial de animais domésticos
+  \item[PIR] \textit{Passive Infrared} (sensor infravermelho passivo)
+  \item[PoE] \textit{Power over Ethernet}
+  \item[PyTorch] Biblioteca de aprendizado profundo em Python
+  \item[Re-ID] Reidentificação individual (\textit{Re-Identification})
+  \item[ROC] \textit{Receiver Operating Characteristic}
+  \item[SBC] \textit{Single-Board Computer} (computador de placa única)
+  \item[SD] \textit{Secure Digital} (cartão de memória)
+  \item[SHA-256] \textit{Secure Hash Algorithm 256-bit}
+  \item[SpeciesNet] Classificador aberto de espécies para \textit{camera trapping}
   \item[STI] Superintendência de Tecnologia da Informação (USP)
-  \item[TCC] trabalho de conclusão de curso
-  \item[USB] \emph{Universal Serial Bus}
+  \item[TCC] Trabalho de Conclusão de Curso
+  \item[TNR] \textit{Trap--Neuter--Return} (captura, castração e devolução)
+  \item[TPR] \textit{True Positive Rate} (taxa de verdadeiros positivos)
+  \item[TPU] \textit{Tensor Processing Unit}
+  \item[UFMG] Universidade Federal de Minas Gerais
+  \item[USB] \textit{Universal Serial Bus}
   \item[USP] Universidade de São Paulo
-  \item[USPSC] Pacote LaTeX USP São Carlos (classe abntex2)
-  \item[YAML] \emph{YAML Ain't Markup Language}
+  \item[USPSC] Pacote LaTeX USP São Carlos (classe \texttt{abntex2})
+  \item[WildlifeReID-10k] \textit{Wildlife Re-Identification 10k}
+  \item[YAML] \textit{YAML Ain't Markup Language}
 \end{siglas}
 \cleardoublepage
 
 % --- Lista de símbolos ---
+% Mantida como subseção dedicada para variáveis matemáticas e thresholds.
 \begin{simbolos}
-  \item[$\mAP$] Precisão média (\emph{mean Average Precision})
-  \item[$\Fscore$] F-score (média harmônica entre precisão e revocação)
-  \item[$\RankK{k}$] Taxa de recuperação ao posto $k$
-  \item[$\tau$] Limiar de rejeição em regime \emph{open-set}
-  \item[IoU] Intersecção sobre união entre \emph{bounding boxes}
+  \item[$\mu\pm\sigma$] Média e desvio padrão sobre sementes aleatórias
+  \item[$N$] Tamanho do catálogo (galeria) em protocolos de re-ID
+  \item[$K$] Posto no \textit{ranking} de hipóteses de re-ID (Top-$K$)
+  \item[$\tau$] Limiar de rejeição em regime \textit{open-set}
+  \item[Top-1, Top-5, Top-10] Fração de consultas com identidade correta entre as $K$ primeiras hipóteses
+  \item[mAP@10] Precisão média avaliada até o décimo posto do \textit{ranking}
+  \item[TPR@FPR=1\%] Taxa de verdadeiros positivos quando a taxa de falsos positivos é fixada em 1\%
+  \item[IoU] Intersecção sobre união entre \textit{bounding boxes}
 \end{simbolos}
 \cleardoublepage
 

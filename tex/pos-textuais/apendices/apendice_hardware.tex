@@ -1,0 +1,64 @@
+% =============================================================================
+% pos-textuais/apendices/apendice_hardware.tex
+%   Apêndice -- Detalhamento de hardware
+%   Conteúdo deslocado do Capítulo 2 para preservar concisão do capítulo principal.
+% =============================================================================
+\chapter{Detalhamento de hardware}
+\label{ap:hardware}
+
+
+Este apêndice reúne os elementos de detalhamento técnico do subsistema de aquisição que foram remetidos para fora do Capítulo~\ref{cap:hardware} a fim de preservar sua leitura como deliberação arquitetural. As três seções a seguir tratam, respectivamente, dos invólucros e proteção ambiental; do dimensionamento energético, do armazenamento local e da conectividade; e das alternativas exploradas em pilotos paralelos à tipologia padronizada.
+
+
+\section{Invólucros e proteção ambiental}
+\label{sec:ap-hw-acondicionamento}
+
+
+Os pontos P01--P10 estão expostos a chuva, orvalho, poeira, variação térmica diária acima de 15\,$^\circ$C e, em vários casos, contato direto com vegetação e solo úmido. Invólucros classe IP66 (proteção total contra poeira e jatos d'água) ou IP67 (imersão temporária) são requisito não negociável do projeto. Em paralelo, surge o compromisso entre vedação e ventilação: módulos com SBC e NPU dissipam calor não desprezível em operação contínua, e invólucros completamente vedados podem elevar a temperatura interna a ponto de comprometer a estabilidade dos sensores, problema reportado em sistemas semelhantes em climas tropicais \cite{tiddeman2023lowpowerhardware,sargent2021raspberrypi}. Essa restrição impacta o regime térmico do sensor de imagem, com possíveis consequências sobre ruído, faixa dinâmica e estabilidade colorimétrica dos quadros entregues ao \textit{pipeline}.
+
+
+\textit{Camera trapping} é, internacionalmente, campo afetado por furto e vandalismo: levantamentos com centenas de profissionais documentam perdas anuais expressivas e indicam que as estratégias mais efetivas combinam camuflagem visual, fixação robusta e posicionamento que reduza a saliência do equipamento \cite{meek2018theft}. No Campus 2, o sistema é instalado em ambiente comunitário cooperativo, partilhado por estudantes, técnicos, voluntários e visitantes externos. Câmeras visivelmente identificáveis tendem a alterar tanto o comportamento de pessoas quanto, em alguma medida, a frequentação dos abrigos pelos próprios gatos, componente relevante em estudos urbanos de fauna sinantrópica \cite{cove2022capital}. A diretriz é integrar o módulo aos abrigos reciclados existentes, aproveitando seu volume para abrigar a caixa eletrônica. Para o \textit{pipeline}, a posição do sensor passa a ser dada pelo abrigo, convertendo-se em parâmetro fixo de calibração geométrica por ponto.
+
+
+A iluminação ativa por infravermelho próximo (NIR) precisa estar coalinhada com o eixo óptico e dimensionada para o alcance típico do ponto, sob pena de gerar quadros saturados próximos ao módulo e escuros para além de distância curta. A obstrução do cone de visão por vegetação no primeiro plano reduz substancialmente a taxa efetiva de detecção, com queda da ordem de duas a três vezes em sítios visualmente carregados \cite{moll2020viewshed}, diretriz que se traduz, no Campus 2, em remoção periódica de folhagem incorporada à rotina dos cuidadores.
+
+
+\section{Energia, armazenamento e conectividade}
+\label{sec:ap-hw-energia}
+
+
+A discussão energética articula três regimes. Nos pontos com tomada elétrica, câmeras IP modificadas para operação local e SBC com NPU operam confortavelmente em ciclo contínuo, com folga para iluminação ativa por NIR e janelas de inferência prolongadas, salvo riscos pontuais de queda de tensão amortecidos por fontes estabilizadas. Esse regime define o teto operacional a partir do qual as etapas mais exigentes do \textit{pipeline} podem migrar para a borda, mas alcança parcela minoritária dos pontos.
+
+
+O regime majoritário é o de alimentação fotovoltaica. SBCs com aceleradores neurais dissipam potência não desprezível em operação contínua, exigindo painel, controlador de carga e banco de bateria dimensionados com folga para o ciclo diário e reserva para dias nublados consecutivos, requisito já reportado como dimensionante em sistemas similares \cite{velasco2024smartcameratraps,pishdast2025smartcameratraps,sargent2021raspberrypi}. A iluminação ativa por NIR é item energético sensível: emissores potentes resolvem o problema óptico noturno, mas inflacionam o consumo médio, deslocando o ponto de operação para fora do envelope viável de painéis e baterias razoáveis. Reduzir o nível de processamento do SBC para o ESP32-CAM, ou aceitar perda parcial de cobertura noturna, é alternativa legítima em vez de regressão técnica \cite{tiddeman2023lowpowerhardware}.
+
+
+O terceiro regime, das câmeras alimentadas por baterias (\textit{trail cam} comercial), opera com consumo médio próximo de zero pela combinação de PIR físico e \textit{deep sleep}, ao custo de processamento de borda essencialmente nulo e de cadência de troca ou recarga das baterias incorporada ao protocolo de campo. Consequentemente, o \textit{pipeline} não pode pressupor processamento de borda uniforme: a divisão borda-servidor varia com o orçamento energético local. Na tipologia adotada como padrão pelo Capítulo~\ref{cap:hardware}, a câmera IP é alimentada por \textit{powerbank} dedicado, com ciclo de troca incorporado à rotina de coleta dos cartões.
+
+
+O armazenamento local, no regime \textit{offline-first}, é canal primário de persistência. Cartões microSD de classe industrial, com tolerância térmica ampliada e algoritmos robustos de \textit{wear leveling}, são o suporte usual; cartões de consumo têm histórico documentado de falha precoce sob ciclos intensos de escrita e variação térmica externa \cite{tiddeman2023lowpowerhardware,sargent2021raspberrypi}. A política de gravação equilibra densidade de informação retida (taxa de quadros, resolução, metadados de inferência) e envelhecimento do meio físico, com rotação programada e marcação de blocos consolidados. Operacionalmente, o ciclo logístico é independente de rede: os cartões são retirados em campo pelos cuidadores ou pela equipe técnica e transferidos ao servidor, com cadência semanal ou quinzenal compatível com a rotina da AEX Gatos do C2. A queda de tensão durante escrita em curso é mitigada por sistemas de arquivos com \textit{journaling} e escrita em blocos atômicos com renomeação final \cite{sargent2021raspberrypi}.
+
+
+A conectividade, ao contrário de energia e armazenamento, é variável institucional. A rede sem fio da Universidade está nominalmente disponível, mas seu uso por dispositivos embarcados depende de autorização da Superintendência de Tecnologia da Informação, credenciais compatíveis com autenticação corporativa (tipicamente 802.1X EAP-PEAP) e configuração consistente em cada nó. A rede celular 4G/LTE opera sob lógica análoga: tecnicamente trivial, institucionalmente custosa. A consequência metodológica é tratar conectividade como camada opcional adicionada sobre um sistema já completo em modo \textit{offline-first}. Quando autorizada, habilita sincronização oportunista, supervisão remota e atualização de modelos em borda; quando indisponível, o sistema continua a operar com cadência de análise atrelada ao ciclo logístico.
+
+
+\section{Alternativas exploradas em pilotos paralelos}
+\label{sec:ap-hw-alternativas}
+
+
+A decisão arquitetural do Capítulo~\ref{cap:hardware} adota tipologia única padronizada para os dez pontos operacionais. As três tipologias não escolhidas como padrão permanecem no projeto sob a forma de pilotos paralelos com finalidade específica.
+
+
+\paragraph*{Câmeras de trilha (\textit{trail cameras}).}
+Atuam como referência comparativa para validação experimental em pontos sem insolação adequada e em ciclos de campo nos quais se queira contrastar a taxa de \textit{ghost frames} e a qualidade noturna entre tipologias. Sua arquitetura fechada, com \textit{firmware} proprietário e ciclo encerrado em cartão SD, impede integração nativa ao restante do sistema; o material extraído é processado a posteriori pelo mesmo \textit{pipeline} de servidor descrito no Capítulo~\ref{cap:pipeline}.
+
+
+\paragraph*{Computadores em placa única com NPU.}
+Mantêm-se como referência para etapas em borda do \textit{pipeline}. Podem ser implantados em uma ou duas unidades-piloto para avaliar o ganho de descarte antecipado de quadros sem animal e de classificação multiespécie embarcada, em preparação a futuras versões do sistema que exijam operação próxima ao tempo real. O custo unitário e o dimensionamento energético (painel, controlador, banco de bateria) são reportados em \cite{velasco2024smartcameratraps,pishdast2025smartcameratraps,sargent2021raspberrypi}.
+
+
+\paragraph*{Microcontroladores com câmera embarcada.}
+Permanecem disponíveis para redes densas de prova de conceito ou para pontos cuja perda do equipamento por vandalismo seja considerada aceitável. A baixa qualidade óptica e o orçamento computacional limitado os mantêm fora da operação principal, mas seu custo unitário viabiliza experimentos de cobertura redundante e de detecção binária de presença.
+
+
+Em todos os casos, essas tipologias entram no projeto como unidades experimentais paralelas, não substituindo a tipologia padronizada nos dez pontos operacionais. Sua função é fornecer evidência empírica para eventual migração arquitetural em versões futuras do sistema. Os atributos de campo consolidados por ponto, com energia, conectividade, incidência solar, fauna não-alvo e risco de vandalismo, são reunidos na matriz P01--P10 do Apêndice~\ref{ap:matriz-pontos}.

@@ -1,12 +1,67 @@
 % =============================================================================
 % capitulos/cap6_conclusao.tex
-%   Cap. 6 -- Conclusão e trabalhos futuros (wrapper)
+%   Cap. 6 -- Conclusão e trabalhos futuros (versão concisa)
 %   §6.1 Síntese -- §6.2 Contribuições -- §6.3 Limitações -- §6.4 Trabalhos futuros
 % =============================================================================
 \chapter{Conclusão e trabalhos futuros}
 \label{cap:conclusao}
 
-\input{capitulos/cap6_conclusao/01_sintese}
-\input{capitulos/cap6_conclusao/02_contribuicoes}
-\input{capitulos/cap6_conclusao/03_limitacoes}
-\input{capitulos/cap6_conclusao/04_trabalhos_futuros}
+
+% =============================================================================
+% §6.1 Síntese
+% =============================================================================
+\section{Síntese}
+\label{sec:conclusao-sintese}
+
+A monografia tratou o problema de manejo da colônia de gatos do Campus~2 da USP São Carlos sob a perspectiva da engenharia de sistemas, especificando um \textit{pipeline} de visão computacional em quatro fases (triagem por movimento, detecção de fauna, classificação de espécie e reidentificação individual, doravante re-ID) como apoio operacional à AEX Gatos do C2. O Capítulo~\ref{cap:hardware} caracterizou os pontos de alimentação e fixou a tipologia única de \textit{kit} com câmeras IP comerciais alimentadas por baterias. O Capítulo~\ref{cap:pipeline} desenhou a cascata em servidor único e adotou MegaDetector, SpeciesNet, MegaDescriptor e PetFace como componentes principais. O Capítulo~\ref{cap:metodologia} formalizou o protocolo de avaliação restrito a \textit{datasets} públicos, com \textit{baseline} mínimo por fase e separação entre \textit{closed-set} e \textit{open-set}. O Capítulo~\ref{cap:resultados} reportou as medidas obtidas pela execução real dos componentes sobre os corpora \texttt{kaggle\_cats} \citeonline{cat_dataset_kaggle_2024}, Felidae \citeonline{felidae_dataset_gts} e PetFace \citeonline{petface_dataset}.
+
+A leitura conjunta dos quatro capítulos descreve um sistema com escopo delimitado: a especificação arquitetural, o protocolo experimental e a caracterização quantitativa das três fases inferenciais sustentam-se sobre dados reais. Restam, conforme detalhado nas seções seguintes, a coleta de campo no Campus~2 e a calibração específica dos modelos sobre a colônia local.
+
+
+% =============================================================================
+% §6.2 Contribuições
+% =============================================================================
+\section{Contribuições}
+\label{sec:conclusao-contribuicoes}
+
+As contribuições deste trabalho organizam-se em três planos. No plano arquitetural, especifica-se um \textit{pipeline} em cascata que integra três bibliotecas pré-treinadas heterogêneas (\textit{camera trapping}, re-ID de animais domésticos e re-ID de fauna silvestre) sob uma única convenção de entrada e saída, com mascaramento de pessoas exigido pela LGPD antes de qualquer persistência identificável. A integração das três bibliotecas em torno de um protocolo único de artefatos (manifestos JSON por fase, \textit{embeddings} em NumPy e tabelas CSV de avaliação) diferencia a proposta de uma composição \textit{ad hoc} de modelos.
+
+No plano metodológico, formaliza-se um protocolo de avaliação restrito a \textit{datasets} públicos, com \textit{baseline} mínimo por fase e separação explícita entre \textit{closed-set} e \textit{open-set} para a Fase~IV. O protocolo permite caracterizar a viabilidade do sistema antes do comprometimento de recursos com coleta sistemática em campo. Os artefatos correspondentes são reproduzíveis a partir dos \textit{scripts} versionados descritos no Capítulo~\ref{cap:metodologia}.
+
+No plano operacional, define-se uma tipologia única de \textit{kit} de instrumentação dimensionada para os pontos de alimentação da AEX Gatos do C2 e organiza-se o conjunto de \textit{scripts} em uma estrutura de orquestração que reduz a barreira de entrada para a equipe da ação de extensão. O fluxo cotidiano concentra-se na confirmação humana de hipóteses de re-ID e na curadoria de novos indivíduos, sem exigir competência especializada em aprendizado profundo.
+
+
+% =============================================================================
+% §6.3 Limitações
+% =============================================================================
+\section{Limitações}
+\label{sec:conclusao-limitacoes}
+
+O recorte adotado carrega cinco limitações que delimitam o escopo do trabalho. A primeira é a ausência de coleta de campo: a cascata operacional e o re-ID foram avaliados sobre corpora externos (\texttt{kaggle\_cats}, Felidae e PetFace), e não sobre imagens da colônia da AEX Gatos do C2. As medidas reportadas respondem pelo comportamento dos modelos pré-treinados em condições próximas, mas não idênticas, às de operação.
+
+A segunda limitação é taxonômica. O gato-mourisco (\textit{Herpailurus yagouaroundi}) e o gato-do-mato (\textit{Leopardus tigrinus}), ecologicamente relevantes no Campus~2, não estão representados nos corpora utilizados. Restam classes proximais (\textit{Lynx rufus} e \textit{Leopardus pardalis}) como aproximação, e a generalização do classificador para esses dois táxons permanece em aberto até a disponibilidade de dados locais.
+
+A terceira limitação é o vazamento por origem. MegaDetector e SpeciesNet foram treinados parcialmente sobre dados do portal LILA~BC (Caltech Camera Traps, Snapshot Serengeti, entre outros), o que tende a sobrestimar a generalização das Fases~II e~III para condições brasileiras. A taxa de 97,3\% de detecção animal observada no corpus Felidae reflete essa proximidade de domínio com os dados de treino e não pode ser transposta diretamente para uma colônia urbana sem validação local.
+
+A quarta limitação é a galeria pequena no regime \textit{open-set}. As curvas ROC do Capítulo~\ref{cap:resultados} foram obtidas com $N \in \{50, 100, 200\}$ identidades; a queda da TPR a FPR fixo, de 0,213 em $N{=}50$ para 0,087 em $N{=}200$ (em FPR$\,=\,$1\%), indica que limiares estabelecidos em escalas pequenas não se transferem diretamente para catálogos maiores.
+
+A quinta limitação é o ambiente de execução único. Todas as medidas foram coletadas em uma estação com GPU NVIDIA MX250. A reprodutibilidade entre máquinas distintas e a sensibilidade dos tempos absolutos a variações de \textit{hardware} permanecem como hipóteses a verificar na implantação.
+
+As cinco limitações são tratadas como condições de contorno e alimentam, em ordem direta, o conjunto de trabalhos futuros tratado na seção seguinte.
+
+
+% =============================================================================
+% §6.4 Trabalhos futuros
+% =============================================================================
+\section{Trabalhos futuros}
+\label{sec:conclusao-futuros}
+
+A continuidade do projeto organiza-se em quatro frentes que retomam, na ordem de execução, as lacunas identificadas na Seção~\ref{sec:conclusao-limitacoes}.
+
+A primeira frente é a coleta de campo e a construção de um \textit{dataset} local. A prioridade imediata é a instalação dos \textit{kits} de câmeras nos pontos de alimentação caracterizados no Capítulo~\ref{cap:hardware}, com rotulagem mínima dos primeiros meses de operação. O acúmulo esperado serve tanto à substituição dos corpora externos quanto à formação de um recurso útil para a comunidade brasileira de \textit{camera trapping}, hoje sub-representada em \textit{datasets} públicos.
+
+A segunda frente é o ajuste fino dos modelos. Sobre o \textit{dataset} local consolidado, o caminho mais promissor é o ajuste fino curto do SpeciesNet para o subconjunto efetivo de fauna não-alvo do Campus~2, com atenção ao par \textit{F.\,catus} \textit{versus} felinos silvestres de pequeno porte, seguido da calibração do limiar de aceitação da Fase~IV sobre os indivíduos já catalogados pela equipe. A calibração deve ser conduzida por escala de catálogo, de modo a contornar a queda de TPR a FPR fixo identificada no Capítulo~\ref{cap:resultados}.
+
+A terceira frente é a validação empírica e a iteração arquitetural. Com \textit{dataset} local e modelos calibrados, o protocolo do Capítulo~\ref{cap:metodologia} é reexecutado, substituindo as estimativas obtidas em corpora externos pelos valores medidos sobre a colônia. Pontos de revisão alimentam iterações focadas: troca pontual de modelo, transição de \textit{closed-set} para \textit{open-set} contínuo ou inclusão de heurísticas de pós-processamento por contexto temporal, em particular o agrupamento de sequências de quadros do mesmo indivíduo na mesma sessão de visitação ao ponto de alimentação.
+
+A quarta frente é a integração com a AEX Gatos do C2 e os desdobramentos de pesquisa. A integração consiste em conectar o \textit{pipeline} ao fluxo de trabalho do grupo, com painel para a equipe (lista de indivíduos detectados, fila de validação humana e candidatos a novo indivíduo) e canal de comunicação com a comunidade do Campus, restrito a relatórios mensais agregados em conformidade com a LGPD. Como desdobramentos de pesquisa, abrem-se o estudo longitudinal da dinâmica da colônia, a replicação do protocolo em outros campi da USP e a ampliação do escopo do classificador para fauna sinantrópica relevante à vigilância de zoonoses urbanas no contexto brasileiro.

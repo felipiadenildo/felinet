@@ -1,21 +1,183 @@
 % =============================================================================
 % capitulos/cap4_metodologia.tex
-%   Cap. 4 -- Metodologia e Testes (wrapper)
-%   Postura: trabalho conceitual. Datasets públicos como proxí dos dados do
-%   Campus 2. Comparações mínimas previstas por fase. Placeholders explícitos
-%   (\todoex{}) para tabelas, gráficos e métricas que dependem de execução.
+%   Cap. 4 -- Metodologia experimental (arquivo consolidado)
+%   Substitui a estrutura anterior de 5 subarquivos + wrapper.
+%   Direção C: protocolo efetivamente executado como caminho deste TCC,
+%   extensões hipotéticas registradas como trabalho futuro.
 %   Estrutura:
-%     §4.1 Visão geral da avaliação
-%     §4.2 Datasets de validação (públicos como proxí)
-%     §4.3 Protocolo experimental por fase
-%     §4.4 Métricas e como reportar
-%     §4.5 Reprodutibilidade, execução e comparação
+%     4.1 Objetivos e postura
+%     4.2 Datasets públicos
+%     4.3 Protocolo por fase
+%     4.4 Métricas e regras de reporte
+%     4.5 Reprodutibilidade
 % =============================================================================
 \chapter{Metodologia experimental}
 \label{cap:metodologia}
 
-\input{capitulos/cap4_metodologia/01_visao_geral}
-\input{capitulos/cap4_metodologia/02_datasets}
-\input{capitulos/cap4_metodologia/03_protocolo}
-\input{capitulos/cap4_metodologia/04_metricas}
-\input{capitulos/cap4_metodologia/05_reprodutibilidade_execucao}
+% -----------------------------------------------------------------------------
+\section{Objetivos e postura}
+\label{sec:metodologia-visao-geral}
+
+A avaliação visa estimar a viabilidade técnica do pipeline definido no Capítulo~\ref{cap:pipeline} sem coleta de campo no Campus~2. Em consequência, restringe-se a datasets públicos consolidados de \textit{camera trapping} e re-identificação animal~\cite{shinoda2024petface,adam2024wildlifereid10k,beery2018terra}: anotações por equipes especializadas, protocolos reproduzíveis e resultados publicados que viabilizam comparação externa. A coleta sistemática no Campus~2, a rotulagem em volume e a construção do catálogo da colônia integram a implementação futura (Capítulo~\ref{cap:conclusao}).
+
+O protocolo adotado neste trabalho concentra-se em três fases do pipeline: classificação operacional de \textit{F.\,catus} nas Fases~II e~III, com os modelos MegaDetector e SpeciesNet aplicados em conjunto sobre subconjuntos balanceados de imagens de gatos e felídeos não-domésticos; e re-ID na Fase~IV, com o PetFace aplicado a três cortes do catálogo de identidades (N=50, 100 e 200 indivíduos) em regime \textit{closed-set} e \textit{open-set}. Os baselines comparativos, datasets adicionais e o teste integrado ponta-a-ponta discutidos como extensão na Seção~\ref{sec:metodologia-protocolo} ficam registrados como trabalhos futuros, em coerência com o porte de um projeto de graduação e com a postura de viabilidade técnica adotada no Capítulo~\ref{cap:pipeline}.
+
+A postura é operacional, não comparativa de modelos: os componentes selecionados no Capítulo~\ref{cap:pipeline} operam em modo pré-treinado (\textit{as-is}), com limiares iniciados nos valores padrão dos mantenedores e ajustados, quando necessário, com base nas matrizes de confusão e taxas de abstenção observadas. As métricas adotadas são as consagradas em cada subtarefa, com \mAP\ para detecção, \Fscore\ e matriz de confusão para classificação, \RankK{1} e métrica AUC para re-ID, permitindo situar o sistema em relação à literatura.
+
+% -----------------------------------------------------------------------------
+\section{Datasets públicos}
+\label{sec:metodologia-datasets}
+
+A seleção dos datasets segue três critérios: aderência à tarefa de cada fase, disponibilidade de protocolo padronizado de avaliação e viabilidade de execução no porte do trabalho. A Tabela~\ref{tab:datasets-avaliacao} sintetiza as fichas técnicas dos datasets adotados e dos previstos como extensão. Todos são distribuídos sob \textit{Community Data License Agreement} permissiva ou licença acadêmica, com agregação de parte deles no portal LILA~BC~\cite{lila_bc}.
+
+% ---- Tabela 4.1: Datasets públicos -----------------------------------------
+\begin{table}[!htb]
+\centering
+\caption[Datasets públicos selecionados para a avaliação do pipeline.]{Datasets públicos selecionados para a avaliação do pipeline, com distinção entre datasets adotados na execução deste trabalho e datasets previstos como extensão (trabalho futuro).}
+\label{tab:datasets-avaliacao}
+\small
+\begin{tabular}{@{}p{2.8cm} p{1.8cm} p{2.6cm} p{1.8cm} p{4.2cm}@{}}
+\toprule
+\textbf{Dataset} & \textbf{Volume} & \textbf{Anotação} & \textbf{Licença} & \textbf{Função no estudo} \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Adotados na execução}} \\
+\addlinespace[2pt]
+PetFace~\cite{shinoda2024petface} & 257\,k indiv. & identidade + raça & acadêmica & Re-ID por face, \textit{closed-set} e \textit{open-set} (Fase~IV) \\
+\addlinespace[2pt]
+\textit{kaggle\_cats}~\cite{kaggle_cats_dataset} & subconjunto N=300 & espécie & permissiva & Aceitação de \textit{F.\,catus} (Fases~II e~III) \\
+\addlinespace[2pt]
+\textit{felidae}~\cite{felidae_dataset} & subconjunto N=300 & espécie & permissiva & Rejeição de felídeos não-domésticos (Fases~II e~III) \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Previstos como extensão (Cap.~\ref{cap:conclusao})}} \\
+\addlinespace[2pt]
+Caltech CT~\cite{beery2018terra} & 243\,k img / 21\,cls & \textit{bbox} + espécie & CDLA perm. & Detecção e classificação multi-espécie em escala \\
+\addlinespace[2pt]
+NACTI~\cite{tabak2019nacti} & 3{,}7\,M img / 28\,cls & espécie (\textit{bbox} parcial) & CDLA perm. & Par \textit{F.\,catus}/\textit{Lynx rufus} \\
+\addlinespace[2pt]
+Snapshot Serengeti~\cite{norouzzadeh2018automatically} & 7{,}1\,M img / 61\,cls & espécie + contagem & CDLA perm. & Descarte em escala de quadros vazios \\
+\addlinespace[2pt]
+WildlifeReID-10k~\cite{adam2024wildlifereid10k} & 10\,k indiv. / 33\,esp. & identidade + \textit{split} & acadêmica & Re-ID por flanco e padrão de pelagem \\
+\bottomrule
+\end{tabular}
+
+\fonte{Elaborado pelo autor.}
+\end{table}
+
+\subsection*{Datasets adotados}
+
+O PetFace~\cite{shinoda2024petface} é a referência primária para a Fase~IV: catálogo de 257\,k indivíduos com subconjunto de gatos domésticos, protocolos oficiais \textit{closed-set} e \textit{open-set} e divisões reprodutíveis. Sobre ele são montados três cortes do catálogo, com N igual a 50, 100 e 200 indivíduos, escolhidos para cobrir a faixa esperada do tamanho do catálogo da colônia após captura, esterilização e devolução (CED) na AEX Gatos do C2, em torno de algumas dezenas a algumas centenas de indivíduos cadastrados.
+
+Para a parte operacional de Fases~II e~III, foram selecionados dois subconjuntos balanceados de N=300 imagens cada, um de \textit{kaggle\_cats}~\cite{kaggle_cats_dataset}, contendo \textit{F.\,catus} em diferentes ambientes e poses, e um de \textit{felidae}~\cite{felidae_dataset}, contendo felídeos não-domésticos como lince, jaguatirica e outros pequenos felinos silvestres. A escolha emula em escala compatível com o cronograma os dois lados da decisão crítica da Fase~III: aceitar quadros de \textit{F.\,catus} e rejeitar felídeos próximos. O par é processado em cascata pelo MegaDetector e pelo SpeciesNet, replicando a operação real do pipeline e permitindo medir, em conjunto, a taxa de animal detectado pela Fase~II e a taxa de convergência para \textit{F.\,catus} na Fase~III.
+
+\subsection*{Datasets previstos como extensão}
+
+Os datasets Caltech Camera Traps~\cite{beery2018terra}, NACTI~\cite{tabak2019nacti}, Snapshot Serengeti~\cite{norouzzadeh2018automatically} e WildlifeReID-10k~\cite{adam2024wildlifereid10k} foram identificados como relevantes para uma avaliação em escala completa do pipeline, mas sua incorporação está fora do escopo deste trabalho. Caltech CT e Snapshot Serengeti permitiriam estressar a Fase~II em volume e em proporção de quadros vazios típica de \textit{camera trapping}; NACTI conteria o par discriminativo \textit{F.\,catus}/\textit{Lynx rufus}, particularmente próximo ao caso do gato-mourisco no Campus~2; WildlifeReID-10k habilitaria o subprocesso de re-ID por flanco e padrão de pelagem, completando a fusão face-mais-flanco proposta na Seção~\ref{sec:pipeline-fase4}. A execução dessa avaliação ampliada figura como trabalho futuro no Capítulo~\ref{cap:conclusao}.
+
+\subsection*{Limites de extrapolação}
+
+Nenhum dataset adotado foi coletado em ambiente urbano cooperativo com câmeras integradas a abrigos comunitários. As Fases~II e~III tampouco contemplam o conjunto exato de fauna não-alvo do Campus~2, em particular o gato-mourisco (\textit{H.\,yagouaroundi}), embora classes ecologicamente equivalentes apareçam em \textit{felidae}. Os resultados configuram estimativas de viabilidade técnica do pipeline, e não predição operacional do desempenho em campo. A validação em condições do Campus~2 fica reservada à implementação futura.
+
+% -----------------------------------------------------------------------------
+\section{Protocolo por fase}
+\label{sec:metodologia-protocolo}
+
+O protocolo organiza-se por fase do pipeline (Capítulo~\ref{cap:pipeline}), com cada fase associada a um dataset, um modelo principal e um critério de avaliação. A Tabela~\ref{tab:mapeamento-protocolar} sumariza o mapeamento adotado neste trabalho e o caminho previsto como extensão. Limiares e hiperparâmetros de inferência seguem os valores padrão dos mantenedores dos modelos e ficam registrados nos arquivos de configuração das execuções (Seção~\ref{sec:metodologia-reprodutibilidade}).
+
+% ---- Tabela 4.2: Mapeamento protocolar -------------------------------------
+\begin{table}[!htb]
+\centering
+\caption[Mapeamento protocolar entre fase, dataset e modelo.]{Mapeamento protocolar entre fase, dataset e modelo principal: caminho adotado neste trabalho e caminho previsto como extensão (Cap.~\ref{cap:conclusao}).}
+\label{tab:mapeamento-protocolar}
+\small
+\begin{tabular}{@{}p{0.8cm} p{3.0cm} p{3.6cm} p{3.4cm} p{2.6cm}@{}}
+\toprule
+\textbf{Fase} & \textbf{Tarefa} & \textbf{Dataset adotado} & \textbf{Modelo principal} & \textbf{Extensão futura} \\
+\midrule
+I  & Ingestão e triagem & --- (heurística) & filtros estatísticos & janela sintética \\
+\addlinespace[2pt]
+II & Detecção de fauna & \textit{kaggle\_cats}, \textit{felidae} (N=300 cada) & MegaDetector (\textit{zero-shot}) & CCT, Snapshot Ser.; baseline YOLOv8n \\
+\addlinespace[2pt]
+III & Triagem de espécie & \textit{kaggle\_cats}, \textit{felidae} (N=300 cada) & SpeciesNet (\textit{zero-shot}) & NACTI; baseline ResNet binário \\
+\addlinespace[2pt]
+IV & Re-ID individual & PetFace (N=50, 100, 200) & PetFace (\textit{closed-set} e \textit{open-set}) & WildlifeReID-10k; partes do corpo \\
+\bottomrule
+\end{tabular}
+
+\fonte{Elaborado pelo autor.}
+\end{table}
+
+\subsection*{Fase I --- ingestão e triagem}
+
+A Fase~I, como descrito na Seção~\ref{sec:pipeline-fase1}, opera por heurísticas simples sobre histogramas (descarte de quadros saturados ou escuros e deduplicação intra-evento) e não invoca modelos de inferência. Sua aferição direta requer um fluxo de mídia bruta com proporção realista de quadros vazios, próximo do regime do Snapshot Serengeti, ausente no escopo deste trabalho. Assim, a Fase~I é considerada validada por construção e sua avaliação quantitativa fica integrada ao teste ponta-a-ponta previsto como extensão.
+
+\subsection*{Fase II --- detecção generalista}
+
+A avaliação da Fase~II é conduzida em conjunto com a Fase~III, sobre os dois subconjuntos balanceados de N=300 imagens. Cada imagem é submetida ao MegaDetector~\cite{hernandez2024pytorchwildlife} em modo \textit{zero-shot}, com limiar de confiança fixado nos valores padrão da rotina \textit{PyTorch-Wildlife}. Para cada subconjunto, registram-se o número de detecções totais, o número de imagens com ao menos uma detecção da classe animal e a proporção correspondente. O critério de viabilidade é qualitativo: a Fase~II é considerada operacional quando a taxa de animal detectado em material sabidamente positivo (kaggle\_cats e felidae) ultrapassa, com folga, a faixa típica de \textit{ghost frames} reportada na literatura~\cite{velez2022choosing}. A comparação com o baseline YOLOv8n sobre Caltech CT e Snapshot Serengeti, descrita como extensão na Tabela~\ref{tab:mapeamento-protocolar}, requer a incorporação desses datasets em volume e fica registrada como trabalho futuro.
+
+\subsection*{Fase III --- classificação de espécie}
+
+A Fase~III consome os recortes produzidos pela Fase~II e aplica o SpeciesNet~\cite{google_speciesnet_blog} também em \textit{zero-shot}, sob seu vocabulário taxonômico nativo. As predições são consolidadas por subconjunto e binarizadas \textit{a posteriori} em ``é \textit{F.\,catus}'' contra ``não é \textit{F.\,catus}'', preservando-se a espécie predita para análise qualitativa. A métrica reportada é a proporção de \textit{F.\,catus} entre as detecções de cada subconjunto, esperando-se valor alto em \textit{kaggle\_cats} (animal-alvo presente) e valor baixo em \textit{felidae} (felídeos não-domésticos). O par opera como teste de aceitação e rejeição em escala compatível com o trabalho. A avaliação completa com baseline binário sobre Caltech CT, conforme registrado na Tabela~\ref{tab:mapeamento-protocolar}, fica reservada para a extensão.
+
+\subsection*{Fase IV --- reidentificação individual}
+
+A Fase~IV é avaliada sobre o PetFace nos protocolos \textit{closed-set} e \textit{open-set} oficiais, em três cortes do catálogo com N igual a 50, 100 e 200 indivíduos. No regime \textit{closed-set}, o catálogo é construído a partir do conjunto cadastral por indivíduo e o teste consulta o conjunto de \textit{query}; reportam-se \RankK{1} e \mAP. No regime \textit{open-set}, parte dos indivíduos do \textit{query} é removida do catálogo e passa a operar como distratora; reporta-se a área sob a curva ROC (AUC) da discriminação entre catalogado e distrator, com média e desvio padrão sobre repetições do sorteio de distratores. A Figura~\ref{fig:reid-cs-os} esquematiza a diferença entre os dois regimes. O controle de vazamento é estrito por indivíduo, nativamente garantido pelos \textit{splits} oficiais do PetFace. Os resultados quantitativos das três escalas constam no Capítulo~\ref{cap:resultados}.
+
+% ---- Figura 4.1: closed-set vs open-set ------------------------------------
+\begin{figure}[!htb]
+\centering
+\caption[Diferença entre os regimes \textit{closed-set} e \textit{open-set} da avaliação de re-ID.]{Diferença entre os regimes de avaliação da Fase~IV: em \textit{closed-set}, todos os indivíduos do conjunto de \textit{query} estão presentes no catálogo; em \textit{open-set}, parte dos indivíduos do \textit{query} é removida do catálogo e opera como distratora, exigindo do sistema decisão de rejeição.}
+\label{fig:reid-cs-os}
+
+\begin{tikzpicture}[
+    >=stealth,
+    every node/.style={font=\footnotesize},
+    bloco/.style={
+        draw=black!60, line width=0.4pt,
+        fill=black!5,
+        minimum width=28mm, minimum height=9mm,
+        align=center, inner sep=2pt
+    },
+    rotulo/.style={font=\scriptsize\itshape, text=black!60},
+    titulo/.style={font=\small\bfseries}
+]
+
+% painel esquerdo: closed-set
+\node[titulo] (t1) at (0,0) {Regime \textit{closed-set}};
+\node[bloco, below=4mm of t1] (qcs) {Conjunto \textit{query}};
+\node[bloco, below=10mm of qcs] (gcs) {Catálogo (galeria)};
+\draw[->, black!60] (qcs.south) -- node[rotulo, right] {consulta} (gcs.north);
+\node[rotulo, below=2mm of gcs.south, align=center]
+    {todos os indivíduos do \textit{query}\\estão no catálogo};
+
+% painel direito: open-set
+\node[titulo, right=46mm of t1] (t2) {Regime \textit{open-set}};
+\node[bloco, below=4mm of t2] (qos) {Conjunto \textit{query}};
+\node[bloco, below=10mm of qos] (gos) {Catálogo (galeria)};
+\node[bloco, right=6mm of gos, fill=white, dashed] (dist) {Distratores};
+\draw[->, black!60] (qos.south) -- node[rotulo, right] {consulta} (gos.north);
+\draw[->, black!60, dashed] (qos.south east) to[bend left=10] (dist.north);
+\node[rotulo, below=2mm of gos.south east, align=center, anchor=north]
+    {parte do \textit{query} não está no catálogo\\(decisão de rejeição requerida)};
+
+\end{tikzpicture}
+
+\fonte{Elaborado pelo autor.}
+\end{figure}
+
+A fusão face-mais-flanco proposta na Seção~\ref{sec:pipeline-fase4} requer um subprocesso de re-ID por flanco apoiado em WildlifeReID-10k e na implementação do método de partes do corpo de \citeonline{akbar2025bodypart}. Esse subprocesso não foi executado no escopo deste trabalho; sua incorporação, juntamente com a calibração conjunta da regra de fusão, fica registrada como trabalho futuro no Capítulo~\ref{cap:conclusao}.
+
+% -----------------------------------------------------------------------------
+\section{Métricas e regras de reporte}
+\label{sec:metodologia-metricas}
+
+A escolha das métricas reflete a tarefa de cada fase. Na Fase~II, a aferição é a proporção de imagens com detecção válida da classe animal em cada subconjunto (\textit{kaggle\_cats} e \textit{felidae}), reportada em conjunto com o número absoluto de detecções, suficiente para indicar se o detector encontra fauna onde ela está presente. Na Fase~III, reportam-se a proporção de detecções classificadas como \textit{F.\,catus} em cada subconjunto e a espécie predita modal, suficientes para indicar se o classificador aceita corretamente \textit{kaggle\_cats} e rejeita \textit{felidae}; a matriz de confusão completa, a acurácia balanceada e o \Fscore\ ficam reservados para a avaliação ampliada com Caltech CT e NACTI prevista como extensão. Na Fase~IV, reportam-se \RankK{1} e \mAP\ no regime \textit{closed-set} e a AUC com média e desvio padrão no regime \textit{open-set}, para cada um dos três cortes de catálogo (N=50, 100, 200). Os valores numéricos consolidados aparecem no Capítulo~\ref{cap:resultados}.
+
+A regra de interpretação é descritiva: cada fase é considerada conceitualmente validada quando a sua métrica principal cai dentro da faixa esperada para o caso de uso, com \mAP\ e \RankK{1} comparáveis aos valores reportados pelos mantenedores dos modelos sobre datasets semelhantes, e a AUC \textit{open-set} suficientemente acima de 0,5 para indicar discriminação útil entre catalogados e distratores. Diferenças pequenas em relação a esses valores configuram ponto de revisão arquitetural, a ser endereçado em trabalho futuro com dados reais do Campus~2. A comparação formal com baselines mínimos por fase, descrita na Tabela~\ref{tab:mapeamento-protocolar} e originalmente prevista como parte da metodologia, fica também reservada para a avaliação ampliada.
+
+% -----------------------------------------------------------------------------
+\section{Reprodutibilidade}
+\label{sec:metodologia-reprodutibilidade}
+
+O ambiente de execução adotado é Python em ambiente virtual isolado, com arquivo de \textit{lock} de dependências (\texttt{requirements.txt} ou \texttt{environment.yml}) versionado junto ao repositório. Os pesos pré-treinados do MegaDetector, do SpeciesNet e do PetFace são baixados explicitamente para diretório local antes da execução, com \textit{checksums} registrados em \texttt{checksums.txt}, permitindo verificar que o modelo carregado em qualquer reexecução é idêntico ao da rodada original. Quatro grupos de dependências são fixados nominalmente: a \textit{toolkit} de aprendizado profundo (PyTorch, com \textit{tag} de \textit{build} CUDA quando aplicável), as bibliotecas dos modelos adotados, as de manipulação de imagem (OpenCV, Pillow) e as de avaliação (scikit-learn). A fixação de \textit{seed} ocorre em três pontos: inicialização dos geradores pseudoaleatórios de Python e NumPy, \textit{seed} da \textit{toolkit} de aprendizado profundo e embaralhamento das partições do PetFace para o sorteio de distratores do regime \textit{open-set}. O valor base único é registrado no arquivo de configuração de cada execução.
+
+A organização operacional do experimento prevê três scripts parametrizados por um único arquivo de configuração versionado junto ao repositório, em coerência com o protocolo executado nas Seções~\ref{sec:metodologia-datasets} e~\ref{sec:metodologia-protocolo}. O primeiro carrega os subconjuntos balanceados de \textit{kaggle\_cats} e \textit{felidae}, executa MegaDetector e SpeciesNet em cascata e produz os agregados das Fases~II e~III. O segundo carrega os \textit{splits} oficiais do PetFace, monta os catálogos \textit{closed-set} e \textit{open-set} nos três cortes (N=50, 100, 200) e produz \RankK{1}, \mAP\ e AUC com repetições para estimativa de desvio padrão. O terceiro consolida as execuções em uma tabela comparável e sinaliza regressões em relação à execução anterior. Cada execução emite, ao final, um arquivo \texttt{run\_metadata.json} contendo SHA do código, versão de Python, plataforma, \textit{seed} e \textit{hash} da configuração. O código completo dos scripts está disponível no repositório público do projeto e referenciado no Apêndice~\ref{ap:pseudocodigos}.
