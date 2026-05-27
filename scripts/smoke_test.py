@@ -51,6 +51,7 @@ from pathlib import Path
 # Parametros (deliberadamente pequenos)
 # ---------------------------------------------------------------------------
 N_PIPELINE = 30
+TAG_SMOKE = "smoke_n30"  # isola runs do smoke do resolver_latest
 N_REID = 50
 PERFIL = "dev"
 FONTES_OPERACIONAIS = ["kaggle_cats", "felidae"]
@@ -184,6 +185,7 @@ def montar_plano() -> list[dict]:
             ["felinet", "pipeline", "executar",
              "--perfil", PERFIL, "--fonte", fonte,
              "--max-amostras", str(N_PIPELINE),
+             "--tag", TAG_SMOKE,
              "--seed-amostragem", "42", "--dev"],
             timeout=1800,
         ))
