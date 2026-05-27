@@ -297,6 +297,41 @@ def etapa_registrar_ambiente(ctx: Contexto) -> None:
     subprocess.run([sys.executable, str(script)], cwd=ctx.repo, capture_output=True)
 
 
+def regenerar_artefatos(ctx) -> None:
+    """Apaga artefatos das etapas listadas em args.regenerar antes de rodar.
+
+    'all' = todas as etapas. 'tabelas,figuras_globais' = so essas duas.
+    """
+    pedido = (ctx.args.regenerar or "").strip().lower()
+    if not pedido:
+        return
+    etapas_cfg = ctx.config.get("etapas", {})
+    if pedido == "all":
+        grupos = list(etapas_cfg.keys())
+    else:
+        grupos = [g.strip() for g in pedido.split(",") if g.strip()]
+    ctx.logger.info(f"MODO REGENERAR: limpando artefatos de {grupos}")
+    total = 0
+    for grupo in grupos:
+        cfg_grupo = etapas_cfg.get(grupo)
+        if not cfg_grupo:
+            ctx.logger.warning(f"  grupo '{grupo}' nao existe no JSON; skip.")
+            continue
+        items = cfg_grupo.get("items")
+        if not items:
+            # etapas dirigidas por template (ex: pipeline_operacional, reid_*)
+            ctx.logger.info(f"  grupo '{grupo}' nao usa items[]; pule via --force")
+            continue
+        for it in items:
+            for art in it.get("artefatos", []):
+                p = ctx.repo / art
+                if p.is_file():
+                    p.unlink()
+                    ctx.logger.info(f"  - {art}")
+                    total += 1
+    ctx.logger.info(f"  total apagado: {total}")
+
+
 def _eh_para_rodar(nome_etapa: str, ctx: Contexto) -> bool:
     """Respeita --etapa (whitelist), --so-tabelas/--so-figuras (whitelist específica)."""
     if ctx.args.etapa:
@@ -672,6 +707,8 @@ def parsear_args() -> argparse.Namespace:
     )
     p.add_argument("--config", type=Path, default=CONFIG_DEFAULT, help="Arquivo JSON de configuração.")
     p.add_argument("--repo", type=Path, default=ROOT_DEFAULT, help="Raiz do repo (default: parent do script).")
+    p.add_argument("--com-smoke", action="store_true", help="Rodar smoke_test antes (default: nao).")
+    p.add_argument("--regenerar", default="", help="Grupos a apagar antes de rodar (csv ou 'all'). Ex: tabelas,figuras_globais.")
     p.add_argument("--force", action="store_true", help="Regerar tudo mesmo se artefato existir.")
     p.add_argument("--so-faltam", action="store_true", help="Só roda o que falta (default — só explícito).")
     p.add_argument("--dry-run", action="store_true", help="Mostra plano sem executar.")
@@ -725,9 +762,12 @@ def main() -> int:
         logger.info("MODO FORCE — regerando mesmo se existir")
 
     # pre-flight: smoke + ambiente
-    if not args.skip_smoke:
+    if args.com_smoke and not args.skip_smoke:
         etapa_smoke(ctx)
+    elif not args.skip_smoke:
+        logger.info("smoke pulado (default; use --com-smoke para incluir).")
     etapa_registrar_ambiente(ctx)
+    regenerar_artefatos(ctx)
 
     # etapas principais
     etapas = config["etapas"]

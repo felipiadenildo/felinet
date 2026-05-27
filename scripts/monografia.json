@@ -5,7 +5,7 @@
     "_doc": "Detecção automática do runner. Se 'auto', usa 'uv run felinet' se uv existir, senão 'felinet'.",
     "runner": "auto",
     "registrar_ambiente": true,
-    "rodar_smoke": true
+    "rodar_smoke": false
   },
   "padroes": {
     "_doc": "Defaults aplicados quando uma etapa não sobrescreve.",

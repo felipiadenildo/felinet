@@ -294,7 +294,7 @@ def _resolver_latest_por_tag(
             continue
         if reg.manifest.get("sucesso") is not True:
             continue
-        return reg.path
+        return reg.raiz
     return None
 
 
