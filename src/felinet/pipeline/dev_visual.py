@@ -206,6 +206,26 @@ def _contar_linhas_csv(arq: Path) -> int:
     with arq.open("r", encoding="utf-8") as f:
         return max(0, sum(1 for _ in f) - 1)
 
+def _contar_csv_por_coluna(arq: Path, coluna: str) -> dict[str, int]:
+    """Conta ocorrências de cada valor único de ``coluna`` em um CSV.
+
+    Retorna dict ``{valor: n}``. Vazio se o arquivo não existir ou a coluna
+    não estiver presente.
+    """
+    if not arq.exists():
+        return {}
+    contagem: dict[str, int] = {}
+    with arq.open("r", encoding="utf-8", newline="") as f:
+        leitor = csv.DictReader(f)
+        if leitor.fieldnames is None or coluna not in leitor.fieldnames:
+            return {}
+        for linha in leitor:
+            v = (linha.get(coluna) or "").strip()
+            if not v:
+                continue
+            contagem[v] = contagem.get(v, 0) + 1
+    return contagem
+
 
 def gerar_resumo_html(base: Path, titulo_run: str = "") -> Path:
     """Gera ``base/resumo.html`` consolidando a galeria das 3 fases.
@@ -221,11 +241,11 @@ def gerar_resumo_html(base: Path, titulo_run: str = "") -> Path:
 
     # ----- Fase 1: ingestão -----
     f1 = base / "01_ingestao"
-    n_aceitas = sum(1 for p in (f1 / "aceitas").iterdir() if p.is_file()) \
-        if (f1 / "aceitas").is_dir() else 0
-    n_rejeitadas = sum(1 for p in (f1 / "rejeitadas").iterdir() if p.is_file()) \
-        if (f1 / "rejeitadas").is_dir() else 0
-    n_motivos = _contar_linhas_csv(f1 / "motivos.csv")
+    arq_motivos = f1 / "motivos.csv"
+    contagem_ing = _contar_csv_por_coluna(arq_motivos, "motivo")
+    n_aceitas = contagem_ing.get("aceita", 0)
+    n_rejeitadas = sum(v for k, v in contagem_ing.items() if k != "aceita")
+    n_motivos = _contar_linhas_csv(arq_motivos)
     sec_f1 = (
         "<h2>Fase 1 — Ingestão</h2>"
         f'<div class="stats">aceitas: <b>{n_aceitas}</b></div>'
@@ -240,13 +260,12 @@ def gerar_resumo_html(base: Path, titulo_run: str = "") -> Path:
 
     # ----- Fase 2: detecção -----
     f2 = base / "02_deteccao"
-    n_com = sum(1 for p in (f2 / "com_animal").iterdir() if p.is_file()) \
-        if (f2 / "com_animal").is_dir() else 0
-    n_sem = sum(1 for p in (f2 / "sem_animal").iterdir() if p.is_file()) \
-        if (f2 / "sem_animal").is_dir() else 0
-    n_low = sum(1 for p in (f2 / "abaixo_limiar").iterdir() if p.is_file()) \
-        if (f2 / "abaixo_limiar").is_dir() else 0
-    n_det = _contar_linhas_csv(f2 / "deteccoes.csv")
+    arq_det = f2 / "deteccoes.csv"
+    contagem_det = _contar_csv_por_coluna(arq_det, "decisao")
+    n_com = contagem_det.get("com_animal", 0)
+    n_sem = contagem_det.get("sem_animal", 0)
+    n_low = contagem_det.get("abaixo_limiar", 0)
+    n_det = _contar_linhas_csv(arq_det)
     sec_f2 = (
         "<h2>Fase 2 — Detecção (MegaDetector)</h2>"
         f'<div class="stats">com animal: <b>{n_com}</b></div>'
@@ -263,11 +282,11 @@ def gerar_resumo_html(base: Path, titulo_run: str = "") -> Path:
 
     # ----- Fase 3: classificação -----
     f3 = base / "03_classificacao"
-    n_felis = sum(1 for p in (f3 / "felis_catus").iterdir() if p.is_file()) \
-        if (f3 / "felis_catus").is_dir() else 0
-    n_outros = sum(1 for p in (f3 / "outros").iterdir() if p.is_file()) \
-        if (f3 / "outros").is_dir() else 0
-    n_cls = _contar_linhas_csv(f3 / "classificacoes.csv")
+    arq_cls = f3 / "classificacoes.csv"
+    contagem_cls = _contar_csv_por_coluna(arq_cls, "classe")
+    n_felis = contagem_cls.get("felis_catus", 0)
+    n_outros = sum(v for k, v in contagem_cls.items() if k != "felis_catus")
+    n_cls = _contar_linhas_csv(arq_cls)
     sec_f3 = (
         "<h2>Fase 3 — Classificação (SpeciesNet Felis-vs-resto)</h2>"
         f'<div class="stats">felis_catus: <b>{n_felis}</b></div>'
