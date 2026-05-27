@@ -523,11 +523,16 @@ def comparativo_fontes(
         m_det = (man_det or {}).get("metricas_resumo") or {}
         n_imagens_det = m_det.get("n_imagens")
         n_animais = m_det.get("n_animais_detectados")
+        # imagens com pelo menos uma deteccao (denominador correto e numerador real para taxa)
+        n_imgs_com_animal = m_det.get("n_imagens_com_animal")
         m_cls = (man_cls or {}).get("metricas_resumo") or {}
         n_class = m_cls.get("n_classificacoes")
         n_felis = m_cls.get("n_felis_catus")
 
-        if n_animais is not None and n_imagens_det:
+        # Taxa = imagens com animal / total amostrado. Fallback p/ manifestos legados.
+        if n_imgs_com_animal is not None and n_midias:
+            taxa_animal = _formatar_pct(float(n_imgs_com_animal), float(n_midias))
+        elif n_animais is not None and n_imagens_det:
             taxa_animal = _formatar_pct(float(n_animais), float(n_imagens_det))
         else:
             taxa_animal = "-"
