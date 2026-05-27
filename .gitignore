@@ -110,3 +110,25 @@ data/dev/reid_mini/*
 # Reports gerados (exceto os curados) ----------------------------
 reports/_tmp_*.md
 reports/_tmp_*.html
+
+# Saidas de experimentos (geradas localmente) ----------------------
+artifacts/
+runs/
+data/raw/
+data/dev/
+data/interim/
+data/processed/
+data/test/
+
+# Backups locais do apply_patch.sh
+BACKUP_v23_smoke_fix_*/
+
+# Pacotes/dumps soltos na raiz
+dados_monografia*.zip
+dados_monografia_*/
+felinet_v23_*.zip
+
+# Logs e relatorios de execucao
+LOG_*.txt
+RELATORIO_SMOKE.md
+diagnostico_smoke*.txt

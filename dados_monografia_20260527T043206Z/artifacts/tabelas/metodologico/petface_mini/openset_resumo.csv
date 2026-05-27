@@ -1,2 +1,0 @@
-N,AUC-ROC (media +/- std),TPR@FPR=1%,TPR@FPR=5%,EER,Rank-1 open,n_seeds
-50,0.900 +/- 0.111,0.700,0.700,0.133,0.700,3
