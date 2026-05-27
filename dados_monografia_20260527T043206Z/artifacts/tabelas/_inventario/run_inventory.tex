@@ -1,0 +1,17 @@
+\begin{table}[!htb]
+\centering
+\caption{Inventário de runs reproduzíveis registrados em ``runs/`` (gitsha, modo, fonte, fase e métricas-chave).}
+\label{tab:run-inventory}
+\begin{tabular}{lrrrrrrr}
+\toprule
+gitsha & modo & fonte & protocolo & fase & sucesso & duracao s & metricas chave \\
+\midrule
+f8a821f & metodologico & petface\_mini & openset\_n0050 & reid & sim & 2.9 & auc\_media=0.9; auc\_desvio=0.11135528725660043 \\
+f8a821f & metodologico & petface\_mini & n0050 & reid & sim & 3.0 & top\_1=1.0; top\_5=1.0 \\
+f8a821f & operacional & felidae & \_ & pipeline & sim & 35.3 & n\_brutas=30; n\_manifesto=30 \\
+f8a821f & operacional & kaggle\_cats & \_ & pipeline & sim & 30.0 & n\_brutas=30; n\_manifesto=30 \\
+f8a821f & operacional & felidae & \_ & pipeline & sim & 331.0 & n\_brutas=300; n\_manifesto=300 \\
+f8a821f & operacional & kaggle\_cats & \_ & pipeline & sim & 170.2 & n\_brutas=300; n\_manifesto=300 \\
+\bottomrule
+\end{tabular}
+\end{table}

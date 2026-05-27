@@ -1,0 +1,7 @@
+gitsha,modo,fonte,protocolo,fase,sucesso,duracao s,metricas chave
+f8a821f,metodologico,petface_mini,openset_n0050,reid,sim,2.9,auc_media=0.9; auc_desvio=0.11135528725660043
+f8a821f,metodologico,petface_mini,n0050,reid,sim,3.0,top_1=1.0; top_5=1.0
+f8a821f,operacional,felidae,_,pipeline,sim,35.3,n_brutas=30; n_manifesto=30
+f8a821f,operacional,kaggle_cats,_,pipeline,sim,30.0,n_brutas=30; n_manifesto=30
+f8a821f,operacional,felidae,_,pipeline,sim,331.0,n_brutas=300; n_manifesto=300
+f8a821f,operacional,kaggle_cats,_,pipeline,sim,170.2,n_brutas=300; n_manifesto=300

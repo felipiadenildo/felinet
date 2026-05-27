@@ -1,0 +1,4 @@
+dev_visualizacao/01_ingestao/motivos.csv
+dev_visualizacao/03_classificacao/classificacoes.csv
+dev_visualizacao/resumo.html
+dev_visualizacao/02_deteccao/deteccoes.csv

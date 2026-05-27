@@ -1,0 +1,20 @@
+\begin{table}[!htb]
+\centering
+\caption{Datasets avaliados durante o desenvolvimento e veredito de uso.}
+\label{tab:datasets-avaliados}
+\begin{tabular}{lrrrr}
+\toprule
+Dataset & Tamanho & Foco & Veredito & Motivo \\
+\midrule
+LILA-BC (ENA24) & \textasciitilde{}8 mil imgs & Camera-trap multispecies & USADO & Contem Felis catus + fauna nao-alvo \\
+PetFace (cat) & \textasciitilde{}10 mil imgs & Re-ID com ID rotulado & USADO & Unico publico para Re-ID de gatos \\
+iNaturalist 2021 & 2.7 M imgs & Biodiversidade ampla & DESCARTADO & Fracao de Felis catus minima \\
+NACTI & 3.7 M imgs & Camera-trap N-americano & DESCARTADO & Fauna nao representa Campus 2 \\
+Wildlife Insights & API restrita & Camera-trap global & DESCARTADO & Circular (SpeciesNet deriva dele) \\
+Cat Dataset (Zhang) & 9 mil imgs & Pose / landmarks & DESCARTADO & Posadas (nao armadilha) \\
+Animal-Pose & \textasciitilde{}6 mil imgs & Landmarks & DESCARTADO & Fora de escopo (Re-ID) \\
+Snapshot Serengeti & \textasciitilde{}7 M imgs & Camera-trap africano & DESCARTADO & Fauna nao-alvo \\
+Campus 2 (proprio) & Em coleta & Camera-trap Brasil & PARCIAL & Volume insuficiente p/ treino \\
+\bottomrule
+\end{tabular}
+\end{table}

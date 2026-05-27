@@ -1,0 +1,45 @@
+{
+  "run_id": "41ffa8",
+  "modo": "metodologico",
+  "fonte": "petface",
+  "perfil": "prod",
+  "protocolo": "openset_n0050",
+  "tag": null,
+  "git_sha": "f8a821f",
+  "git_branch": "refactor/v23-release-candidate",
+  "git_dirty": true,
+  "data_inicio": "2026-05-27T01:11:15-03:00",
+  "data_fim": "2026-05-27T01:11:19-03:00",
+  "duracao_s": 4.26,
+  "sucesso": true,
+  "mensagem": "",
+  "fonte_path_real": "/media/felipi/ssd/dados_tcc/PetFace",
+  "configs": {
+    "paths": "configs/paths.yaml",
+    "modelos": "configs/modelos.yaml",
+    "pipeline": "configs/pipeline.yaml"
+  },
+  "ambiente": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-117-generic-x86_64-with-glibc2.39",
+    "hostname": "felipi-pc",
+    "torch": "2.5.1+cu121",
+    "cuda": true,
+    "gpu": "NVIDIA GeForce MX250"
+  },
+  "extras": {
+    "comando": "reid avaliar-openset",
+    "n": 50,
+    "frac_novos": 0.5,
+    "seeds": [
+      42,
+      7,
+      123
+    ]
+  },
+  "metricas_resumo": {
+    "auc_media": 0.6469333333333335,
+    "auc_desvio": 0.050832010911760435,
+    "tpr_at_fpr_01_media": 0.21333333333333335
+  }
+}
