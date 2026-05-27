@@ -22,6 +22,20 @@
   "etapas": {
     "_doc": "Cada etapa é executada em ordem. 'habilitada=false' pula. Cada artefato em 'artefatos' é checado para incremental.",
 
+    "reid_extrair_embeddings": {
+      "habilitada": true,
+      "_doc": "Passo 1 da Fase IV: extrai embeddings MegaDescriptor por subset N. Pre-requisito de reid_closed, reid_openset e figuras matriz-sim/dist-intra/galeria-erros.",
+      "fonte": "petface",
+      "ns": [50, 100, 200],
+      "comando_template": [
+        "reid", "extrair-embeddings",
+        "--perfil", "{perfil_metodologico}",
+        "--fonte", "{fonte}",
+        "--n", "{n}"
+      ],
+      "artefato_template": "runs/metodologico/{fonte}/{perfil_metodologico}/n{n:04d}/{git_sha}/embeddings.npz"
+    },
+
     "reid_closed": {
       "habilitada": true,
       "_doc": "Re-ID closed-set por N em petface (Fase IV isolada).",
@@ -35,11 +49,7 @@
         "--n", "{n}",
         "--k-max", "{k_max}"
       ],
-      "artefato_template": "runs/metodologico/{fonte}/{perfil_metodologico}/n{n:04d}/{git_sha}/metricas.json",
-      "artefatos_extras_template": [
-        "runs/metodologico/{fonte}/{perfil_metodologico}/n{n:04d}/{git_sha}/embeddings.npz"
-      ],
-      "_nota_extras": "embeddings.npz é consumido por reid_openset, matriz-similaridade, dist-intra-inter e galeria-erros. Sem ele, todas as figuras por N e o openset falham."
+      "artefato_template": "runs/metodologico/{fonte}/{perfil_metodologico}/n{n:04d}/{git_sha}/metricas.json"
     },
 
     "reid_openset": {
