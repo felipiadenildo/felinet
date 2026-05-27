@@ -262,6 +262,42 @@ def _resolver_manifesto_path(latest: Path) -> Path | None:
     return None
 
 
+def _resolver_latest_por_tag(
+    raiz_runs: Path,
+    *,
+    modo: str,
+    fonte: str,
+    perfil_nome: str,
+    tag: str | None,
+    protocolo: str | None = None,
+) -> Path | None:
+    """Igual a resolver_latest, mas filtra por manifest.tag quando tag != None."""
+    if not tag:
+        return resolver_latest(
+            modo=modo,
+            fonte=fonte,
+            perfil=perfil_nome,
+            protocolo=protocolo,
+            raiz_runs=raiz_runs,
+        )
+    from felinet.runs import listar_runs
+
+    registros = listar_runs(
+        raiz_runs,
+        modo=modo,
+        fonte=fonte,
+        perfil=perfil_nome,
+        protocolo=protocolo,
+    )
+    for reg in registros:
+        if (reg.manifest.get("tag") or "") != tag:
+            continue
+        if reg.manifest.get("sucesso") is not True:
+            continue
+        return reg.path
+    return None
+
+
 @app.command("fontes-resumo")
 def fontes_resumo(
     perfil: str = typer.Option("prod", "--perfil", "-p"),
@@ -272,6 +308,7 @@ def fontes_resumo(
         "Default: todas as fontes do perfil com manifesto ingerido.",
     ),
     saida: Path = typer.Option(None, "--saida"),
+    tag: str = typer.Option(None, "--tag", help="Filtra runs por manifest.tag."),
 ) -> None:
     """Tabela 'fontes operacionais': mídias, únicas (SHA), janela temporal, extensões.
 
@@ -295,11 +332,12 @@ def fontes_resumo(
     ]
     linhas: list[list[str]] = [cabecalho]
     for fonte in lista_fontes:
-        latest = resolver_latest(
+        latest = _resolver_latest_por_tag(
+            raiz_runs,
             modo="operacional",
             fonte=fonte,
-            perfil=cfg.nome,
-            raiz_runs=raiz_runs,
+            perfil_nome=cfg.nome,
+            tag=tag,
         )
         if latest is None:
             LOG.warning(f"Fonte '{fonte}': manifesto ausente em runs/ (skip).")
@@ -426,6 +464,7 @@ def _latest_por_fase(
     fonte: str,
     perfil_nome: str,
     prefixo_comando: str,
+    tag: str | None = None,
 ) -> dict | None:
     """Retorna o ``manifest`` do run mais recente compativel com a fase.
 
@@ -452,6 +491,8 @@ def _latest_por_fase(
         comando = (reg.manifest.get("extras") or {}).get("comando", "")
         if reg.manifest.get("sucesso") is not True:
             continue
+        if tag is not None and (reg.manifest.get("tag") or "") != tag:
+            continue
         if any(comando.startswith(p) for p in comandos_validos):
             return reg.manifest
     return None
@@ -473,6 +514,7 @@ def comparativo_fontes(
         "Default: todas as fontes do perfil.",
     ),
     saida: Path = typer.Option(None, "--saida"),
+    tag: str = typer.Option(None, "--tag", help="Filtra runs por manifest.tag."),
 ) -> None:
     """Tabela comparativa entre fontes (Kaggle vs Felidae vs PetFace).
 
@@ -506,13 +548,13 @@ def comparativo_fontes(
 
     for fonte in lista_fontes:
         man_ing = _latest_por_fase(
-            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="ingestao"
+            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="ingestao", tag=tag
         )
         man_det = _latest_por_fase(
-            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="deteccao"
+            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="deteccao", tag=tag
         )
         man_cls = _latest_por_fase(
-            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="classificacao"
+            raiz_runs, fonte=fonte, perfil_nome=cfg.nome, prefixo_comando="classificacao", tag=tag
         )
 
         if man_ing is None and man_det is None and man_cls is None:
