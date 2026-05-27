@@ -83,3 +83,52 @@ data/dev/pipeline/08_avaliacao_pipeline.json
 mlruns/
 .dvc/cache
 .dvc/tmp
+data/dev/pipeline/01_brutas
+
+# Layout runs/ ---------------------------------------------------
+runs/
+!runs/.gitkeep
+!runs/README.md
+
+# Mapeamento por-usuário de datasets locais (config sensivel ao disco) -----
+configs/datasets_locais.yaml
+
+# Pasta de quarentena (arquivos em revisão para deleção) -------------------
+_quarentena/
+
+# Datasets externos (pontos de montagem) -------------------------
+data/raw/
+!data/raw/camera_trap/.gitkeep
+!data/raw/camera_trap/README.md
+!data/raw/reid/.gitkeep
+!data/raw/reid/README.md
+data/dev/interim/
+data/dev/processed/
+data/dev/reid_mini/*
+!data/dev/reid_mini/README.md
+
+# Reports gerados (exceto os curados) ----------------------------
+reports/_tmp_*.md
+reports/_tmp_*.html
+
+# Saidas de experimentos (geradas localmente) ----------------------
+artifacts/
+runs/
+data/raw/
+data/dev/
+data/interim/
+data/processed/
+data/test/
+
+# Backups locais do apply_patch.sh
+BACKUP_v23_smoke_fix_*/
+
+# Pacotes/dumps soltos na raiz
+dados_monografia*.zip
+dados_monografia_*/
+felinet_v23_*.zip
+
+# Logs e relatorios de execucao
+LOG_*.txt
+RELATORIO_SMOKE.md
+diagnostico_smoke*.txt

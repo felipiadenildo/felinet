@@ -1,4 +1,5 @@
 """Hash de arquivos (SHA-256) para manifesto de ingestao e checksums de runs."""
+
 from __future__ import annotations
 
 import hashlib

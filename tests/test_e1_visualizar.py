@@ -1,10 +1,12 @@
 # 03_codigo/tests/test_e1_visualizar.py
 """Teste do renderizador de bboxes."""
+
 from __future__ import annotations
 
 from pathlib import Path
 
 from PIL import Image
+
 from felinet.pipeline.fase2_deteccao.schema import (
     BoundingBox,
     Deteccao,

@@ -3,6 +3,7 @@
 Renderiza as detecções salvas no esquema neutro como overlay visual
 para inspeção humana e figuras da monografia.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,8 +14,8 @@ from .schema import ResultadoDeteccao
 
 # Paleta por categoria — cores acessíveis (contrastam em fundo claro/escuro)
 _CORES = {
-    "animal": (220, 50, 50),    # vermelho
-    "person": (50, 130, 220),   # azul
+    "animal": (220, 50, 50),  # vermelho
+    "person": (50, 130, 220),  # azul
     "vehicle": (240, 180, 40),  # amarelo
 }
 _COR_DEFAULT = (200, 200, 200)

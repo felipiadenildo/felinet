@@ -5,6 +5,7 @@ Convencoes:
 - ``indent=2, ensure_ascii=False`` para JSON
 - ``cria pasta-pai`` antes de gravar
 """
+
 from __future__ import annotations
 
 import csv

@@ -4,6 +4,7 @@ Escreve mensagens em formato JSON-Lines (uma linha por evento), facilitando
 ingestao posterior por scripts de analise e DVC/MLflow. Tambem espelha
 para stderr em formato humano quando rodando em terminal.
 """
+
 from __future__ import annotations
 
 import json
@@ -51,9 +52,7 @@ def configurar_logging(
     raiz.handlers.clear()
 
     h_humano = logging.StreamHandler(sys.stderr)
-    h_humano.setFormatter(
-        logging.Formatter(fmt="[%(levelname)s] %(name)s :: %(message)s")
-    )
+    h_humano.setFormatter(logging.Formatter(fmt="[%(levelname)s] %(name)s :: %(message)s"))
     raiz.addHandler(h_humano)
 
     if arquivo_jsonl is not None:

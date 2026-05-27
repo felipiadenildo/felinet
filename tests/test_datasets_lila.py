@@ -1,8 +1,11 @@
 """Testes para datasets.lila_bc (subset dev local)."""
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
+
+from PIL import Image
 
 from felinet.datasets.lila_bc import (
     ARQUIVO_MANIFESTO,
@@ -11,7 +14,6 @@ from felinet.datasets.lila_bc import (
     listar_subset_dev,
     subset_esta_pronto,
 )
-from PIL import Image
 
 
 def _criar_imagem(caminho: Path, tamanho: tuple[int, int] = (32, 32)) -> None:
@@ -63,9 +65,7 @@ def test_carregar_manifesto_retorna_none_se_ausente(tmp_path: Path) -> None:
 
 def test_carregar_manifesto_le_json_existente(tmp_path: Path) -> None:
     conteudo = {"total": 2, "imagens": [{"arquivo": "a.jpg"}, {"arquivo": "b.jpg"}]}
-    (tmp_path / ARQUIVO_MANIFESTO).write_text(
-        json.dumps(conteudo), encoding="utf-8"
-    )
+    (tmp_path / ARQUIVO_MANIFESTO).write_text(json.dumps(conteudo), encoding="utf-8")
     carregado = carregar_manifesto(tmp_path)
     assert carregado == conteudo
 

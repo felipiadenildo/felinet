@@ -1,4 +1,5 @@
 """Testes da política de decisão da Fase III."""
+
 from __future__ import annotations
 
 from felinet.pipeline.fase3_classificacao.decisor import (

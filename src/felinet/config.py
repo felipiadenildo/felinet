@@ -1,7 +1,7 @@
 """Carregamento de configuracoes (paths.yaml, modelos.yaml, pipeline.yaml).
 
-Centraliza acesso aos caminhos de dados. Substitui todos os ``Path("04_dados/...")``
-hard-coded do projeto antigo. Resolve perfil ``dev`` ou ``prod`` baseado em:
+Centraliza acesso aos caminhos de dados. Resolve perfil ``dev`` ou ``prod``
+baseado em:
 
 1. Argumento explicito da funcao (``perfil="..."``)
 2. Variavel de ambiente ``FELINET_PERFIL``
@@ -9,7 +9,14 @@ hard-coded do projeto antigo. Resolve perfil ``dev`` ou ``prod`` baseado em:
 
 Tambem suporta sobrescritas pontuais via variaveis de ambiente prefixadas
 com ``FELINET_`` (ex.: ``FELINET_DATA_RAW`` sobrescreve ``raw_camera_trap``).
+
+O carregamento expoe:
+
+- ``carregar_perfil(nome)`` -> ``Perfil`` (dataclass com caminhos resolvidos)
+- ``resolver_fonte(perfil, fonte)`` -> ``Path`` (caminho da fonte registrada
+  em ``configs/paths.yaml`` na secao ``fontes``)
 """
+
 from __future__ import annotations
 
 import os
@@ -35,7 +42,6 @@ def raiz_projeto() -> Path:
     for ancestral in aqui.parents:
         if (ancestral / "pyproject.toml").exists():
             return ancestral
-    # fallback: cwd
     return Path.cwd()
 
 
@@ -61,7 +67,27 @@ class Perfil:
     extras: dict[str, Any] = field(default_factory=dict)
 
 
-def _resolver_path(raiz: Path, valor: str) -> Path:
+def _resolver_path(raiz: Path, valor: str | dict) -> Path:
+    """Resolve um caminho relativo a raiz do projeto.
+
+    Aceita string (caminho direto) ou dict com chave 'raiz' (preferida) ou
+    'path' (compatibilidade). Em dict, demais chaves sao metadados (tipo,
+    layout, etc.) tratados em outro nivel.
+    """
+    if isinstance(valor, dict):
+        if "raiz" in valor:
+            valor = valor["raiz"]
+        elif "path" in valor:
+            valor = valor["path"]
+        else:
+            raise TypeError(
+                f"Entrada de path como dict requer chave 'raiz' ou 'path'. "
+                f"Recebido: {sorted(valor.keys())}"
+            )
+    if not isinstance(valor, str):
+        raise TypeError(
+            f"_resolver_path espera str ou dict, recebeu {type(valor).__name__}: {valor!r}"
+        )
     p = Path(valor).expanduser()
     if not p.is_absolute():
         p = raiz / p
@@ -72,7 +98,6 @@ def _aplicar_overrides_env(dados: dict[str, Any]) -> dict[str, Any]:
     """Sobrescritas pontuais por variavel de ambiente.
 
     Convencao: ``FELINET_<CHAVE_MAIUSCULA>`` sobrescreve a chave correspondente.
-    Exemplo: ``FELINET_RAW_PETFACE=/tmp/petface`` -> raw_petface.
     """
     overrides = {}
     for chave in dados:
@@ -87,6 +112,11 @@ def _aplicar_overrides_env(dados: dict[str, Any]) -> dict[str, Any]:
 @lru_cache(maxsize=4)
 def carregar_perfil(perfil: str | None = None) -> Perfil:
     """Carrega um perfil de ``configs/paths.yaml``.
+
+    Os campos top-level do YAML (``fontes``, ``raiz_runs``,
+    ``artifacts_figuras_raiz``, ``artifacts_tabelas_raiz``) sao injetados
+    em ``Perfil.extras`` para serem consumidos por ``felinet.runs`` e
+    outros modulos.
 
     Args:
         perfil: Nome do perfil. Se ``None``, le ``FELINET_PERFIL`` ou usa
@@ -114,27 +144,79 @@ def carregar_perfil(perfil: str | None = None) -> Perfil:
     perfis = raw.get("perfis", {})
     if nome not in perfis:
         disponiveis = ", ".join(sorted(perfis))
-        raise KeyError(
-            f"Perfil '{nome}' nao definido em {yaml_path}. "
-            f"Disponiveis: {disponiveis}"
-        )
+        raise KeyError(f"Perfil '{nome}' nao definido em {yaml_path}. Disponiveis: {disponiveis}")
 
     dados = _aplicar_overrides_env(perfis[nome])
     raiz = raiz_projeto()
 
-    campos_obrigatorios = {f.name for f in fields(Perfil) if f.name not in {"nome", "raw_campus2", "extras"}}
+    campos_obrigatorios = {
+        f.name for f in fields(Perfil) if f.name not in {"nome", "raw_campus2", "extras"}
+    }
     resolvidos: dict[str, Any] = {"nome": nome}
+    extras: dict[str, Any] = {}
     for chave, valor in dados.items():
         if chave in campos_obrigatorios or chave == "raw_campus2":
             resolvidos[chave] = _resolver_path(raiz, valor)
         else:
-            resolvidos.setdefault("extras", {})[chave] = valor
+            extras[chave] = valor
+
+    # Injeta top-level (fontes, raiz_runs, ...) em extras
+    for chave_top in ("fontes", "raiz_runs", "artifacts_figuras_raiz", "artifacts_tabelas_raiz"):
+        if chave_top in raw:
+            extras[chave_top] = raw[chave_top]
+
+    resolvidos["extras"] = extras
 
     faltando = campos_obrigatorios - set(resolvidos)
     if faltando:
         raise KeyError(f"Perfil '{nome}' nao define: {sorted(faltando)}")
 
     return Perfil(**resolvidos)
+
+
+def resolver_fonte(perfil: Perfil, fonte: str) -> Path:
+    """Resolve o caminho de uma fonte registrada em ``configs/paths.yaml``.
+
+    Args:
+        perfil: Perfil carregado.
+        fonte: Identificador da fonte (chave em ``fontes:`` no YAML).
+
+    Returns:
+        Path absoluto da fonte (pode ser symlink, nao resolve).
+
+    Raises:
+        KeyError: Se a fonte nao estiver registrada.
+    """
+    fontes = (perfil.extras or {}).get("fontes", {})
+    if fonte not in fontes:
+        disponiveis = ", ".join(sorted(fontes))
+        raise KeyError(
+            f"Fonte '{fonte}' nao registrada. Disponiveis: {disponiveis}. "
+            f"Adicione em configs/paths.yaml -> fontes:"
+        )
+    return _resolver_path(raiz_projeto(), fontes[fonte])
+
+
+def fonte_default(perfil: Perfil, modo: str) -> str:
+    """Retorna a fonte default para um modo (operacional|metodologico).
+
+    Args:
+        perfil: Perfil carregado.
+        modo: ``"operacional"`` ou ``"metodologico"``.
+
+    Returns:
+        Identificador da fonte default registrada no perfil.
+
+    Raises:
+        KeyError: Se nao houver default registrado para o modo.
+    """
+    chave = f"fonte_default_{modo}"
+    valor = (perfil.extras or {}).get(chave)
+    if not valor:
+        raise KeyError(
+            f"Perfil '{perfil.nome}' nao define '{chave}'. Passe --fonte explicitamente."
+        )
+    return str(valor)
 
 
 def carregar_modelos() -> dict[str, Any]:

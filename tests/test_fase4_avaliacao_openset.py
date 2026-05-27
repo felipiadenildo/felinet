@@ -1,8 +1,6 @@
 """Testes para avaliação open-set Re-ID (Etapa 7.1)."""
-from __future__ import annotations
 
-import sys
-from pathlib import Path
+from __future__ import annotations
 
 import numpy as np
 import pytest
@@ -61,9 +59,7 @@ def test_avaliar_open_set_separacao_perfeita_auc_um():
     """Quando conhecidos e novos sao linearmente separaveis, AUC deve ser ~1.0."""
     emb, ids = _gerar_embeddings_separaveis(n_ids=20, n_imgs_por_id=5, rng_seed=42)
     ids_unicos = list(set(ids))
-    ids_catalogo, ids_novos = particionar_ids_open_set(
-        ids_unicos, frac_novos=0.30, random_state=42
-    )
+    ids_catalogo, ids_novos = particionar_ids_open_set(ids_unicos, frac_novos=0.30, random_state=42)
 
     # Galeria = 4 primeiras imagens dos IDs do catalogo; queries = 5a imagem de TODOS
     emb = np.asarray(emb)
@@ -117,9 +113,7 @@ def test_avaliar_open_set_curva_roc_monotonica():
 def test_avaliar_open_set_contadores_consistentes():
     emb, ids = _gerar_embeddings_separaveis(n_ids=10, n_imgs_por_id=5, rng_seed=3)
     ids_unicos = list(set(ids))
-    ids_catalogo, ids_novos = particionar_ids_open_set(
-        ids_unicos, frac_novos=0.30, random_state=42
-    )
+    ids_catalogo, ids_novos = particionar_ids_open_set(ids_unicos, frac_novos=0.30, random_state=42)
 
     ids_arr = np.asarray(ids)
     mask_galeria = np.array(
@@ -136,10 +130,7 @@ def test_avaliar_open_set_contadores_consistentes():
     )
 
     assert resultado.n_queries_total == int(mask_query.sum())
-    assert (
-        resultado.n_queries_conhecidas + resultado.n_queries_novas
-        == resultado.n_queries_total
-    )
+    assert resultado.n_queries_conhecidas + resultado.n_queries_novas == resultado.n_queries_total
     assert resultado.n_ids_novos == len(ids_novos)
     assert 0.0 <= resultado.tpr_at_fpr_01 <= 1.0
     assert 0.0 <= resultado.tpr_at_fpr_05 <= 1.0
@@ -157,9 +148,7 @@ def test_avaliar_open_set_aleatorio_auc_proximo_meio():
     emb /= np.linalg.norm(emb, axis=1, keepdims=True)
     ids = [f"id_{i:03d}" for i in range(n_ids) for _ in range(n_imgs)]
 
-    _, ids_novos = particionar_ids_open_set(
-        list(set(ids)), frac_novos=0.50, random_state=42
-    )
+    _, ids_novos = particionar_ids_open_set(list(set(ids)), frac_novos=0.50, random_state=42)
 
     ids_arr = np.asarray(ids)
     mask_galeria = np.array(
@@ -177,6 +166,7 @@ def test_avaliar_open_set_aleatorio_auc_proximo_meio():
 
     # AUC nao precisa ser exatamente 0.5, mas longe de 1.0 e longe de 0.0
     assert 0.30 <= resultado.auc_roc <= 0.70
+
 
 def test_calcular_eer_separacao_perfeita():
     """Separacao perfeita => EER proximo de 0."""
@@ -211,9 +201,7 @@ def test_avaliar_open_set_inclui_eer():
     """Smoke test: resultado tem campo EER preenchido."""
     emb, ids = _gerar_embeddings_separaveis(n_ids=10, n_imgs_por_id=5, rng_seed=1)
     ids_unicos = list(set(ids))
-    ids_catalogo, ids_novos = particionar_ids_open_set(
-        ids_unicos, frac_novos=0.50, random_state=42
-    )
+    ids_catalogo, ids_novos = particionar_ids_open_set(ids_unicos, frac_novos=0.50, random_state=42)
 
     ids_arr = np.asarray(ids)
     mask_galeria = np.array(

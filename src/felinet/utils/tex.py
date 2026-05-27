@@ -2,6 +2,7 @@
 
 Saida pode ser usada com ``\\input{tabelas/reid_closed_set.tex}`` em LaTeX.
 """
+
 from __future__ import annotations
 
 import csv

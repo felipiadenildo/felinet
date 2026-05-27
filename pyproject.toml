@@ -1,6 +1,6 @@
 [project]
 name = "felinet"
-version = "0.2.0"
+version = "0.3.0"
 description = "Sistema de monitoramento por visao computacional da colonia de gatos do Campus 2 da USP Sao Carlos"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
@@ -39,6 +39,7 @@ dependencies = [
     # Utilitarios
     "pydantic>=2.8.0",
     "typer>=0.12.0",
+    "questionary>=2.0",
     "rich>=13.7.0",
     "python-dotenv>=1.0.0",
     "tqdm>=4.66.0",
@@ -82,10 +83,20 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
-ignore = ["E501"]
+ignore = [
+    "E501",
+    # Typer usa typer.Option(...) como default; eh o padrao oficial da biblioteca.
+    "B008",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["E501"]
+# Workaround de sys.path antes dos imports (necessario para o MegaDetector wrapper).
+"src/felinet/pipeline/fase2_deteccao/megadetector.py" = ["E402"]
+# Convencao cientifica: mAP (mean Average Precision) e nome canonico em literatura
+# de Re-ID/IR (CVPR/TREC). Mantemos o casing original em vez de m_ap_at_k.
+"src/felinet/pipeline/fase4_reid/avaliacao.py" = ["N802", "N815"]
+"tests/test_fase4_avaliacao.py" = ["N802", "E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

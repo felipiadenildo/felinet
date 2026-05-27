@@ -1,0 +1,54 @@
+# Datasets locais — caminhos em SEU disco. Não commitar este arquivo.
+# Copie de datasets_locais.example.yaml e edite.
+#
+# tipo:
+#   - camera_trap_brutas: imagens cruas de armadilha (sem rótulo de identidade).
+#     Roda fases 1, 2, 3 (ingestão, detecção, classificação Felis-vs-resto).
+#   - reid_crops_rotulados: crops já recortados com rótulo de indivíduo.
+#     Roda SOMENTE fase 4 (Re-ID). Pula 1-3.
+#   - camera_trap_rotulado_identidade: imagens cruas COM rótulo de identidade.
+#     Roda fases 1, 2, 3, 4 (cascata completa).
+#
+# layout:
+#   - flat: todas as imagens numa pasta única.
+#   - por_classe: subpastas por espécie/categoria (ex: bobcat/, puma/).
+#   - por_identidade: subpastas por indivíduo (ex: gato_001/, gato_002/).
+#   - cocotraps: estrutura COCO Camera Traps (com JSON de metadados).
+#   - aninhado_livre: estrutura desconhecida, varre recursivamente (fallback).
+
+datasets:
+
+  kaggle_cats:
+    tipo: camera_trap_brutas
+    layout: flat
+    caminho: /home/USUARIO/.cache/kagglehub/datasets/samuelayman/cat-dataset/versions/1/cats
+    descricao: Kaggle Cats — referência felis_catus
+    fases_aplicaveis: [1, 2, 3]
+
+  felidae:
+    tipo: camera_trap_brutas
+    layout: por_classe
+    caminho: /media/USUARIO/ssd/dados_tcc/Felidae
+    descricao: Felidae Conservation Fund (LILA) — 66 categorias
+    fases_aplicaveis: [1, 2, 3]
+
+  petface:
+    tipo: reid_crops_rotulados
+    layout: por_identidade
+    caminho: /media/USUARIO/ssd/dados_tcc/PetFace
+    descricao: PetFace — re-identificação (crops rotulados)
+    fases_aplicaveis: [4]
+
+  # campus2_2025:
+  #   tipo: camera_trap_rotulado_identidade
+  #   layout: cocotraps
+  #   caminho: /caminho/local
+  #   descricao: Camera-trap Campus 2 USP São Carlos
+  #   fases_aplicaveis: [1, 2, 3, 4]
+
+  # exemplo_meu_dataset:
+  #   tipo: camera_trap_brutas
+  #   layout: aninhado_livre
+  #   caminho: /caminho/local
+  #   descricao: Dataset experimental
+  #   fases_aplicaveis: [1, 2, 3]

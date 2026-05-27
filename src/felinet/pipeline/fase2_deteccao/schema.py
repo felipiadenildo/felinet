@@ -3,6 +3,7 @@
 Define a estrutura de dados que o pipeline consome após a detecção,
 isolando o resto do sistema da API específica do MegaDetector.
 """
+
 from __future__ import annotations
 
 import json
@@ -100,12 +101,14 @@ def carregar_resultados_json(arquivo: Path | str) -> list[ResultadoDeteccao]:
             )
             for d in r.get("deteccoes", [])
         ]
-        resultados.append(ResultadoDeteccao(
-            media_path=r["media_path"],
-            largura=int(r["largura"]),
-            altura=int(r["altura"]),
-            deteccoes=deteccoes,
-            modelo=r["modelo"],
-            tempo_ms=float(r["tempo_ms"]),
-        ))
+        resultados.append(
+            ResultadoDeteccao(
+                media_path=r["media_path"],
+                largura=int(r["largura"]),
+                altura=int(r["altura"]),
+                deteccoes=deteccoes,
+                modelo=r["modelo"],
+                tempo_ms=float(r["tempo_ms"]),
+            )
+        )
     return resultados

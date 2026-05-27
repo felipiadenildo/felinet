@@ -5,6 +5,7 @@ Política conservadora descrita em §3.4 da monografia:
 - Confiança alta em outra espécie → fauna não-alvo
 - Confiança baixa ou ambígua     → fila de validação humana
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass

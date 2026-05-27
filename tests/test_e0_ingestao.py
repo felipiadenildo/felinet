@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+
 from felinet.pipeline.fase1_ingestao.validar import (
     eh_imagem,
     eh_video,

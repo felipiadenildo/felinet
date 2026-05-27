@@ -7,6 +7,7 @@ Protocolo oficial PetFace:
       (de todos individuos amostrados) e verifica se o ID correto aparece nos K
       primeiros resultados.
 """
+
 from __future__ import annotations
 
 import csv
@@ -26,9 +27,7 @@ class RegistroPetFace:
 
     def __post_init__(self) -> None:
         if not self.galeria:
-            raise ValueError(
-                f"Individuo {self.id_individuo} sem imagens de galeria"
-            )
+            raise ValueError(f"Individuo {self.id_individuo} sem imagens de galeria")
 
 
 def subset_esta_pronto(diretorio: Path = DIRETORIO_PADRAO) -> bool:
@@ -65,8 +64,8 @@ def carregar_reidentification(
 
             # filename vem como "cat/000000/05.png" -- caminho relativo a raiz
             query_path = diretorio / "split" / "cat" / ".." / ".." / "images" / filename
-            query_path = query_path.resolve() if query_path.exists() else (
-                diretorio / "images" / filename
+            query_path = (
+                query_path.resolve() if query_path.exists() else (diretorio / "images" / filename)
             )
 
             id_pad = f"{label:06d}"
@@ -75,7 +74,8 @@ def carregar_reidentification(
                 continue
 
             todas_imgs = sorted(
-                p for p in pasta_individuo.iterdir()
+                p
+                for p in pasta_individuo.iterdir()
                 if p.suffix.lower() in {".png", ".jpg", ".jpeg"}
             )
             galeria = tuple(p for p in todas_imgs if p.name != query_path.name)

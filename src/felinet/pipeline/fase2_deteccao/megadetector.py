@@ -4,6 +4,7 @@ Carregamento sob demanda (lazy) para manter testes rápidos.
 A primeira chamada baixa os pesos automaticamente (~50 MB)
 em ~/.cache/torch/hub/ ou similar.
 """
+
 from __future__ import annotations
 
 # --- Workaround: evita import de torchaudio (que exige libcudart.so.13
@@ -78,6 +79,7 @@ class DetectorMegaDetectorV6:
     def _resolver_dispositivo(dispositivo: str) -> str:
         if dispositivo == "auto":
             import torch
+
             return "cuda" if torch.cuda.is_available() else "cpu"
         return dispositivo
 
@@ -94,6 +96,7 @@ class DetectorMegaDetectorV6:
         from PytorchWildlife.models.detection import (
             MegaDetectorV6,  # type: ignore[attr-defined]
         )
+
         self._modelo = MegaDetectorV6(
             device=self.dispositivo,
             pretrained=True,
@@ -134,9 +137,7 @@ class DetectorMegaDetectorV6:
         resultado_bruto = modelo.single_image_detection(str(caminho_imagem))
         tempo_ms = (time.perf_counter() - t0) * 1000
 
-        deteccoes = self._converter(
-            resultado_bruto, largura, altura, limite_confianca
-        )
+        deteccoes = self._converter(resultado_bruto, largura, altura, limite_confianca)
 
         return ResultadoDeteccao(
             media_path=str(caminho_imagem),
@@ -184,7 +185,5 @@ class DetectorMegaDetectorV6:
                 w=max(0.0, min(1.0, (x2 - x1) / largura)),
                 h=max(0.0, min(1.0, (y2 - y1) / altura)),
             )
-            deteccoes.append(
-                Deteccao(categoria=categoria, confianca=conf, bbox=bbox)
-            )
+            deteccoes.append(Deteccao(categoria=categoria, confianca=conf, bbox=bbox))
         return deteccoes
