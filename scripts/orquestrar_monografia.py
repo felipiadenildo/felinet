@@ -308,6 +308,26 @@ def _eh_para_rodar(nome_etapa: str, ctx: Contexto) -> bool:
     return True
 
 
+def etapa_reid_extrair_embeddings(ctx: Contexto, cfg_etapa: dict) -> None:
+    """Passo 1 da Fase IV: extrai embeddings MegaDescriptor.
+
+    Saída: ``runs/metodologico/<fonte>/<perfil>/n<NNNN>/<gitsha>/embeddings.npz``
+    É pré-requisito de reid_closed, reid_openset e das figuras matriz-sim/dist-intra/galeria-erros.
+    """
+    if not cfg_etapa.get("habilitada", True) or not _eh_para_rodar("reid_extrair_embeddings", ctx):
+        ctx.logger.info("⏭  reid_extrair_embeddings pulado")
+        return
+    ctx.logger.info("══ reid_extrair_embeddings ══")
+    base = {**ctx.config["padroes"], **cfg_etapa, "git_sha": ctx.git_sha}
+    for n in cfg_etapa["ns"]:
+        sub_ctx = {**base, "n": n}
+        cmd = substituir_lista(cfg_etapa["comando_template"], sub_ctx)
+        artefato = substituir(cfg_etapa["artefato_template"], sub_ctx)
+        ctx.resultados.append(
+            executar_comando(ctx, f"reid_extrair_embeddings n={n}", cmd, [artefato])
+        )
+
+
 def etapa_reid_closed(ctx: Contexto, cfg_etapa: dict) -> None:
     if not cfg_etapa.get("habilitada", True) or not _eh_para_rodar("reid_closed", ctx):
         ctx.logger.info("⏭  reid_closed pulado")
@@ -555,7 +575,10 @@ def gerar_manifesto_run(ctx: Contexto, esperados: list[str], inventario: Path, z
         "inventario_md": str(inventario.relative_to(ctx.repo)) if inventario.is_relative_to(ctx.repo) else str(inventario),
         "zip": str(zip_path) if zip_path else None,
     }
-    out.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    out.write_text(
+        json.dumps(data, indent=2, ensure_ascii=False, default=str),
+        encoding="utf-8",
+    )
     return out
 
 
@@ -658,7 +681,7 @@ def parsear_args() -> argparse.Namespace:
         "--etapa",
         action="append",
         default=[],
-        help="Whitelist de etapas (repetível). Etapas válidas: reid_closed, reid_openset, pipeline_operacional, regenerar_resumo_html, tabelas, figuras_globais, figuras_por_n.",
+        help="Whitelist de etapas (repetível). Etapas válidas: reid_extrair_embeddings, reid_closed, reid_openset, pipeline_operacional, regenerar_resumo_html, tabelas, figuras_globais, figuras_por_n.",
     )
     p.add_argument("--skip-smoke", action="store_true", help="Pula o smoke test inicial.")
     p.add_argument("--timeout", type=int, default=3600, help="Timeout por comando em segundos.")
@@ -708,6 +731,8 @@ def main() -> int:
 
     # etapas principais
     etapas = config["etapas"]
+    if "reid_extrair_embeddings" in etapas:
+        etapa_reid_extrair_embeddings(ctx, etapas["reid_extrair_embeddings"])
     etapa_reid_closed(ctx, etapas["reid_closed"])
     etapa_reid_openset(ctx, etapas["reid_openset"])
     etapa_pipeline_operacional(ctx, etapas["pipeline_operacional"])
