@@ -66,6 +66,8 @@ tex/*.synctex.gz
 tex/*.run.xml
 tex/*-blx.bib
 
+logs/
+
 # Artefatos pesados regeneraveis ---------------------------------
 artifacts/figuras/exemplos/*.jpg
 artifacts/figuras/exemplos/*.jpeg

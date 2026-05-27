@@ -1,0 +1,278 @@
+{
+  "_doc": "Configuração declarativa do orquestrador de geração da monografia. Edite somente este arquivo para mudar parâmetros — o orquestrar_monografia.py lê tudo daqui.",
+  "_doc_versao": "1.0",
+
+  "ambiente": {
+    "_doc": "Detecção automática do runner. Se 'auto', usa 'uv run felinet' se uv existir, senão 'felinet'.",
+    "runner": "auto",
+    "registrar_ambiente": true,
+    "rodar_smoke": true
+  },
+
+  "padroes": {
+    "_doc": "Defaults aplicados quando uma etapa não sobrescreve.",
+    "perfil_metodologico": "prod",
+    "perfil_operacional": "dev",
+    "seed": 42,
+    "top_n_piores": 5,
+    "top_k_galeria": 3,
+    "bins_dist": 40
+  },
+
+  "etapas": {
+    "_doc": "Cada etapa é executada em ordem. 'habilitada=false' pula. Cada artefato em 'artefatos' é checado para incremental.",
+
+    "reid_closed": {
+      "habilitada": true,
+      "_doc": "Re-ID closed-set por N em petface (Fase IV isolada).",
+      "fonte": "petface",
+      "ns": [50, 100, 200],
+      "k_max": 10,
+      "comando_template": [
+        "reid", "avaliar-closed",
+        "--perfil", "{perfil_metodologico}",
+        "--fonte", "{fonte}",
+        "--n", "{n}",
+        "--k-max", "{k_max}"
+      ],
+      "artefato_template": "runs/metodologico/{fonte}/{perfil_metodologico}/n{n:04d}/{git_sha}/metricas.json",
+      "artefatos_extras_template": [
+        "runs/metodologico/{fonte}/{perfil_metodologico}/n{n:04d}/{git_sha}/embeddings.npz"
+      ],
+      "_nota_extras": "embeddings.npz é consumido por reid_openset, matriz-similaridade, dist-intra-inter e galeria-erros. Sem ele, todas as figuras por N e o openset falham."
+    },
+
+    "reid_openset": {
+      "habilitada": true,
+      "_doc": "Re-ID open-set por N em petface.",
+      "fonte": "petface",
+      "ns": [50, 100, 200],
+      "frac_novos": 0.50,
+      "seeds": "42,7,123",
+      "comando_template": [
+        "reid", "avaliar-openset",
+        "--perfil", "{perfil_metodologico}",
+        "--fonte", "{fonte}",
+        "--n", "{n}",
+        "--frac-novos", "{frac_novos}",
+        "--seeds", "{seeds}"
+      ],
+      "artefato_template": "runs/metodologico/{fonte}/{perfil_metodologico}/openset_n{n:04d}/{git_sha}/metricas.json"
+    },
+
+    "pipeline_operacional": {
+      "habilitada": true,
+      "_doc": "Cascata I->II->III por fonte operacional. Modo dev é rápido. Para prod, mude perfil.",
+      "fontes": ["kaggle_cats", "felidae"],
+      "max_amostras": 300,
+      "tag": "monografia_n300",
+      "comando_template": [
+        "pipeline", "executar",
+        "--perfil", "{perfil_operacional}",
+        "--fonte", "{fonte}",
+        "--max-amostras", "{max_amostras}",
+        "--seed-amostragem", "{seed}",
+        "--tag", "{tag}"
+      ],
+      "artefato_glob": "runs/operacional/{fonte}/{perfil_operacional}/*/*{tag}*/manifest.json"
+    },
+
+    "regenerar_resumo_html": {
+      "habilitada": true,
+      "_doc": "Após o fix do gerar_resumo_html (commit e3e136e), regenera resumo.html de todas as galerias dev_visualizacao.",
+      "fontes": ["kaggle_cats", "felidae"],
+      "comando_template": [
+        "dev", "gerar-resumo-html",
+        "--fonte", "{fonte}",
+        "--perfil", "{perfil_operacional}"
+      ],
+      "artefato_glob": "runs/operacional/{fonte}/{perfil_operacional}/*/*/dev_visualizacao/resumo.html",
+      "regerar_sempre": true,
+      "_nota_regerar": "regerar_sempre=true ignora o check incremental — sempre roda para aplicar o fix de contadores."
+    },
+
+    "tabelas": {
+      "habilitada": true,
+      "_doc": "Tabelas CSV + TEX (booktabs). Cada item gera uma família.",
+      "items": [
+        {
+          "nome": "fontes-resumo",
+          "comando": ["tabelas", "fontes-resumo", "--perfil", "{perfil_operacional}"],
+          "artefatos": [
+            "artifacts/tabelas/operacional/_global/fontes_resumo.csv",
+            "artifacts/tabelas/operacional/_global/fontes_resumo.tex"
+          ]
+        },
+        {
+          "nome": "comparativo-fontes-tab",
+          "comando": ["tabelas", "comparativo-fontes", "--perfil", "{perfil_operacional}"],
+          "artefatos": [
+            "artifacts/tabelas/operacional/_global/comparativo_fontes.csv",
+            "artifacts/tabelas/operacional/_global/comparativo_fontes.tex"
+          ]
+        },
+        {
+          "nome": "datasets-avaliados",
+          "comando": ["tabelas", "datasets-avaliados", "--perfil", "{perfil_metodologico}"],
+          "artefatos": [
+            "artifacts/tabelas/datasets_avaliados.csv",
+            "artifacts/tabelas/datasets_avaliados.tex"
+          ]
+        },
+        {
+          "nome": "reid-resumo",
+          "_doc": "Tabela com Rank-1, Rank-5, mAP por N. Compara fechado em todos os Ns.",
+          "comando": ["tabelas", "reid-resumo",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "petface",
+                       "--ns", "50,100,200"],
+          "artefatos": [
+            "artifacts/tabelas/metodologico/petface/reid_resumo.csv",
+            "artifacts/tabelas/metodologico/petface/reid_resumo.tex"
+          ]
+        },
+        {
+          "nome": "openset-resumo",
+          "_doc": "Tabela com AUC, EER, threshold ótimo por N.",
+          "comando": ["tabelas", "openset-resumo",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "petface",
+                       "--ns", "50,100,200"],
+          "artefatos": [
+            "artifacts/tabelas/metodologico/petface/openset_resumo.csv",
+            "artifacts/tabelas/metodologico/petface/openset_resumo.tex"
+          ]
+        },
+        {
+          "nome": "run-inventory",
+          "comando": ["tabelas", "run-inventory", "--perfil", "{perfil_metodologico}"],
+          "artefatos": [
+            "artifacts/tabelas/_inventario/run_inventory.csv",
+            "artifacts/tabelas/_inventario/run_inventory.tex"
+          ]
+        }
+      ]
+    },
+
+    "figuras_globais": {
+      "habilitada": true,
+      "_doc": "Figuras únicas (não-paramétricas em N).",
+      "items": [
+        {
+          "nome": "comparativo-fontes-fig",
+          "comando": ["figuras", "comparativo-fontes", "--perfil", "{perfil_operacional}"],
+          "artefatos": ["artifacts/figuras/operacional/_global/comparativo_fontes.png"]
+        },
+        {
+          "nome": "cmc-comparativo",
+          "comando": ["figuras", "cmc-comparativo",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "petface",
+                       "--ns", "50,100,200"],
+          "artefatos": ["artifacts/figuras/metodologico/petface/reid_cmc_comparativo.png"]
+        },
+        {
+          "nome": "matriz-confusao-fontes",
+          "_doc": "Esqueleto (depende de rótulos por imagem). Falha tolerada.",
+          "comando": ["figuras", "matriz-confusao-fontes", "--perfil", "{perfil_operacional}"],
+          "artefatos": ["artifacts/figuras/operacional/_global/matriz_confusao_fontes.png"],
+          "falha_tolerada": true
+        }
+      ]
+    },
+
+    "figuras_por_n": {
+      "habilitada": true,
+      "_doc": "Figuras parametrizadas em N. Para cada N em 'ns', roda 'figuras' (closed) e 'figuras_openset'.",
+      "fonte": "petface",
+      "ns": [50, 100, 200],
+      "figuras_closed": [
+        {
+          "nome": "reid-cmc",
+          "comando": ["figuras", "reid-cmc",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "{fonte}",
+                       "--n", "{n}"],
+          "artefato_template": "artifacts/figuras/metodologico/{fonte}/n{n:04d}/reid_cmc.png"
+        },
+        {
+          "nome": "matriz-similaridade",
+          "comando": ["figuras", "matriz-similaridade",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "{fonte}",
+                       "--n", "{n}"],
+          "artefato_template": "artifacts/figuras/metodologico/{fonte}/n{n:04d}/reid_matriz_sim.png"
+        },
+        {
+          "nome": "dist-intra-inter",
+          "comando": ["figuras", "dist-intra-inter",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "{fonte}",
+                       "--n", "{n}",
+                       "--bins", "{bins_dist}"],
+          "artefato_template": "artifacts/figuras/metodologico/{fonte}/n{n:04d}/reid_dist_intra_inter.png"
+        },
+        {
+          "nome": "galeria-erros",
+          "_doc": "5 piores queries (top_n_piores=5), 3 candidatos cada.",
+          "comando": ["figuras", "galeria-erros",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "{fonte}",
+                       "--n", "{n}",
+                       "--piores", "{top_n_piores}",
+                       "--top-k", "{top_k_galeria}"],
+          "artefato_template": "artifacts/figuras/metodologico/{fonte}/n{n:04d}/reid_galeria_erros.png"
+        }
+      ],
+      "figuras_openset": [
+        {
+          "nome": "roc-openset",
+          "comando": ["figuras", "roc-openset",
+                       "--perfil", "{perfil_metodologico}",
+                       "--fonte", "{fonte}",
+                       "--n", "{n}"],
+          "artefato_template": "artifacts/figuras/metodologico/{fonte}/openset_n{n:04d}/reid_roc_openset.png"
+        }
+      ]
+    }
+  },
+
+  "empacotamento": {
+    "_doc": "Cria zip versionado em entrega/dados_monografia/. Mantém histórico (não sobrescreve).",
+    "habilitada": true,
+    "diretorio_saida": "entrega/dados_monografia",
+    "prefixo": "dados_monografia",
+    "incluir": [
+      "artifacts/",
+      "runs/ambiente/"
+    ],
+    "incluir_de_runs": {
+      "_doc": "Para cada padrão em 'glob', inclui arquivos correspondentes mantendo path relativo.",
+      "metricas_e_manifests": [
+        "runs/metodologico/**/metricas.json",
+        "runs/metodologico/**/manifest.json",
+        "runs/operacional/**/manifest.json",
+        "runs/operacional/**/_estrutura_run.txt"
+      ],
+      "dev_visualizacao_html": [
+        "runs/operacional/**/dev_visualizacao/resumo.html",
+        "runs/operacional/**/dev_visualizacao/_inventario.txt"
+      ],
+      "manifesto_amostra_50_linhas": [
+        "runs/operacional/**/02_manifesto/manifesto.csv"
+      ]
+    },
+    "arquivos_raiz_opcionais": [
+      "LOG_experimento.txt",
+      "RELATORIO_SMOKE.md"
+    ]
+  },
+
+  "saida": {
+    "log_diretorio": "logs/monografia",
+    "log_erros": "logs/monografia/erros_<timestamp>.log",
+    "log_execucao": "logs/monografia/execucao_<timestamp>.log",
+    "inventario": "logs/monografia/inventario_<timestamp>.md",
+    "manifesto_run": "logs/monografia/manifesto_<timestamp>.json"
+  }
+}

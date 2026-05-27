@@ -418,3 +418,18 @@ ambiente:
 ## Smoke test rapido: roda pipeline mini + valida saidas + gera RELATORIO_SMOKE.md
 smoke: ambiente
 	@python scripts/smoke_test.py
+
+monografia:
+	@python scripts/orquestrar_monografia.py
+
+monografia-faltam:
+	@python scripts/orquestrar_monografia.py --so-faltam
+
+monografia-force:
+	@python scripts/orquestrar_monografia.py --force
+
+monografia-tabelas:
+	@python scripts/orquestrar_monografia.py --so-tabelas
+
+monografia-figuras:
+	@python scripts/orquestrar_monografia.py --so-figuras
