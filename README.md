@@ -46,8 +46,11 @@ data/                local sources (data/raw/*) and dev samples
 runs/                traceable output of each execution
 artifacts/           figures and tables generated for the thesis
 tests/               pytest suite (~150 tests)
-tex/                 LaTeX manuscript (untouched by the code)
 ```
+
+The thesis's LaTeX manuscript is versioned separately, in the
+[`monografia-tcc-felinet`](https://github.com/felipiadenildo/monografia-tcc-felinet)
+repository (private). This repository holds only the pipeline code.
 
 ### Documentation
 
@@ -126,8 +129,11 @@ data/                fontes locais (data/raw/*) e amostras dev
 runs/                saídas rastreáveis de cada execução
 artifacts/           figuras e tabelas geradas para a monografia
 tests/               suíte pytest (~150 testes)
-tex/                 manuscrito LaTeX (intocado pelo código)
 ```
+
+O manuscrito LaTeX da monografia é versionado à parte, no repositório
+[`monografia-tcc-felinet`](https://github.com/felipiadenildo/monografia-tcc-felinet)
+(privado). Este repositório contém apenas o código do pipeline.
 
 ### Documentação
 
