@@ -49,7 +49,7 @@ tests/               pytest suite (~150 tests)
 ```
 
 The thesis's LaTeX manuscript is versioned separately, in the
-[`monografia-tcc-felinet`](https://github.com/felipiadenildo/monografia-tcc-felinet)
+[`monografia-engenharia-de-computacao-felinet`](https://github.com/felipiadenildo/monografia-engenharia-de-computacao-felinet)
 repository (private). This repository holds only the pipeline code.
 
 ### Documentation
@@ -132,7 +132,7 @@ tests/               suíte pytest (~150 testes)
 ```
 
 O manuscrito LaTeX da monografia é versionado à parte, no repositório
-[`monografia-tcc-felinet`](https://github.com/felipiadenildo/monografia-tcc-felinet)
+[`monografia-engenharia-de-computacao-felinet`](https://github.com/felipiadenildo/monografia-engenharia-de-computacao-felinet)
 (privado). Este repositório contém apenas o código do pipeline.
 
 ### Documentação

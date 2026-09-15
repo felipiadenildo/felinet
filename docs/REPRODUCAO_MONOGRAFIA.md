@@ -106,6 +106,6 @@ felinet --help   # CLI íntegra
 
 O artefato final da monografia agrega os CSVs e PNGs gerados acima
 diretamente no manuscrito LaTeX do repositório
-[`monografia-tcc-felinet`](https://github.com/felipiadenildo/monografia-tcc-felinet),
+[`monografia-engenharia-de-computacao-felinet`](https://github.com/felipiadenildo/monografia-engenharia-de-computacao-felinet),
 que é editado manualmente e versionado separadamente, fora do escopo
 deste pipeline.
