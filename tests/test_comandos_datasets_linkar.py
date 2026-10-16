@@ -43,9 +43,7 @@ def test_listar_sem_arquivo_da_mensagem_amigavel(
     assert "Configure seus datasets" in res.output
 
 
-def test_listar_com_yaml_mostra_status(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_listar_com_yaml_mostra_status(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _setup_repo(tmp_path, monkeypatch)
     res = runner.invoke(datasets_app, ["listar"])
     assert res.exit_code == 0
@@ -53,9 +51,7 @@ def test_listar_com_yaml_mostra_status(
     assert "camera_trap_brutas" in res.output
 
 
-def test_linkar_cria_symlink(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_linkar_cria_symlink(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     raiz, fonte_disco = _setup_repo(tmp_path, monkeypatch)
     res = runner.invoke(datasets_app, ["linkar", "--nome", "kaggle_cats"])
     assert res.exit_code == 0, res.output
@@ -64,9 +60,7 @@ def test_linkar_cria_symlink(
     assert link.resolve() == fonte_disco.resolve()
 
 
-def test_linkar_apenas_planejar_nao_cria(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_linkar_apenas_planejar_nao_cria(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     raiz, _ = _setup_repo(tmp_path, monkeypatch)
     res = runner.invoke(
         datasets_app,
@@ -77,9 +71,7 @@ def test_linkar_apenas_planejar_nao_cria(
     assert not link.exists()
 
 
-def test_linkar_nome_inexistente_da_erro(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_linkar_nome_inexistente_da_erro(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _setup_repo(tmp_path, monkeypatch)
     res = runner.invoke(datasets_app, ["linkar", "--nome", "nao_existe"])
     assert res.exit_code != 0

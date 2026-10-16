@@ -14,8 +14,8 @@ pytest -m "smoke or not smoke"  # tudo
 ## Estrutura
 
 - `conftest.py` -- fixtures compartilhadas (imagens sinteticas, EXIF).
-- `test_e0_*.py` -- Fase I (ingestao, EXIF, manifesto, camtrap).
-- `test_e1_*.py` -- Fase II (MegaDetector smoke, schema, visualizacao).
+- `test_fase1_*.py` -- Fase I (ingestao, EXIF, manifesto, camtrap).
+- `test_fase2_*.py` -- Fase II (MegaDetector smoke, schema, visualizacao).
 - `test_fase3_*.py` -- Fase III (decisor, schema).
 - `test_fase4_*.py` -- Fase IV (avaliacao closed-set, open-set, schema).
 - `test_datasets_lila.py` -- adapter LILA-BC.

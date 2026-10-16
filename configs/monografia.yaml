@@ -1,0 +1,14 @@
+# Onde estão, nesta máquina, os dados que `felinet monografia gerar` usa.
+# Caminhos relativos são relativos à raiz do felinet. As opções da linha de comando vencem.
+#
+# No ambiente original (o notebook da execução final) os caminhos gravados nos runs existem como
+# estão, e `substituir` fica vazio. Em outra máquina, reconstrua as imagens dos runs com
+# `felinet datasets reconstruir-run` e mapeie o prefixo gravado para a pasta local.
+
+monografia: ../monografia-felinet   # repositório da monografia; a saída vai para elementos/gerados/
+runs: runs                          # raiz dos runs da execução final (operacional/, metodologico/, complementar/)
+fotos: data/exemplos/fauna_campus2  # 36 fotos do iNaturalist (scripts/baixar_exemplos_inat.py)
+
+substituir: {}
+#  /home/felipi/Desktop/tcc/tcc_gatos_campus2_v22/data/raw/camera_trap: /caminho/das/imagens/reconstruidas
+#  /media/felipi/ssd/dados_tcc/PetFace/images: /caminho/do/PetFace/images

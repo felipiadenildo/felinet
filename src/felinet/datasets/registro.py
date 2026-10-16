@@ -83,9 +83,7 @@ def carregar_datasets_locais(
             layout=cfg.get("layout", "aninhado_livre"),
             caminho=Path(cfg["caminho"]).expanduser(),
             descricao=cfg.get("descricao", ""),
-            fases_aplicaveis=cfg.get(
-                "fases_aplicaveis", FASES_POR_TIPO.get(tipo, [])
-            ),
+            fases_aplicaveis=cfg.get("fases_aplicaveis", FASES_POR_TIPO.get(tipo, [])),
         )
     return out
 

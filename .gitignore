@@ -69,8 +69,6 @@ tex/*-blx.bib
 logs/
 
 # Artefatos pesados regeneraveis ---------------------------------
-artifacts/figuras/exemplos/*.jpg
-artifacts/figuras/exemplos/*.jpeg
 
 # Saidas regeneraveis da cascata dev -----------------------------
 # (manifesto.csv, deteccoes.json, classificacoes.json sao versionados
@@ -114,8 +112,9 @@ reports/_tmp_*.md
 reports/_tmp_*.html
 
 # Saidas de experimentos (geradas localmente) ----------------------
-artifacts/
 runs/
+# fotos dos exemplos (licenças do iNaturalist; baixadas por scripts/baixar_exemplos_inat.py)
+data/exemplos/
 data/raw/
 data/dev/
 data/interim/

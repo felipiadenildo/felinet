@@ -47,20 +47,10 @@ make reid-todos
 Numeros publicados em `data/processed/avaliacao_reid_petface_n*_latest.json`
 e `data/processed/avaliacao_openset_petface_n*_latest.json`.
 
-## Gerar figuras e tabelas (artefatos para o LaTeX)
+## Gerar figuras e tabelas da monografia
 
 ```bash
-make figuras
-make tabelas
+felinet monografia gerar     # tabelas closed/open-set, CMC, ROC e as figuras do Apêndice E
 ```
 
-Gera:
-
-- `artifacts/figuras/reid_cmc_n0200.png`, `reid_cmc_n0500.png`
-- `artifacts/figuras/reid_matriz_sim_n0050.png`
-- `artifacts/tabelas/reid_resumo.{csv,tex}`
-- `artifacts/tabelas/openset_resumo.{csv,tex}`
-- `artifacts/tabelas/datasets_avaliados.{csv,tex}`
-
-Estes arquivos sao **incluidos diretamente** no LaTeX da monografia via
-`\input{}` e `\includegraphics{}`.
+Os arquivos vão para `monografia-felinet/elementos/gerados/` (ver `docs/REPRODUCAO_MONOGRAFIA.md`).

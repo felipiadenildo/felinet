@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Instalar núcleo + dev (sem GPU e sem pesos de modelos)
+        run: uv pip install --system -e ".[dev]"
+      - name: Lint
+        run: ruff check src/ tests/ scripts/
+      - name: Testes
+        run: pytest -q

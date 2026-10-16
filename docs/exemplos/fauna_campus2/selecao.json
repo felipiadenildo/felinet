@@ -1,0 +1,16 @@
+{
+  "_doc": "Espécies da Tab. 2 (na ordem das linhas) e fotos da Fig. 8 (na ordem da grade, 3 por linha). Lido por felinet.monografia.elementos.",
+  "especies": [
+    {"prefixo": "gato_domestico", "comum": "Gato doméstico", "cientifico": "Felis catus"},
+    {"prefixo": "gato_do_mato", "comum": "Gato-do-mato", "cientifico": "Leopardus guttulus"},
+    {"prefixo": "gato_mourisco", "comum": "Gato-mourisco", "cientifico": "Herpailurus yagouaroundi"},
+    {"prefixo": "quati", "comum": "Quati", "cientifico": "Nasua nasua"},
+    {"prefixo": "gamba", "comum": "Gambá", "cientifico": "Didelphis albiventris"},
+    {"prefixo": "teiu", "comum": "Teiú", "cientifico": "Salvator merianae"}
+  ],
+  "grade": [
+    "gato_domestico_231295337.jpg", "gato_domestico_384205858.jpg", "gato_domestico_99619108.jpg",
+    "gato_do_mato_268143509.jpg", "gato_do_mato_208351782.jpg", "gato_mourisco_175247576.jpg",
+    "quati_95925398.jpg", "gamba_192343269.jpg", "teiu_254148860.jpg"
+  ]
+}

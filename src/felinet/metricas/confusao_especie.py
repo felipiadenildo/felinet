@@ -1,4 +1,4 @@
-"""Cálculo de matriz de confusão Felis-vs-resto por fonte (Bloco 9).
+"""Cálculo de matriz de confusão Felis-vs-resto por fonte.
 
 Cruza a predição do classificador de espécie (SpeciesNet, registrada em
 ``classificacoes.csv`` ou ``manifest.json`` da fase 3) com o rótulo

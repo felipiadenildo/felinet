@@ -39,8 +39,6 @@ perfis:
     raw_petface:        data/raw/reid/petface
     interim:            data/dev/interim
     processed:          data/dev/processed
-    artifacts_figuras:  artifacts/figuras
-    artifacts_tabelas:  artifacts/tabelas
     saida_manifesto:           data/dev/legado/02
     saida_deteccoes:           data/dev/legado/03
     saida_classificacoes:      data/dev/legado/04

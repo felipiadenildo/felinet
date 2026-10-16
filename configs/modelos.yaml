@@ -7,11 +7,11 @@
 
 megadetector:
   versao: "v6.0.0"
-  arquitetura: "yolov9-c"
+  arquitetura: "yolov10-c"
   fonte: "PytorchWildlife"
-  identificador: "MDV6-yolov9-c.pt"
+  identificador: "MDV6-yolov10-c.pt"
   url_oficial: "https://github.com/microsoft/CameraTraps"
-  cache_local: "~/.cache/torch/hub/checkpoints/MDV6-yolov9-c.pt"
+  cache_local: "~/.cache/torch/hub/checkpoints/MDV6-yolov10-c.pt"
   classes_saida: ["animal", "person", "vehicle"]
 
 speciesnet:

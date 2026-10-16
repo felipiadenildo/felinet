@@ -13,8 +13,8 @@ demais foram descartados**.
 | Re-ID felinos (Fase IV)    | **PetFace** (categoria `cat`)  | Cat Dataset (Zhang); Animal-Pose; OpenCats                          |
 | Operacional Campus 2       | **proprio** (em coleta)        | --                                                                  |
 
-A tabela completa, com codigo de motivo, esta em
-`artifacts/tabelas/datasets_avaliados.csv` (consumida pelo Capitulo 4).
+A tabela de datasets da monografia (Cap. 4, "Datasets publicos selecionados") e escrita
+no proprio capitulo; esta nota guarda a justificativa de cada escolha.
 
 ## Datasets usados
 
@@ -70,11 +70,3 @@ A tabela completa, com codigo de motivo, esta em
 - **Motivo do descarte**: fauna africana; usado apenas como referencia
   metodologica (artigos do consorcio). O subset ENA24 ja cobre o
   caso-de-uso.
-
-## Tabela `datasets_avaliados.csv`
-
-A tabela CSV em `artifacts/tabelas/datasets_avaliados.csv` traz todos os
-datasets desta nota mais o veredito (USADO / DESCARTADO) e o codigo de
-motivo. Eh consumida diretamente pelo Capitulo 4 da monografia via
-`\input{...datasets_avaliados.tex}` (gerada por
-`felinet tabelas datasets-avaliados`).

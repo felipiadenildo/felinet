@@ -1,0 +1,1858 @@
+{
+ "modelos": {
+  "deteccao": "MDv6 (MDV6-yolov10-c)",
+  "classificacao": "SpeciesNet"
+ },
+ "confianca_deteccao": 0.2,
+ "resultados": [
+  {
+   "arquivo": "gamba_192343269.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.3915,
+     "bbox": {
+      "x": 0.3115,
+      "y": 0.38297,
+      "w": 0.44622,
+      "h": 0.37074
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "virginia opossum",
+       "probabilidade": 0.7163
+      },
+      {
+       "especie": "common opossum",
+       "probabilidade": 0.1117
+      },
+      {
+       "especie": "possum family",
+       "probabilidade": 0.077
+      },
+      {
+       "especie": "didelphis species",
+       "probabilidade": 0.0198
+      },
+      {
+       "especie": "white-eared opossum",
+       "probabilidade": 0.0127
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gamba_268226940.jpg",
+   "largura": 1024,
+   "altura": 769,
+   "caixas": []
+  },
+  {
+   "arquivo": "gamba_278496425.jpg",
+   "largura": 768,
+   "altura": 1024,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.9355,
+     "bbox": {
+      "x": 0.30695,
+      "y": 0.29111,
+      "w": 0.50502,
+      "h": 0.28626
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "virginia opossum",
+       "probabilidade": 0.4605
+      },
+      {
+       "especie": "northern raccoon",
+       "probabilidade": 0.1351
+      },
+      {
+       "especie": "american badger",
+       "probabilidade": 0.0494
+      },
+      {
+       "especie": "greater hog badger",
+       "probabilidade": 0.0278
+      },
+      {
+       "especie": "small-toothed ferret badger",
+       "probabilidade": 0.0211
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gamba_337503303.jpg",
+   "largura": 768,
+   "altura": 1024,
+   "caixas": []
+  },
+  {
+   "arquivo": "gamba_34306326.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": [
+    {
+     "categoria": "vehicle",
+     "confianca": 0.3278,
+     "bbox": {
+      "x": 0.51876,
+      "y": 0.00189,
+      "w": 0.48101,
+      "h": 0.70985
+     },
+     "status": null,
+     "top_k": []
+    },
+    {
+     "categoria": "person",
+     "confianca": 0.2188,
+     "bbox": {
+      "x": 0.51876,
+      "y": 0.00189,
+      "w": 0.48101,
+      "h": 0.70985
+     },
+     "status": null,
+     "top_k": []
+    }
+   ]
+  },
+  {
+   "arquivo": "gamba_40560026.jpg",
+   "largura": 1024,
+   "altura": 1023,
+   "caixas": [
+    {
+     "categoria": "vehicle",
+     "confianca": 0.2583,
+     "bbox": {
+      "x": 0.29044,
+      "y": 0.01856,
+      "w": 0.44632,
+      "h": 0.38571
+     },
+     "status": null,
+     "top_k": []
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.2146,
+     "bbox": {
+      "x": 0.29954,
+      "y": 0.16255,
+      "w": 0.43885,
+      "h": 0.24369
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "andean white-eared opossum",
+       "probabilidade": 0.192
+      },
+      {
+       "especie": "small-toothed ferret badger",
+       "probabilidade": 0.1238
+      },
+      {
+       "especie": "common opossum",
+       "probabilidade": 0.1213
+      },
+      {
+       "especie": "possum family",
+       "probabilidade": 0.058
+      },
+      {
+       "especie": "guianan white-eared opossum",
+       "probabilidade": 0.0397
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_do_mato_140915708.jpg",
+   "largura": 1024,
+   "altura": 822,
+   "caixas": []
+  },
+  {
+   "arquivo": "gato_do_mato_208351782.jpg",
+   "largura": 758,
+   "altura": 539,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.7441,
+     "bbox": {
+      "x": 0.50742,
+      "y": 0.25733,
+      "w": 0.48655,
+      "h": 0.69764
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "ocelot",
+       "probabilidade": 0.2361
+      },
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.1133
+      },
+      {
+       "especie": "jaguar",
+       "probabilidade": 0.0991
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0702
+      },
+      {
+       "especie": "fossa",
+       "probabilidade": 0.0694
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_do_mato_268143509.jpg",
+   "largura": 1024,
+   "altura": 819,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.8892,
+     "bbox": {
+      "x": 0.35175,
+      "y": 0.20752,
+      "w": 0.24637,
+      "h": 0.56825
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "marbled cat",
+       "probabilidade": 0.2513
+      },
+      {
+       "especie": "southern tiger cat",
+       "probabilidade": 0.162
+      },
+      {
+       "especie": "clouded leopard",
+       "probabilidade": 0.1416
+      },
+      {
+       "especie": "leopard cat",
+       "probabilidade": 0.0471
+      },
+      {
+       "especie": "ocelot",
+       "probabilidade": 0.0355
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.297,
+     "bbox": {
+      "x": 0.35955,
+      "y": 0.67215,
+      "w": 0.04218,
+      "h": 0.10268
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "blank",
+       "probabilidade": 0.3058
+      },
+      {
+       "especie": "domestic cattle",
+       "probabilidade": 0.2825
+      },
+      {
+       "especie": "american black bear",
+       "probabilidade": 0.0697
+      },
+      {
+       "especie": "domestic dog",
+       "probabilidade": 0.0586
+      },
+      {
+       "especie": "eastern gray squirrel",
+       "probabilidade": 0.0512
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_do_mato_285900456.jpg",
+   "largura": 1024,
+   "altura": 682,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.4387,
+     "bbox": {
+      "x": 0.22455,
+      "y": 0.35771,
+      "w": 0.31741,
+      "h": 0.51455
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "southern tiger cat",
+       "probabilidade": 0.3262
+      },
+      {
+       "especie": "northern tiger cat",
+       "probabilidade": 0.1302
+      },
+      {
+       "especie": "marbled cat",
+       "probabilidade": 0.1012
+      },
+      {
+       "especie": "small indian civet",
+       "probabilidade": 0.0675
+      },
+      {
+       "especie": "leopard cat",
+       "probabilidade": 0.0526
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3399,
+     "bbox": {
+      "x": 0.47465,
+      "y": 0.41342,
+      "w": 0.14977,
+      "h": 0.20297
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "leopard cat",
+       "probabilidade": 0.3694
+      },
+      {
+       "especie": "bobcat",
+       "probabilidade": 0.1692
+      },
+      {
+       "especie": "ocelot",
+       "probabilidade": 0.1042
+      },
+      {
+       "especie": "serval",
+       "probabilidade": 0.0775
+      },
+      {
+       "especie": "iberian lynx",
+       "probabilidade": 0.0409
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_do_mato_285922458.jpg",
+   "largura": 1024,
+   "altura": 681,
+   "caixas": [
+    {
+     "categoria": "person",
+     "confianca": 0.3476,
+     "bbox": {
+      "x": 0.31857,
+      "y": 0.00699,
+      "w": 0.35492,
+      "h": 0.68156
+     },
+     "status": null,
+     "top_k": []
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3054,
+     "bbox": {
+      "x": 0.31857,
+      "y": 0.00699,
+      "w": 0.35492,
+      "h": 0.68156
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "bobcat",
+       "probabilidade": 0.4816
+      },
+      {
+       "especie": "leopard cat",
+       "probabilidade": 0.3354
+      },
+      {
+       "especie": "serval",
+       "probabilidade": 0.0472
+      },
+      {
+       "especie": "northern tiger cat",
+       "probabilidade": 0.024
+      },
+      {
+       "especie": "iberian lynx",
+       "probabilidade": 0.0204
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_do_mato_340086801.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.9148,
+     "bbox": {
+      "x": 0.41952,
+      "y": 0.40925,
+      "w": 0.35082,
+      "h": 0.21968
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.355
+      },
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.262
+      },
+      {
+       "especie": "asiatic golden cat",
+       "probabilidade": 0.1233
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0687
+      },
+      {
+       "especie": "african golden cat",
+       "probabilidade": 0.0661
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_domestico_231295337.jpg",
+   "largura": 1024,
+   "altura": 768,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.664,
+     "bbox": {
+      "x": 0.42677,
+      "y": 0.34395,
+      "w": 0.1137,
+      "h": 0.22515
+     },
+     "status": "felis_catus",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.9958
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0014
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0005
+      },
+      {
+       "especie": "blank",
+       "probabilidade": 0.0005
+      },
+      {
+       "especie": "domestic dog",
+       "probabilidade": 0.0003
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_domestico_254118851.jpg",
+   "largura": 1024,
+   "altura": 834,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.3349,
+     "bbox": {
+      "x": 0.52562,
+      "y": 0.00674,
+      "w": 0.47332,
+      "h": 0.57013
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.4205
+      },
+      {
+       "especie": "domestic goat",
+       "probabilidade": 0.0814
+      },
+      {
+       "especie": "coyote",
+       "probabilidade": 0.0563
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0456
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0429
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.2395,
+     "bbox": {
+      "x": 0.00171,
+      "y": 0.07432,
+      "w": 0.46517,
+      "h": 0.58315
+     },
+     "status": "felis_catus",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.716
+      },
+      {
+       "especie": "bobcat",
+       "probabilidade": 0.0903
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0731
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0328
+      },
+      {
+       "especie": "leopard cat",
+       "probabilidade": 0.0128
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.2141,
+     "bbox": {
+      "x": 0.34713,
+      "y": 0.02345,
+      "w": 0.45766,
+      "h": 0.56751
+     },
+     "status": "felis_catus",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.7987
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0498
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0363
+      },
+      {
+       "especie": "caracal",
+       "probabilidade": 0.0242
+      },
+      {
+       "especie": "asiatic golden cat",
+       "probabilidade": 0.0145
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_domestico_306979471.jpg",
+   "largura": 768,
+   "altura": 1024,
+   "caixas": [
+    {
+     "categoria": "vehicle",
+     "confianca": 0.212,
+     "bbox": {
+      "x": 0.35882,
+      "y": 0.00309,
+      "w": 0.63934,
+      "h": 0.48858
+     },
+     "status": null,
+     "top_k": []
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_domestico_321645915.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.4122,
+     "bbox": {
+      "x": 5e-05,
+      "y": 0.14119,
+      "w": 0.47448,
+      "h": 0.7195
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "striped hyaena",
+       "probabilidade": 0.3029
+      },
+      {
+       "especie": "coyote",
+       "probabilidade": 0.1627
+      },
+      {
+       "especie": "spotted hyaena",
+       "probabilidade": 0.1542
+      },
+      {
+       "especie": "aardwolf",
+       "probabilidade": 0.138
+      },
+      {
+       "especie": "black-backed jackal",
+       "probabilidade": 0.0205
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_domestico_384205858.jpg",
+   "largura": 1024,
+   "altura": 538,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.4338,
+     "bbox": {
+      "x": 0.36896,
+      "y": 0.0191,
+      "w": 0.47631,
+      "h": 0.77554
+     },
+     "status": "felis_catus",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.9759
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0171
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0034
+      },
+      {
+       "especie": "mammal",
+       "probabilidade": 0.0007
+      },
+      {
+       "especie": "bobcat",
+       "probabilidade": 0.0005
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3185,
+     "bbox": {
+      "x": 0.6965,
+      "y": 0.00341,
+      "w": 0.17016,
+      "h": 0.59251
+     },
+     "status": "felis_catus",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.9763
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0099
+      },
+      {
+       "especie": "bobcat",
+       "probabilidade": 0.0092
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.002
+      },
+      {
+       "especie": "wild cat",
+       "probabilidade": 0.0003
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_domestico_99619108.jpg",
+   "largura": 1024,
+   "altura": 768,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.7225,
+     "bbox": {
+      "x": 0.35824,
+      "y": 0.13093,
+      "w": 0.44416,
+      "h": 0.59776
+     },
+     "status": "felis_catus",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.9767
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0101
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0091
+      },
+      {
+       "especie": "mammal",
+       "probabilidade": 0.0007
+      },
+      {
+       "especie": "ocelot",
+       "probabilidade": 0.0002
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.253,
+     "bbox": {
+      "x": 0.0,
+      "y": 0.21641,
+      "w": 0.48894,
+      "h": 0.60528
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "domestic dog",
+       "probabilidade": 0.3408
+      },
+      {
+       "especie": "domestic goat",
+       "probabilidade": 0.2098
+      },
+      {
+       "especie": "wild goat",
+       "probabilidade": 0.0963
+      },
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.0364
+      },
+      {
+       "especie": "domestic sheep",
+       "probabilidade": 0.0307
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.2082,
+     "bbox": {
+      "x": 0.08902,
+      "y": 0.12941,
+      "w": 0.47021,
+      "h": 0.60806
+     },
+     "status": "felis_catus",
+     "top_k": [
+      {
+       "especie": "domestic cat",
+       "probabilidade": 0.9429
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0244
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0084
+      },
+      {
+       "especie": "wild goat",
+       "probabilidade": 0.003
+      },
+      {
+       "especie": "caracal",
+       "probabilidade": 0.0016
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_mourisco_126482427.jpg",
+   "largura": 1024,
+   "altura": 574,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.9375,
+     "bbox": {
+      "x": 0.2106,
+      "y": 0.46381,
+      "w": 0.20193,
+      "h": 0.2205
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "fisher",
+       "probabilidade": 0.4971
+      },
+      {
+       "especie": "tayra",
+       "probabilidade": 0.1355
+      },
+      {
+       "especie": "american mink",
+       "probabilidade": 0.1039
+      },
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.0937
+      },
+      {
+       "especie": "pine marten",
+       "probabilidade": 0.0402
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3098,
+     "bbox": {
+      "x": 0.78511,
+      "y": 0.37025,
+      "w": 0.02593,
+      "h": 0.09299
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "blank",
+       "probabilidade": 0.9967
+      },
+      {
+       "especie": "eastern gray squirrel",
+       "probabilidade": 0.0006
+      },
+      {
+       "especie": "white-tailed deer",
+       "probabilidade": 0.0005
+      },
+      {
+       "especie": "eastern fox squirrel",
+       "probabilidade": 0.0004
+      },
+      {
+       "especie": "douglas's squirrel",
+       "probabilidade": 0.0003
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_mourisco_175247576.jpg",
+   "largura": 724,
+   "altura": 1024,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.911,
+     "bbox": {
+      "x": 0.39289,
+      "y": 0.42736,
+      "w": 0.27195,
+      "h": 0.29941
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.6651
+      },
+      {
+       "especie": "african golden cat",
+       "probabilidade": 0.0817
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0627
+      },
+      {
+       "especie": "felis species",
+       "probabilidade": 0.0514
+      },
+      {
+       "especie": "fossa",
+       "probabilidade": 0.036
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_mourisco_177511641.jpg",
+   "largura": 1024,
+   "altura": 768,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.877,
+     "bbox": {
+      "x": 0.20243,
+      "y": 0.49263,
+      "w": 0.42226,
+      "h": 0.26294
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.4594
+      },
+      {
+       "especie": "asiatic golden cat",
+       "probabilidade": 0.3749
+      },
+      {
+       "especie": "caracal",
+       "probabilidade": 0.0682
+      },
+      {
+       "especie": "cat family",
+       "probabilidade": 0.0148
+      },
+      {
+       "especie": "fossa",
+       "probabilidade": 0.0132
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3419,
+     "bbox": {
+      "x": 0.20327,
+      "y": 0.49625,
+      "w": 0.42178,
+      "h": 0.26229
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "asiatic golden cat",
+       "probabilidade": 0.4017
+      },
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.3533
+      },
+      {
+       "especie": "caracal",
+       "probabilidade": 0.1013
+      },
+      {
+       "especie": "dhole",
+       "probabilidade": 0.0183
+      },
+      {
+       "especie": "fossa",
+       "probabilidade": 0.0162
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_mourisco_217105972.jpg",
+   "largura": 1024,
+   "altura": 757,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.2726,
+     "bbox": {
+      "x": 0.30175,
+      "y": 0.42648,
+      "w": 0.45878,
+      "h": 0.37914
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.6178
+      },
+      {
+       "especie": "tayra",
+       "probabilidade": 0.321
+      },
+      {
+       "especie": "giant otter",
+       "probabilidade": 0.0427
+      },
+      {
+       "especie": "neotropical otter",
+       "probabilidade": 0.0055
+      },
+      {
+       "especie": "bush dog",
+       "probabilidade": 0.0033
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_mourisco_351727211.jpg",
+   "largura": 1024,
+   "altura": 768,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.8282,
+     "bbox": {
+      "x": 0.43838,
+      "y": 0.29868,
+      "w": 0.31821,
+      "h": 0.57922
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "asiatic golden cat",
+       "probabilidade": 0.5756
+      },
+      {
+       "especie": "african golden cat",
+       "probabilidade": 0.1556
+      },
+      {
+       "especie": "puma",
+       "probabilidade": 0.1452
+      },
+      {
+       "especie": "caracal",
+       "probabilidade": 0.0331
+      },
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.0324
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "gato_mourisco_52468398.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.3961,
+     "bbox": {
+      "x": 0.0,
+      "y": 0.0,
+      "w": 0.47819,
+      "h": 0.69119
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "crab-eating fox",
+       "probabilidade": 0.3975
+      },
+      {
+       "especie": "short-eared dog",
+       "probabilidade": 0.2119
+      },
+      {
+       "especie": "jaguarundi",
+       "probabilidade": 0.1926
+      },
+      {
+       "especie": "grey fox",
+       "probabilidade": 0.0506
+      },
+      {
+       "especie": "grey wolf",
+       "probabilidade": 0.029
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "quati_298055526.jpg",
+   "largura": 768,
+   "altura": 1024,
+   "caixas": []
+  },
+  {
+   "arquivo": "quati_309691510.jpg",
+   "largura": 768,
+   "altura": 1024,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.963,
+     "bbox": {
+      "x": 0.17867,
+      "y": 0.39924,
+      "w": 0.43429,
+      "h": 0.46748
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.416
+      },
+      {
+       "especie": "northern raccoon",
+       "probabilidade": 0.251
+      },
+      {
+       "especie": "crab-eating raccoon",
+       "probabilidade": 0.0799
+      },
+      {
+       "especie": "white-nosed coati",
+       "probabilidade": 0.0283
+      },
+      {
+       "especie": "grey fox",
+       "probabilidade": 0.0268
+      }
+     ]
+    },
+    {
+     "categoria": "vehicle",
+     "confianca": 0.8618,
+     "bbox": {
+      "x": 0.69912,
+      "y": 0.13454,
+      "w": 0.25491,
+      "h": 0.13964
+     },
+     "status": null,
+     "top_k": []
+    }
+   ]
+  },
+  {
+   "arquivo": "quati_323932753.jpg",
+   "largura": 767,
+   "altura": 1024,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.9254,
+     "bbox": {
+      "x": 0.47695,
+      "y": 0.44655,
+      "w": 0.18146,
+      "h": 0.21802
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.9764
+      },
+      {
+       "especie": "white-nosed coati",
+       "probabilidade": 0.0142
+      },
+      {
+       "especie": "yellow-throated marten",
+       "probabilidade": 0.0019
+      },
+      {
+       "especie": "greater hog badger",
+       "probabilidade": 0.0017
+      },
+      {
+       "especie": "crab-eating mongoose",
+       "probabilidade": 0.0013
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.538,
+     "bbox": {
+      "x": 0.00107,
+      "y": 0.89458,
+      "w": 0.37362,
+      "h": 0.10542
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "blank",
+       "probabilidade": 0.992
+      },
+      {
+       "especie": "eastern gray squirrel",
+       "probabilidade": 0.0012
+      },
+      {
+       "especie": "southern pig-tailed macaque",
+       "probabilidade": 0.0005
+      },
+      {
+       "especie": "mammal",
+       "probabilidade": 0.0005
+      },
+      {
+       "especie": "rodent",
+       "probabilidade": 0.0004
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3123,
+     "bbox": {
+      "x": 0.50445,
+      "y": 0.4221,
+      "w": 0.0631,
+      "h": 0.02945
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "blank",
+       "probabilidade": 0.2791
+      },
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.0577
+      },
+      {
+       "especie": "american black bear",
+       "probabilidade": 0.0563
+      },
+      {
+       "especie": "domestic cattle",
+       "probabilidade": 0.0549
+      },
+      {
+       "especie": "domestic goat",
+       "probabilidade": 0.0498
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "quati_66004198.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": []
+  },
+  {
+   "arquivo": "quati_95925398.jpg",
+   "largura": 741,
+   "altura": 900,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.4036,
+     "bbox": {
+      "x": 0.50673,
+      "y": 0.12156,
+      "w": 0.49327,
+      "h": 0.47866
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.9926
+      },
+      {
+       "especie": "red panda",
+       "probabilidade": 0.0019
+      },
+      {
+       "especie": "greater hog badger",
+       "probabilidade": 0.0013
+      },
+      {
+       "especie": "white-nosed coati",
+       "probabilidade": 0.0006
+      },
+      {
+       "especie": "yellow-throated marten",
+       "probabilidade": 0.0005
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3424,
+     "bbox": {
+      "x": 0.001,
+      "y": 0.44963,
+      "w": 0.38991,
+      "h": 0.44056
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.9011
+      },
+      {
+       "especie": "brush-tailed rock wallaby",
+       "probabilidade": 0.047
+      },
+      {
+       "especie": "banded civet",
+       "probabilidade": 0.0105
+      },
+      {
+       "especie": "blank",
+       "probabilidade": 0.0095
+      },
+      {
+       "especie": "ringtail",
+       "probabilidade": 0.0072
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.276,
+     "bbox": {
+      "x": 0.24951,
+      "y": 0.06206,
+      "w": 0.53013,
+      "h": 0.44359
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.9998
+      },
+      {
+       "especie": "crab-eating raccoon",
+       "probabilidade": 0.0002
+      },
+      {
+       "especie": "procyonidae family",
+       "probabilidade": 0.0
+      },
+      {
+       "especie": "ring-tailed vontsira",
+       "probabilidade": 0.0
+      },
+      {
+       "especie": "tayra",
+       "probabilidade": 0.0
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.2498,
+     "bbox": {
+      "x": 0.43835,
+      "y": 0.51134,
+      "w": 0.56165,
+      "h": 0.48222
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "blank",
+       "probabilidade": 0.7191
+      },
+      {
+       "especie": "human",
+       "probabilidade": 0.0637
+      },
+      {
+       "especie": "white-tailed deer",
+       "probabilidade": 0.0445
+      },
+      {
+       "especie": "european rabbit",
+       "probabilidade": 0.0259
+      },
+      {
+       "especie": "eastern chipmunk",
+       "probabilidade": 0.0175
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "quati_95925399.jpg",
+   "largura": 900,
+   "altura": 666,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.2629,
+     "bbox": {
+      "x": 0.18766,
+      "y": 0.09958,
+      "w": 0.42476,
+      "h": 0.58389
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "south american coati",
+       "probabilidade": 0.9982
+      },
+      {
+       "especie": "white-nosed coati",
+       "probabilidade": 0.0012
+      },
+      {
+       "especie": "crab-eating raccoon",
+       "probabilidade": 0.0004
+      },
+      {
+       "especie": "yellow-throated marten",
+       "probabilidade": 0.0001
+      },
+      {
+       "especie": "southern tamandua",
+       "probabilidade": 0.0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "teiu_203211022.jpg",
+   "largura": 998,
+   "altura": 705,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.8481,
+     "bbox": {
+      "x": 0.28979,
+      "y": 0.36803,
+      "w": 0.4811,
+      "h": 0.47698
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "culpeo",
+       "probabilidade": 0.4217
+      },
+      {
+       "especie": "crab-eating fox",
+       "probabilidade": 0.1658
+      },
+      {
+       "especie": "canine family",
+       "probabilidade": 0.1497
+      },
+      {
+       "especie": "grey fox",
+       "probabilidade": 0.0756
+      },
+      {
+       "especie": "black-backed jackal",
+       "probabilidade": 0.0443
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.7687,
+     "bbox": {
+      "x": 0.45863,
+      "y": 0.42018,
+      "w": 0.43392,
+      "h": 0.46264
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "crab-eating fox",
+       "probabilidade": 0.957
+      },
+      {
+       "especie": "culpeo",
+       "probabilidade": 0.0294
+      },
+      {
+       "especie": "side-striped jackal",
+       "probabilidade": 0.0058
+      },
+      {
+       "especie": "short-eared dog",
+       "probabilidade": 0.0037
+      },
+      {
+       "especie": "black-backed jackal",
+       "probabilidade": 0.0013
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "teiu_254148860.jpg",
+   "largura": 1024,
+   "altura": 473,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.7451,
+     "bbox": {
+      "x": 0.30304,
+      "y": 0.38927,
+      "w": 0.39007,
+      "h": 0.45145
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "lace monitor",
+       "probabilidade": 0.9033
+      },
+      {
+       "especie": "yellow-spotted monitor",
+       "probabilidade": 0.0372
+      },
+      {
+       "especie": "common water monitor",
+       "probabilidade": 0.0206
+      },
+      {
+       "especie": "heath monitor",
+       "probabilidade": 0.0087
+      },
+      {
+       "especie": "perentie",
+       "probabilidade": 0.0069
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.2961,
+     "bbox": {
+      "x": 0.46679,
+      "y": 0.4297,
+      "w": 0.41688,
+      "h": 0.34505
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "lace monitor",
+       "probabilidade": 0.9355
+      },
+      {
+       "especie": "yellow-spotted monitor",
+       "probabilidade": 0.0204
+      },
+      {
+       "especie": "common water monitor",
+       "probabilidade": 0.011
+      },
+      {
+       "especie": "blank",
+       "probabilidade": 0.0106
+      },
+      {
+       "especie": "perentie",
+       "probabilidade": 0.0062
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "teiu_304998782.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.42,
+     "bbox": {
+      "x": 0.21178,
+      "y": 0.45242,
+      "w": 0.11518,
+      "h": 0.17312
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "human",
+       "probabilidade": 0.4402
+      },
+      {
+       "especie": "western pond turtle",
+       "probabilidade": 0.1417
+      },
+      {
+       "especie": "giant land tortoise species",
+       "probabilidade": 0.0618
+      },
+      {
+       "especie": "reptile",
+       "probabilidade": 0.0245
+      },
+      {
+       "especie": "turtle order",
+       "probabilidade": 0.0199
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.3789,
+     "bbox": {
+      "x": 0.51271,
+      "y": 0.20185,
+      "w": 0.48581,
+      "h": 0.2349
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "heath monitor",
+       "probabilidade": 0.4293
+      },
+      {
+       "especie": "lace monitor",
+       "probabilidade": 0.1813
+      },
+      {
+       "especie": "reptile",
+       "probabilidade": 0.1227
+      },
+      {
+       "especie": "common water monitor",
+       "probabilidade": 0.1223
+      },
+      {
+       "especie": "tupinambis species",
+       "probabilidade": 0.0533
+      }
+     ]
+    },
+    {
+     "categoria": "animal",
+     "confianca": 0.2097,
+     "bbox": {
+      "x": 0.24609,
+      "y": 0.26276,
+      "w": 0.47978,
+      "h": 0.37286
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "lace monitor",
+       "probabilidade": 0.3292
+      },
+      {
+       "especie": "heath monitor",
+       "probabilidade": 0.2907
+      },
+      {
+       "especie": "tupinambis species",
+       "probabilidade": 0.0864
+      },
+      {
+       "especie": "common water monitor",
+       "probabilidade": 0.0856
+      },
+      {
+       "especie": "perentie",
+       "probabilidade": 0.0693
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "teiu_337118190.jpg",
+   "largura": 1024,
+   "altura": 1024,
+   "caixas": [
+    {
+     "categoria": "person",
+     "confianca": 0.2571,
+     "bbox": {
+      "x": 0.0,
+      "y": 0.0,
+      "w": 0.47655,
+      "h": 0.47174
+     },
+     "status": null,
+     "top_k": []
+    }
+   ]
+  },
+  {
+   "arquivo": "teiu_338764676.jpg",
+   "largura": 1024,
+   "altura": 683,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.2471,
+     "bbox": {
+      "x": 0.0,
+      "y": 0.28115,
+      "w": 0.46647,
+      "h": 0.50202
+     },
+     "status": "validacao_humana",
+     "top_k": [
+      {
+       "especie": "common water monitor",
+       "probabilidade": 0.3569
+      },
+      {
+       "especie": "reptile",
+       "probabilidade": 0.3063
+      },
+      {
+       "especie": "lace monitor",
+       "probabilidade": 0.2078
+      },
+      {
+       "especie": "heath monitor",
+       "probabilidade": 0.0205
+      },
+      {
+       "especie": "tupinambis species",
+       "probabilidade": 0.0166
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "arquivo": "teiu_361545971.jpg",
+   "largura": 1024,
+   "altura": 768,
+   "caixas": [
+    {
+     "categoria": "animal",
+     "confianca": 0.6486,
+     "bbox": {
+      "x": 0.0,
+      "y": 0.67266,
+      "w": 0.16628,
+      "h": 0.14194
+     },
+     "status": "outra_especie",
+     "top_k": [
+      {
+       "especie": "blank",
+       "probabilidade": 0.9186
+      },
+      {
+       "especie": "vehicle",
+       "probabilidade": 0.0402
+      },
+      {
+       "especie": "corvus species",
+       "probabilidade": 0.0104
+      },
+      {
+       "especie": "reptile",
+       "probabilidade": 0.0034
+      },
+      {
+       "especie": "red squirrel",
+       "probabilidade": 0.0025
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

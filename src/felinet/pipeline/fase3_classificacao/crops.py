@@ -14,9 +14,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..fase2_deteccao.schema import BoundingBox
+from PIL import Image
+
+from ..fase2_deteccao.anonimizacao import anonimizar_pessoas
+from ..fase2_deteccao.schema import BoundingBox, Deteccao
 from .schema import STATUS_FELIS_CATUS, ResultadoClassificacao
-from .speciesnet import cortar_crop
+from .speciesnet import cortar_crop, cortar_de_imagem
 
 
 @dataclass(frozen=True)
@@ -38,6 +41,7 @@ def persistir_crops_felis_catus(
     classificacoes: list[ResultadoClassificacao],
     deteccoes_por_imagem: dict[str, list[BoundingBox]],
     pasta_saida: Path,
+    pessoas_por_imagem: dict[str, list[Deteccao]] | None = None,
 ) -> list[CropPersistido]:
     """Grava em disco apenas os crops com status ``felis_catus``.
 
@@ -46,6 +50,9 @@ def persistir_crops_felis_catus(
         deteccoes_por_imagem: Mapa ``media_path -> lista de bboxes`` da Fase II.
             Necessario porque ``ResultadoClassificacao`` so guarda o indice da bbox.
         pasta_saida: Diretorio onde gravar os PNGs (criado se nao existir).
+        pessoas_por_imagem: Deteccoes ``person`` por imagem. Quando presentes, a imagem e
+            anonimizada (desfoque gaussiano, LGPD) antes do recorte, para que nenhum PNG
+            gravado contenha pessoa identificavel.
 
     Returns:
         Lista de ``CropPersistido``, na ordem em que foram gravados.
@@ -62,7 +69,12 @@ def persistir_crops_felis_catus(
         if not bboxes or classificacao.bbox_indice >= len(bboxes):
             continue
         bbox = bboxes[classificacao.bbox_indice]
-        crop = cortar_crop(media_path, bbox)
+        pessoas = (pessoas_por_imagem or {}).get(str(media_path))
+        if pessoas:
+            img = anonimizar_pessoas(Image.open(media_path).convert("RGB"), pessoas)
+            crop = cortar_de_imagem(img, bbox)
+        else:
+            crop = cortar_crop(media_path, bbox)
         nome = _nome_arquivo_crop(media_path, classificacao.bbox_indice)
         caminho = pasta_saida / nome
         crop.save(caminho, format="PNG")

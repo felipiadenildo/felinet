@@ -1,4 +1,4 @@
-"""E0 — Ingestão: geração de manifesto CSV de mídias.
+"""Fase I — Ingestão: geração de manifesto CSV de mídias.
 
 O manifesto é o registro auditável de tudo que entrou no pipeline:
 caminho relativo, hash SHA-256, timestamp, dimensões e equipamento.

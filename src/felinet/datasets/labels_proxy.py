@@ -1,6 +1,6 @@
 """Mapeamento de classes (subpastas/categorias) para rótulo binário Felis-vs-resto.
 
-O Bloco 9 (matriz de confusão Felis-vs-resto por fonte) precisa de ground
+A matriz de confusão Felis-vs-resto por fonte precisa de ground
 truth por imagem. Sem rotulação manual exaustiva, recorre-se a dois proxies:
 
 1. **Label de fonte**: para datasets monocategoria (e.g. ``kaggle_cats`` é

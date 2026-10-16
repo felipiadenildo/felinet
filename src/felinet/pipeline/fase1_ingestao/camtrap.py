@@ -1,8 +1,8 @@
-"""E0 — Ingestão: conversão para esquema Camtrap-DP simplificado.
+"""Fase I — Ingestão: conversão para esquema Camtrap-DP simplificado.
 
 Camtrap-DP é o padrão GBIF para dados de armadilhas fotográficas.
 Esta versão implementa o subconjunto mínimo: deployment + media,
-sem observations (que virão dos estágios E1-E3).
+sem observations (que virão das Fases II a IV).
 
 Especificação completa: https://camtrap-dp.tdwg.org/
 """

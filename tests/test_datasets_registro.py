@@ -39,11 +39,7 @@ def test_carregar_yaml_minimo(tmp_path: Path) -> None:
 
 def test_defaults_aplicados_quando_ausentes(tmp_path: Path) -> None:
     arq = tmp_path / "ds.yaml"
-    arq.write_text(
-        "datasets:\n"
-        "  meu:\n"
-        "    caminho: /tmp/meu\n"
-    )
+    arq.write_text("datasets:\n  meu:\n    caminho: /tmp/meu\n")
     out = carregar_datasets_locais(arq)
     assert out["meu"].tipo == "camera_trap_brutas"
     assert out["meu"].layout == "aninhado_livre"

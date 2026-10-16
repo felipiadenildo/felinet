@@ -34,9 +34,7 @@ def test_despachar_listar_chama_subprocess() -> None:
     assert run.called
 
 
-def test_wizard_pipeline_filtra_por_fase1(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_wizard_pipeline_filtra_por_fase1(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Ao montar o menu de fonte, só entram datasets com fase 1 aplicável."""
     from felinet.comandos import easyrun
     from felinet.datasets.registro import DatasetLocal
@@ -57,9 +55,7 @@ def test_wizard_pipeline_filtra_por_fase1(
             fases_aplicaveis=[4],
         ),
     }
-    monkeypatch.setattr(
-        easyrun, "carregar_datasets_locais", lambda *a, **kw: datasets
-    )
+    monkeypatch.setattr(easyrun, "carregar_datasets_locais", lambda *a, **kw: datasets)
 
     capturado: list[list[str]] = []
 
