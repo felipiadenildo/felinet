@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "Se usar o felinet, cite o software e a monografia que o descreve."
+title: "felinet: pipeline de visão computacional para monitoramento da colônia de gatos do Campus 2 da USP São Carlos"
+version: 0.4.0.dev0
+license: MIT
+repository-code: "https://github.com/felipiadenildo/felinet"
+authors:
+  - family-names: "Sousa"
+    given-names: "Felipi Adenildo Soares"
+keywords: [visão computacional, reidentificação animal, armadilhas fotográficas, gatos comunitários, MegaDetector, SpeciesNet, MegaDescriptor]
+preferred-citation:
+  type: thesis
+  thesis-type: "Trabalho de Conclusão de Curso (Engenharia de Computação)"
+  title: "Estudo e Concepção de um Sistema de Monitoramento e Apoio ao Manejo por Visão Computacional para a Colônia de Gatos da USP São Carlos"
+  authors:
+    - family-names: "Sousa"
+      given-names: "Felipi Adenildo Soares"
+  institution:
+    name: "Universidade de São Paulo, Escola de Engenharia de São Carlos e Instituto de Ciências Matemáticas e de Computação"
+  year: 2026

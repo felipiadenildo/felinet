@@ -60,7 +60,11 @@ class CropEntrada:
 
 def cortar_crop(media_path: Path | str, bbox: BoundingBox) -> Image.Image:
     """Extrai o recorte normalizado da bbox sobre a imagem original."""
-    img = Image.open(media_path).convert("RGB")
+    return cortar_de_imagem(Image.open(media_path).convert("RGB"), bbox)
+
+
+def cortar_de_imagem(img: Image.Image, bbox: BoundingBox) -> Image.Image:
+    """Recorte da bbox (coordenadas normalizadas) sobre uma imagem já carregada."""
     largura, altura = img.size
     x1 = int(bbox.x * largura)
     y1 = int(bbox.y * altura)
@@ -104,11 +108,17 @@ class ClassificadorSpeciesNet:
         dispositivo: str = "auto",
         top_k: int = 5,
         config_decisor: ConfigDecisor | None = None,
+        pais: str | None = None,
     ) -> None:
+        """``pais`` (ISO 3166-1 alfa-3, ex.: ``"BRA"``) ativa o filtro geográfico oficial do
+        SpeciesNet: espécies que não ocorrem no país sobem na taxonomia (família, ordem...).
+        Os experimentos da monografia rodaram sem filtro (``pais=None``)."""
         self.dispositivo = self._resolver_dispositivo(dispositivo)
         self.top_k = top_k
         self.config_decisor = config_decisor or ConfigDecisor()
+        self.pais = pais
         self._modelo: Any = None
+        self._ensemble: Any = None
 
     @staticmethod
     def _resolver_dispositivo(dispositivo: str) -> str:
@@ -136,6 +146,8 @@ class ClassificadorSpeciesNet:
             return []
         classes = classificacoes.get("classes", [])
         scores = classificacoes.get("scores", [])
+        if self.pais and classes:
+            classes, scores = self._filtro_geografico(classes, scores)
         resultado: list[PrediccaoEspecie] = []
         for label, score in zip(classes[: self.top_k], scores[: self.top_k], strict=False):
             resultado.append(
@@ -145,6 +157,31 @@ class ClassificadorSpeciesNet:
                 )
             )
         return resultado
+
+    def _filtro_geografico(self, classes: list[str], scores: list[float]) -> tuple[list, list]:
+        """Aplica o filtro geográfico do SpeciesNet ao top-1 e remove do restante as espécies
+        bloqueadas no país (mesmas regras do ``SpeciesNetEnsemble``)."""
+        from speciesnet import DEFAULT_MODEL, SpeciesNetEnsemble
+        from speciesnet.geofence_utils import (
+            geofence_animal_classification,
+            should_geofence_animal_classification,
+        )
+
+        if self._ensemble is None:
+            self._ensemble = SpeciesNetEnsemble(DEFAULT_MODEL, geofence=True)
+        mapa = self._ensemble.geofence_map
+        rotulo, score, _fonte = geofence_animal_classification(
+            labels=list(classes), scores=list(scores), country=self.pais, admin1_region=None,
+            taxonomy_map=self._ensemble.taxonomy_map, geofence_map=mapa, enable_geofence=True,
+        )  # fmt: skip
+        if rotulo == classes[0]:
+            return classes, scores
+        resto = [
+            (c, s)
+            for c, s in zip(classes[1:], scores[1:], strict=False)
+            if not should_geofence_animal_classification(c, self.pais, None, mapa, True)
+        ]
+        return [rotulo] + [c for c, _ in resto], [score] + [s for _, s in resto]
 
     def classificar(self, crop_entrada: CropEntrada) -> ResultadoClassificacao:
         """Classifica um unico crop e aplica a politica de decisao."""

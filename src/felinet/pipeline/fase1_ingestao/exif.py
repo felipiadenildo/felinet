@@ -1,4 +1,4 @@
-"""E0 — Ingestão: extração de metadados EXIF.
+"""Fase I — Ingestão: extração de metadados EXIF.
 
 Foca nos campos críticos para armadilhas fotográficas: timestamp de
 captura, marca/modelo do equipamento e dimensões da imagem.

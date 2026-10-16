@@ -1,4 +1,4 @@
-"""E1 — Detecção: wrapper do MegaDetector v6.
+"""Fase II — Detecção: wrapper do MegaDetector v6.
 
 Carregamento sob demanda (lazy) para manter testes rápidos.
 A primeira chamada baixa os pesos automaticamente (~50 MB)

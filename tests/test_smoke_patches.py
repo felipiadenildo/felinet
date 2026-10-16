@@ -1,17 +1,10 @@
 """Testes dos patches v23-smoke-fix.
 
-Cobre os 3 bugs corrigidos:
-
-1. ``_latest_por_fase`` em ``tabelas.py`` deve aceitar runs com
-   ``extras.comando == "pipeline executar"`` como satisfazendo as 3 fases
-   (ingestao/deteccao/classificacao). Antes, exigia match exato por fase.
-
-2. ``RelatorioCascata.como_dicionario()`` em ``pipeline/orquestrador.py``
+1. ``RelatorioCascata.como_dicionario()`` em ``pipeline/orquestrador.py``
    deve expor aliases ``n_entradas``, ``n_animais_detectados``, ``n_imagens``,
-   ``n_classificacoes`` e ``n_felis_catus`` esperados por
-   ``figuras comparativo-fontes``.
+   ``n_classificacoes`` e ``n_felis_catus`` (contrato do manifesto dos runs).
 
-3. ``dev preparar-petface-mini`` deve gerar um subset sintetico via PIL
+2. ``dev preparar-petface-mini`` deve gerar um subset sintetico via PIL
    quando ``--origem`` for omitido, criando a estrutura oficial
    ``data/dev/reid_mini/{split/cat/reidentification.csv, images/cat/<id_pad>/*.png}``.
 """
@@ -19,109 +12,13 @@ Cobre os 3 bugs corrigidos:
 from __future__ import annotations
 
 import csv
-import json
 from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner
 
 from felinet.comandos.dev import app as dev_app
-from felinet.comandos.tabelas import _latest_por_fase
 from felinet.pipeline.orquestrador import RelatorioCascata
-
-# ---------------------------------------------------------------------------
-# Bug 1: _latest_por_fase aceita "pipeline executar"
-# ---------------------------------------------------------------------------
-
-
-def _escrever_manifest(
-    raiz: Path,
-    *,
-    fonte: str,
-    perfil: str,
-    comando: str,
-    data_inicio: str = "2025-01-01T00:00:00+00:00",
-) -> Path:
-    raiz.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "run_id": "test01",
-        "modo": "operacional",
-        "fonte": fonte,
-        "perfil": perfil,
-        "protocolo": None,
-        "tag": None,
-        "git_sha": "abc1234",
-        "git_branch": "main",
-        "git_dirty": False,
-        "data_inicio": data_inicio,
-        "data_fim": data_inicio,
-        "duracao_s": 1.0,
-        "sucesso": True,
-        "mensagem": "",
-        "extras": {"comando": comando},
-        "metricas_resumo": {},
-    }
-    arq = raiz / "manifest.json"
-    arq.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return arq
-
-
-def test_latest_por_fase_aceita_pipeline_executar_como_qualquer_fase(
-    tmp_path: Path,
-) -> None:
-    """Um unico run de 'pipeline executar' deve satisfazer as 3 fases."""
-    base = tmp_path / "runs" / "operacional"
-    _escrever_manifest(
-        base / "kaggle_cats" / "dev" / "_" / "abc1234",
-        fonte="kaggle_cats",
-        perfil="dev",
-        comando="pipeline executar",
-    )
-
-    for fase in ("ingestao", "deteccao", "classificacao"):
-        manifest = _latest_por_fase(
-            tmp_path / "runs",
-            fonte="kaggle_cats",
-            perfil_nome="dev",
-            prefixo_comando=fase,
-        )
-        assert manifest is not None, f"fase={fase} nao encontrou o run unificado"
-        assert manifest["extras"]["comando"] == "pipeline executar"
-
-
-def test_latest_por_fase_ainda_aceita_comandos_individuais(tmp_path: Path) -> None:
-    """Backward compat: runs antigos com comandos por fase continuam validos."""
-    base = tmp_path / "runs" / "operacional"
-    _escrever_manifest(
-        base / "felidae" / "dev" / "_" / "old1__ing",
-        fonte="felidae",
-        perfil="dev",
-        comando="ingestao executar",
-        data_inicio="2025-01-01T00:00:00+00:00",
-    )
-    _escrever_manifest(
-        base / "felidae" / "dev" / "_" / "old2__det",
-        fonte="felidae",
-        perfil="dev",
-        comando="deteccao executar",
-        data_inicio="2025-01-02T00:00:00+00:00",
-    )
-
-    man_ing = _latest_por_fase(
-        tmp_path / "runs",
-        fonte="felidae",
-        perfil_nome="dev",
-        prefixo_comando="ingestao",
-    )
-    man_det = _latest_por_fase(
-        tmp_path / "runs",
-        fonte="felidae",
-        perfil_nome="dev",
-        prefixo_comando="deteccao",
-    )
-    assert man_ing is not None and man_ing["extras"]["comando"].startswith("ingestao")
-    assert man_det is not None and man_det["extras"]["comando"].startswith("deteccao")
-
 
 # ---------------------------------------------------------------------------
 # Bug 2: RelatorioCascata expoe aliases
@@ -143,7 +40,7 @@ def test_relatorio_cascata_expoe_aliases_esperados_por_comparativo_fontes() -> N
     )
     d = rel.como_dicionario()
 
-    # aliases obrigatorios para o bloco 7
+    # aliases obrigatorios para a figura comparativo-fontes
     assert d["n_entradas"] == 30
     assert d["n_animais_detectados"] == 42
     assert d["n_imagens"] == 27
@@ -174,9 +71,7 @@ def test_relatorio_cascata_n_imagens_faz_fallback_para_n_manifesto() -> None:
 
 
 @pytest.fixture
-def cfg_dev_apontando_para_tmp(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> Path:
+def cfg_dev_apontando_para_tmp(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Faz carregar_perfil('dev') retornar um Perfil com raw_petface=tmp_path/reid_mini."""
     from felinet import config as cfg_mod
 

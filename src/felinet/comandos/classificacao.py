@@ -178,10 +178,15 @@ def recortar(
     deteccoes_por_imagem = {
         str(r.media_path): [d.bbox for d in r.deteccoes] for r in resultados_det
     }
+    pessoas_por_imagem = {
+        str(r.media_path): [d for d in r.deteccoes if d.categoria == "person"]
+        for r in resultados_det
+    }
 
     crops = persistir_crops_felis_catus(
         classificacoes,
         deteccoes_por_imagem,
         pasta_saida,
+        pessoas_por_imagem=pessoas_por_imagem,
     )
     typer.echo(f"OK: {len(crops)} crops persistidos -> {pasta_saida}")

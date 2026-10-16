@@ -27,9 +27,20 @@ def cmd(args: list[str]) -> str:
 
 def pacotes_principais() -> dict[str, str]:
     pkgs = [
-        "torch", "torchvision", "ultralytics", "transformers",
-        "numpy", "pandas", "matplotlib", "pillow", "opencv-python",
-        "scikit-learn", "typer", "ruff", "pytest", "questionary",
+        "torch",
+        "torchvision",
+        "ultralytics",
+        "transformers",
+        "numpy",
+        "pandas",
+        "matplotlib",
+        "pillow",
+        "opencv-python",
+        "scikit-learn",
+        "typer",
+        "ruff",
+        "pytest",
+        "questionary",
     ]
     out: dict[str, str] = {}
     for nome in pkgs:
@@ -46,6 +57,7 @@ def info_torch_gpu() -> dict[str, str]:
     info = {"cuda_disponivel": "n/d", "cuda_versao": "n/d", "dispositivos": "n/d"}
     try:
         import torch
+
         info["cuda_disponivel"] = str(torch.cuda.is_available())
         info["cuda_versao"] = str(torch.version.cuda)
         if torch.cuda.is_available():
@@ -73,10 +85,20 @@ def coletar() -> dict:
         "kernel": cmd(["uname", "-r"]),
         "python": sys.version.split()[0],
         "executavel_python": sys.executable,
-        "cpu": cmd(["bash", "-c", "lscpu | grep 'Model name' | head -1 | sed 's/Model name:[ ]*//'"]) or "n/d",
+        "cpu": cmd(
+            ["bash", "-c", "lscpu | grep 'Model name' | head -1 | sed 's/Model name:[ ]*//'"]
+        )
+        or "n/d",
         "nucleos": cmd(["nproc"]),
         "ram_total": cmd(["bash", "-c", "free -h | awk '/^Mem:/{print $2}'"]),
-        "gpu_nvidia": cmd(["bash", "-c", "nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader 2>/dev/null"]) or "n/d",
+        "gpu_nvidia": cmd(
+            [
+                "bash",
+                "-c",
+                "nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader 2>/dev/null",
+            ]
+        )
+        or "n/d",
         "torch_gpu": info_torch_gpu(),
         "pacotes": pacotes_principais(),
         "git": commit_atual(),

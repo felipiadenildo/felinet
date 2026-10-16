@@ -82,11 +82,11 @@ class RelatorioCascata:
             "sucesso": self.sucesso,
             "mensagem": self.mensagem,
             # aliases legados (consumidos por figuras/tabelas comparativo_fontes)
-            "n_entradas":           self.n_manifesto,
+            "n_entradas": self.n_manifesto,
             "n_animais_detectados": self.n_deteccoes_animal,
-            "n_imagens":            self.n_imagens_com_animal or self.n_manifesto,
-            "n_classificacoes":     self.n_classificacoes_total,
-            "n_felis_catus":        self.n_classificacoes_felis_catus,
+            "n_imagens": self.n_imagens_com_animal or self.n_manifesto,
+            "n_classificacoes": self.n_classificacoes_total,
+            "n_felis_catus": self.n_classificacoes_felis_catus,
         }
 
 
@@ -99,8 +99,14 @@ def executar_cascata(
     max_amostras: int = 0,
     seed_amostragem: int = 42,
     dev_visual: bool = False,
+    triagem: bool = False,
 ) -> RelatorioCascata:
     """Executa I -> II -> III -> IV gravando dentro de ``run.raiz``.
+
+    Com ``triagem=True``, a Fase I extrai quadros de vídeos, descarta quadros escuros, saturados e
+    duplicados e normaliza os aceitos (Seção 3.2 da monografia) antes da detecção; o registro das
+    decisões vai para ``01_triagem.csv``. Desligado por padrão: as execuções da monografia usaram as
+    imagens como estavam.
 
     Args:
         pasta_brutas: Pasta de imagens brutas (geralmente um symlink em
@@ -159,6 +165,25 @@ def executar_cascata(
         dev_base = preparar_estrutura(run.raiz)
         LOG.info(f"Modo --dev ativo: galeria em {dev_base}")
 
+    if triagem:
+        import csv
+
+        from felinet.pipeline.fase1_ingestao.triagem import preparar_quadros_canonicos
+
+        pasta_quadros = run.raiz / "01_quadros"
+        _, registro_triagem = preparar_quadros_canonicos(pasta_brutas, pasta_quadros)
+        with (run.raiz / "01_triagem.csv").open("w", newline="", encoding="utf-8") as f:
+            escritor = csv.DictWriter(
+                f, fieldnames=["midia", "quadro", "instante_s", "motivo", "arquivo"]
+            )
+            escritor.writeheader()
+            escritor.writerows(registro_triagem)
+        aceitos = sum(r["motivo"] == "aceito" for r in registro_triagem)
+        LOG.info(
+            f"Fase I (triagem): {aceitos}/{len(registro_triagem)} quadros aceitos -> {pasta_quadros}"
+        )
+        pasta_brutas = pasta_quadros
+
     extensoes = {".jpg", ".jpeg", ".png", ".tif", ".tiff"}
     brutas = sorted(p for p in pasta_brutas.rglob("*") if p.suffix.lower() in extensoes)
     n_total = len(brutas)
@@ -183,17 +208,20 @@ def executar_cascata(
     detector = DetectorMegaDetectorV6()
     resultados_det: list[ResultadoDeteccao] = []
     deteccoes_por_imagem: dict[str, list[BoundingBox]] = {}
+    pessoas_por_imagem: dict[str, list] = {}
     for entrada in entradas_manifesto:
         caminho = pasta_brutas / entrada.caminho_relativo
         resultado = detector.detectar(caminho, limite_confianca=confianca_min_deteccao)
         resultados_det.append(resultado)
         deteccoes_por_imagem[str(caminho)] = [d.bbox for d in resultado.deteccoes]
+        pessoas_por_imagem[str(caminho)] = [
+            d for d in resultado.deteccoes if d.categoria == "person"
+        ]
     arquivo_det = run.deteccoes_dir / "deteccoes.json"
     salvar_deteccoes_json(resultados_det, arquivo_det)
     n_animal = sum(1 for r in resultados_det for d in r.deteccoes if d.categoria == "animal")
     n_imagens_com_animal = sum(
-        1 for r in resultados_det
-        if any(d.categoria == "animal" for d in r.deteccoes)
+        1 for r in resultados_det if any(d.categoria == "animal" for d in r.deteccoes)
     )
     LOG.info(f"Fase II OK: {n_animal} bboxes 'animal' -> {arquivo_det}")
     if dev_base is not None:
@@ -250,6 +278,7 @@ def executar_cascata(
         classificacoes,
         deteccoes_por_imagem,
         run.crops_dir,
+        pessoas_por_imagem=pessoas_por_imagem,
     )
     LOG.info(f"Crops persistidos: {len(crops)} -> {run.crops_dir}")
 

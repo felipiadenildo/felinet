@@ -53,9 +53,7 @@ def preparar_estrutura(raiz_run: Path) -> Path:
     return base
 
 
-def registrar_ingestao(
-    base: Path, nome_arq: str, motivo: str, detalhe: str = ""
-) -> None:
+def registrar_ingestao(base: Path, nome_arq: str, motivo: str, detalhe: str = "") -> None:
     """Acrescenta uma linha em ``01_ingestao/motivos.csv``.
 
     ``motivo`` é um slug curto (``aceita``, ``hash_dup``, ``formato_invalido``,
@@ -170,15 +168,11 @@ def _coletar_amostra(pasta: Path, max_n: int = 24) -> list[Path]:
     if not pasta.is_dir():
         return []
     extensoes = {".jpg", ".jpeg", ".png", ".webp"}
-    arquivos = sorted(
-        p for p in pasta.iterdir() if p.is_file() and p.suffix.lower() in extensoes
-    )
+    arquivos = sorted(p for p in pasta.iterdir() if p.is_file() and p.suffix.lower() in extensoes)
     return arquivos[:max_n]
 
 
-def _renderizar_galeria(
-    titulo: str, pasta: Path, base_html: Path, max_n: int = 24
-) -> str:
+def _renderizar_galeria(titulo: str, pasta: Path, base_html: Path, max_n: int = 24) -> str:
     """Renderiza uma seção HTML com galeria de imagens de uma pasta."""
     arquivos = _coletar_amostra(pasta, max_n=max_n)
     if not arquivos:
@@ -193,10 +187,7 @@ def _renderizar_galeria(
             f'<img src="{rel}" alt="{arq.name}" loading="lazy"></a>'
             f'<div class="legenda">{arq.name}</div></div>'
         )
-    return (
-        f"<h3>{titulo}{mais}</h3>"
-        f'<div class="grid">{"".join(cells)}</div>'
-    )
+    return f'<h3>{titulo}{mais}</h3><div class="grid">{"".join(cells)}</div>'
 
 
 def _contar_linhas_csv(arq: Path) -> int:
@@ -205,6 +196,7 @@ def _contar_linhas_csv(arq: Path) -> int:
         return 0
     with arq.open("r", encoding="utf-8") as f:
         return max(0, sum(1 for _ in f) - 1)
+
 
 def _contar_csv_por_coluna(arq: Path, coluna: str) -> dict[str, int]:
     """Conta ocorrências de cada valor único de ``coluna`` em um CSV.
@@ -251,7 +243,7 @@ def gerar_resumo_html(base: Path, titulo_run: str = "") -> Path:
         f'<div class="stats">aceitas: <b>{n_aceitas}</b></div>'
         f'<div class="stats">rejeitadas: <b>{n_rejeitadas}</b></div>'
         f'<div class="stats">registros CSV: <b>{n_motivos}</b></div>'
-        '<details><summary>motivos.csv</summary>'
+        "<details><summary>motivos.csv</summary>"
         '<p>Veja <a href="01_ingestao/motivos.csv">01_ingestao/motivos.csv</a> '
         "para detalhes de cada decisão.</p></details>"
         + _renderizar_galeria("Aceitas", f1 / "aceitas", arq_html)
@@ -272,7 +264,7 @@ def gerar_resumo_html(base: Path, titulo_run: str = "") -> Path:
         f'<div class="stats">sem animal: <b>{n_sem}</b></div>'
         f'<div class="stats">abaixo do limiar: <b>{n_low}</b></div>'
         f'<div class="stats">registros CSV: <b>{n_det}</b></div>'
-        '<details><summary>deteccoes.csv</summary>'
+        "<details><summary>deteccoes.csv</summary>"
         '<p>Veja <a href="02_deteccao/deteccoes.csv">02_deteccao/deteccoes.csv</a> '
         "para coordenadas e scores de cada bbox.</p></details>"
         + _renderizar_galeria("Com animal (bbox verde)", f2 / "com_animal", arq_html)
@@ -292,7 +284,7 @@ def gerar_resumo_html(base: Path, titulo_run: str = "") -> Path:
         f'<div class="stats">felis_catus: <b>{n_felis}</b></div>'
         f'<div class="stats">outros: <b>{n_outros}</b></div>'
         f'<div class="stats">registros CSV: <b>{n_cls}</b></div>'
-        '<details><summary>classificacoes.csv</summary>'
+        "<details><summary>classificacoes.csv</summary>"
         '<p>Veja <a href="03_classificacao/classificacoes.csv">03_classificacao/classificacoes.csv</a> '
         "para a classe e score de cada crop.</p></details>"
         + _renderizar_galeria("Classificados como felis_catus", f3 / "felis_catus", arq_html)

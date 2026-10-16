@@ -1,4 +1,4 @@
-"""E1 — Detecção: esquema neutro de saída.
+"""Fase II — Detecção: esquema neutro de saída.
 
 Define a estrutura de dados que o pipeline consome após a detecção,
 isolando o resto do sistema da API específica do MegaDetector.

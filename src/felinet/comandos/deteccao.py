@@ -118,7 +118,7 @@ def visualizar(
             raise typer.Exit(code=1)
         entrada = latest / "deteccoes.json"
 
-    pasta_saida = saida or (cfg.artifacts_figuras / "exemplos" / fonte_efetiva)
+    pasta_saida = saida or (entrada.parent / "visualizacao")
     pasta_saida.mkdir(parents=True, exist_ok=True)
     codigo = _visualizar(entrada, pasta_saida)
     raise typer.Exit(code=codigo)

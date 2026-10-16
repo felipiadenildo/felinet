@@ -5,7 +5,7 @@ Uso:
     felinet --version
     felinet pipeline executar --perfil dev
     felinet reid avaliar-closed --n 200
-    felinet figuras reid-cmc --n 200
+    felinet monografia gerar
     felinet dev preparar-petface-mini
 
 Subcomandos sao definidos em ``felinet.comandos.*`` e registrados aqui.
@@ -22,10 +22,11 @@ from felinet.comandos import (
     deteccao,
     dev,
     easyrun,
-    figuras,
+    exemplos,
+    experimentos,
     ingestao,
+    monografia,
     reid,
-    tabelas,
 )
 from felinet.comandos import (
     pipeline as pipeline_cmd,
@@ -45,9 +46,22 @@ app.add_typer(
     classificacao.app, name="classificacao", help="Fase III: classificacao SpeciesNet + decisor."
 )
 app.add_typer(reid.app, name="reid", help="Fase IV: Re-ID MegaDescriptor (PetFace + cascata).")
-app.add_typer(figuras.app, name="figuras", help="Gera figuras (PNG/PDF) para a monografia.")
-app.add_typer(tabelas.app, name="tabelas", help="Gera tabelas (CSV + booktabs .tex).")
+app.add_typer(
+    monografia.app,
+    name="monografia",
+    help="Figuras e tabelas da monografia: listar, gerar e verificar.",
+)
 app.add_typer(pipeline_cmd.app, name="pipeline", help="Orquestrador da cascata I->II->III->IV.")
+app.add_typer(
+    experimentos.app,
+    name="experimentos",
+    help="Experimentos complementares do Cap. 5 (Cascatas Multifonte, Sensibilidade).",
+)
+app.add_typer(
+    exemplos.app,
+    name="exemplos",
+    help="Execuções ilustrativas da cascata (fora dos experimentos).",
+)
 app.add_typer(dev.app, name="dev", help="Utilitarios de desenvolvimento (cascata dev, validacao).")
 app.add_typer(datasets.app, name="datasets", help="Download e preparo de datasets externos.")
 app.add_typer(

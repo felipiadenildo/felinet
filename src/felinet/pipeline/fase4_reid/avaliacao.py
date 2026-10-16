@@ -273,7 +273,9 @@ def _curva_roc(
 
 
 def _auc_trapezio(fpr: np.ndarray, tpr: np.ndarray) -> float:
-    return float(np.trapz(tpr, fpr))
+    # np.trapz saiu no NumPy 2; np.trapezoid só existe a partir do 2.0
+    trapezio = getattr(np, "trapezoid", None) or np.trapz
+    return float(trapezio(tpr, fpr))
 
 
 def _tpr_em_fpr_alvo(

@@ -66,7 +66,7 @@ real do pipeline requer instalação completa via ``make instalar``.
 make qualidade        # ruff + pytest (ignora marker smoke)
 pytest -q             # mesmo conjunto
 pytest -m smoke       # testes que dependem de GPU/modelos pesados
-pytest -k bloco7      # subconjunto por nome
+pytest -k comparativo_fontes   # subconjunto por nome
 ```
 
 A configuração default em ``pyproject.toml`` (``addopts = "-q -m 'not smoke'"``)

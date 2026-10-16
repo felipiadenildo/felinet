@@ -1,0 +1,6 @@
+[
+  {"fonte": "kaggle_cats", "arquivo": "25_1387.jpg", "rotulo": "Gato aceito"},
+  {"fonte": "kaggle_cats", "arquivo": "25_175.jpg", "rotulo": "Dois gatos: o branco também tomado por pessoa"},
+  {"fonte": "kaggle_cats", "arquivo": "25_124.jpg", "rotulo": "Gatos detectados como pessoa"},
+  {"fonte": "kaggle_cats", "arquivo": "25_1268.jpg", "rotulo": "Gato rejeitado como puma"}
+]

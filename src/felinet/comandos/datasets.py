@@ -65,15 +65,11 @@ def listar() -> None:
 
 @app.command("linkar")
 def linkar(
-    nome: str = typer.Option(
-        None, "--nome", help="Linkar apenas o dataset com este nome."
-    ),
+    nome: str = typer.Option(None, "--nome", help="Linkar apenas o dataset com este nome."),
     apenas_planejar: bool = typer.Option(
         False, "--apenas-planejar", help="Imprime o que faria, sem executar."
     ),
-    forcar: bool = typer.Option(
-        False, "--forcar", help="Sobrescreve symlink/diretório existente."
-    ),
+    forcar: bool = typer.Option(False, "--forcar", help="Sobrescreve symlink/diretório existente."),
 ) -> None:
     """Cria symlinks data/raw/<categoria>/<nome>/ → caminho_local."""
     from felinet.config import raiz_projeto
@@ -99,14 +95,10 @@ def linkar(
     for nome_ds, ds in alvos.items():
         link = raiz / ds.link_destino
         if not ds.caminho.exists():
-            typer.echo(
-                f"[skip] {nome_ds}: caminho local não existe: {ds.caminho}"
-            )
+            typer.echo(f"[skip] {nome_ds}: caminho local não existe: {ds.caminho}")
             continue
         if not ds.caminho.is_dir():
-            typer.echo(
-                f"[skip] {nome_ds}: caminho local não é diretório: {ds.caminho}"
-            )
+            typer.echo(f"[skip] {nome_ds}: caminho local não é diretório: {ds.caminho}")
             continue
         if link.is_symlink() or link.exists():
             try:
@@ -117,9 +109,7 @@ def linkar(
                 typer.echo(f"[ok ] {nome_ds}: já linkado → {ds.caminho}")
                 continue
             if not forcar:
-                typer.echo(
-                    f"[skip] {nome_ds}: {link} já existe. Use --forcar para sobrescrever."
-                )
+                typer.echo(f"[skip] {nome_ds}: {link} já existe. Use --forcar para sobrescrever.")
                 continue
             if apenas_planejar:
                 typer.echo(f"[plano] {nome_ds}: substituiria {link} → {ds.caminho}")
@@ -127,9 +117,7 @@ def linkar(
             if link.is_symlink() or link.is_file():
                 link.unlink()
             else:
-                typer.echo(
-                    f"[skip] {nome_ds}: {link} é diretório regular; remova manualmente."
-                )
+                typer.echo(f"[skip] {nome_ds}: {link} é diretório regular; remova manualmente.")
                 continue
 
         if apenas_planejar:
@@ -153,7 +141,7 @@ def baixar_felidae(
         "--cache-meta",
         help="Diretório para o ZIP/JSON de metadados. Default: <destino>/_metadata/.",
     ),
-        preset: str = typer.Option(
+    preset: str = typer.Option(
         "completo",
         "--preset",
         help="Preset de cotas: 'completo' (~8.3k imgs/~18.6 GB) ou "
@@ -201,9 +189,7 @@ def baixar_felidae(
     )
 
     if preset not in PRESETS:
-        raise typer.BadParameter(
-            f"Preset '{preset}' invalido. Opcoes: {sorted(PRESETS.keys())}."
-        )
+        raise typer.BadParameter(f"Preset '{preset}' invalido. Opcoes: {sorted(PRESETS.keys())}.")
     cotas_base, cota_demais_base = PRESETS[preset]
     LOG.info(f"Preset de cotas: '{preset}' (cota_demais={cota_demais_base}).")
 
@@ -290,3 +276,76 @@ def baixar_felidae(
         f"Imagens em {destino}/<categoria>/. "
         f"Manifesto em {manifesto_path}."
     )
+
+
+@app.command("reconstruir-run")
+def reconstruir_run(
+    run: Path = typer.Option(..., "--run", help="Pasta do run (com 02_manifesto/manifesto.csv)."),
+    destino: Path = typer.Option(..., "--destino", help="Raiz onde gravar as imagens."),
+    fonte: str = typer.Option(
+        ..., "--fonte", help="felidae (LILA BC) ou kaggle_cats (pasta local)."
+    ),
+    origem: Path = typer.Option(
+        None, "--origem", help="kaggle_cats: pasta do dataset baixado (contém cat/Images/)."
+    ),
+    metadados: Path = typer.Option(
+        None, "--metadados", help="felidae: JSON COCO do LILA (baixado se omitido)."
+    ),
+    so: list[str] = typer.Option(
+        None, "--so", help="Só estes arquivos (nome ou prefixo do nome; repetível)."
+    ),
+) -> None:
+    """Reconstrói as imagens de um run a partir da fonte pública, conferindo o SHA-256 do manifesto."""
+    from felinet.datasets import reconstrucao as r
+    from felinet.datasets.felidae import baixar_metadados
+
+    itens = r.ler_manifesto(run)
+    if so:
+        itens = [i for i in itens if any(Path(i.caminho_relativo).name.startswith(p) for p in so)]
+    if fonte == "felidae":
+        json_meta = metadados or baixar_metadados(destino / "_metadata" / "felidae_meta.zip")
+        obter = r.obter_do_lila(r.indice_lila(json_meta))
+    elif fonte == "kaggle_cats":
+        if origem is None:
+            raise typer.BadParameter("kaggle_cats requer --origem (pasta do dataset baixado).")
+        obter = r.obter_de_pasta(origem)
+    else:
+        raise typer.BadParameter("fonte deve ser felidae ou kaggle_cats.")
+    saida = r.reconstruir(itens, destino, obter)
+    for chave, lista in saida.items():
+        typer.echo(f"{chave}: {len(lista)}")
+        if chave in ("sha_divergente", "falha"):
+            for linha in lista[:10]:
+                typer.echo(f"  {linha}")
+    if saida["sha_divergente"] or saida["falha"]:
+        raise typer.Exit(1)
+
+
+@app.command("extrair-petface")
+def extrair_petface(
+    embeddings: Path = typer.Option(
+        ..., "--embeddings", help="embeddings.npz do run de re-ID (campo caminhos)."
+    ),
+    destino: Path = typer.Option(
+        ..., "--destino", help="Pasta images/ de saída (cat/<id>/<nn>.png)."
+    ),
+    tar: Path = typer.Option(
+        Path("-"),
+        "--tar",
+        help="cat.tar.gz do PetFace; '-' lê da entrada padrão (ex.: rclone cat).",
+    ),
+) -> None:
+    """Extrai do pacote oficial do PetFace só as imagens citadas por um run, sem gravar o pacote."""
+    import sys
+
+    from felinet.datasets import reconstrucao as r
+
+    nomes = set(r.arquivos_petface_do_run(embeddings))
+    if str(tar) == "-":
+        gravados = r.extrair_de_tar(sys.stdin.buffer, nomes, destino)
+    else:
+        with tar.open("rb") as f:
+            gravados = r.extrair_de_tar(f, nomes, destino)
+    typer.echo(f"{gravados}/{len(nomes)} imagens em {destino}")
+    if gravados < len(nomes):
+        raise typer.Exit(1)

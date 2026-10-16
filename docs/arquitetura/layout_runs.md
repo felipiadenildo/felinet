@@ -70,7 +70,7 @@ runs/latest/metodologico__petface__prod__openset_n0200 -> ...
 ```
 
 Esses symlinks sao atualizados automaticamente por `felinet.runs.criar_run`
-e consumidos pelos comandos `felinet figuras` e `felinet tabelas`.
+e usados pelos comandos que procuram o run mais recente de uma fonte.
 
 ## Estrutura interna de um run
 
@@ -149,30 +149,20 @@ Cada run grava um manifesto com a tupla rastreavel:
 ## Versionamento
 
 - `runs/` e gitignored: pixels e embeddings nao entram no repositorio.
-- Apenas o `manifest.json` e citavel; quando um resultado precisa ser
-  preservado para a monografia, a tabela ou figura derivada e gravada
-  em `artifacts/tabelas/...` ou `artifacts/figuras/...` (versionados).
+- Apenas o `manifest.json` e citavel; as figuras e tabelas derivadas para a
+  monografia sao gravadas no repositorio dela (`elementos/gerados/`), com
+  o sha256 de cada arquivo de entrada no `MANIFESTO.json`.
 - O `manifest.json` carrega o git_sha que permite reconstruir o codigo
   exato. Se o usuario quiser preservar o run completo, deve copia-lo
   manualmente para fora do `runs/` (ex.: para um SSD de arquivo morto).
 
 ## Como a monografia consome runs/
 
-O fluxo de geracao de tabelas e figuras nunca cita `runs/` diretamente
-no texto. O fluxo e:
-
-1. `felinet reid extrair-embeddings --fonte petface --n 200`
-   cria `runs/metodologico/petface/prod/n0200/<sha>/`.
-2. `felinet reid avaliar-closed --fonte petface --n 200` consome o run
-   anterior e grava `metricas.json` no mesmo (ou novo) run.
-3. `felinet tabelas reid-resumo --fonte petface --ns 50,200,500` le os
-   tres runs latest e escreve
-   `artifacts/tabelas/metodologico/petface/reid_resumo.{csv,tex}`.
-4. O `.tex` da monografia faz
-   `\input{artifacts/tabelas/metodologico/petface/reid_resumo.tex}`.
-
-A versionalizacao do `.tex` em `artifacts/` documenta o estado dos
-numeros; o `manifest.json` linkado por gitsha permite reproduzir.
+O texto da monografia nunca cita `runs/` diretamente. `felinet monografia gerar` le os runs da execucao final
+(cascata: `operacional/<fonte>/dev/_/<sha>__monografia_n300/`; re-ID: `metodologico/petface/prod/{n,openset_n}<NNNN>/<sha>/`;
+complementares: `complementar/<experimento>/<origem>/resultados.csv`) e escreve figuras e tabelas em
+`monografia-felinet/elementos/gerados/`. Havendo mais de um run do mesmo experimento, os resultados precisam ser
+identicos (senao o comando lista os runs divergentes). Mapa completo: `docs/REPRODUCAO_MONOGRAFIA.md`.
 
 ## Adicionando uma nova fonte
 
@@ -188,3 +178,21 @@ Cada protocolo e identificado por slug `<familia>_n<NNNN>` ou apenas
 `n<NNNN>`. Para criar um protocolo novo, basta passar `--tag` para
 diferenciar variacoes (ex.: `--tag triplet_loss`) ou estender o codigo
 do comando para mapear novas combinacoes a slugs proprios.
+
+## Experimentos complementares (`runs/complementar/`)
+
+Os experimentos complementares do Cap. 5 da monografia (Experimento de Cascatas Multifonte e Experimento de
+Sensibilidade ao Limiar do Detector) gravam um CSV por execução:
+
+```
+runs/complementar/<experimento>/<origem>/resultados.csv
+runs/complementar/<experimento>/<origem>/manifest.json
+```
+
+* `cascatas_multifonte`: `source, n_images, n_detection_boxes, n_images_with_animal, rate_animal,
+  n_classified_cat, rate_cat, mean_det_score, elapsed_s` (tabela do Apêndice E);
+* `sensibilidade_limiar`: `source, threshold, n_boxes, n_images_with_animal, rate_animal, mean_score` (tabela do Apêndice E).
+
+Os CSVs da execução da monografia vieram do protótipo `felinet_mono` (origem `felinet_mono`, registrada no
+`manifest.json`). `felinet monografia gerar` lê esse diretório; havendo mais de uma origem com resultados
+diferentes, o comando falha e lista as pastas.

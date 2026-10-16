@@ -132,8 +132,7 @@ def preparar_petface_mini(
     if origem is None:
         n_total = _gerar_petface_mini_sintetico(destino, individuos, imagens_por_id)
         typer.echo(
-            f"OK [sintetico]: {individuos} IDs x {imagens_por_id} imgs "
-            f"= {n_total} -> {destino}"
+            f"OK [sintetico]: {individuos} IDs x {imagens_por_id} imgs = {n_total} -> {destino}"
         )
         return
 
@@ -155,9 +154,7 @@ def preparar_petface_mini(
     linhas_csv: list[tuple[str, str]] = []
     n_copiadas = 0
     for ordem, id_dir in enumerate(ids):
-        imgs = sorted(
-            p for p in id_dir.glob("*") if p.suffix.lower() in {".jpg", ".png", ".jpeg"}
-        )
+        imgs = sorted(p for p in id_dir.glob("*") if p.suffix.lower() in {".jpg", ".png", ".jpeg"})
         imgs = rng.sample(imgs, min(imagens_por_id, len(imgs)))
         # padroniza nome do diretorio destino para 6 digitos (ordem na amostra)
         id_pad = f"{ordem:06d}"
@@ -179,9 +176,7 @@ def preparar_petface_mini(
         for filename, label in linhas_csv:
             escritor.writerow([filename, label])
 
-    typer.echo(
-        f"OK [real]: {len(ids)} IDs x ~{imagens_por_id} imgs = {n_copiadas} -> {destino}"
-    )
+    typer.echo(f"OK [real]: {len(ids)} IDs x ~{imagens_por_id} imgs = {n_copiadas} -> {destino}")
 
 
 @app.command("validar-ambiente")
@@ -257,9 +252,7 @@ def demo(
 
     cfg = carregar_perfil(perfil)
     raiz_runs = getattr(cfg, "raiz_runs", Path("runs"))
-    base_run = resolver_latest(
-        modo="operacional", fonte=fonte, perfil=perfil, raiz_runs=raiz_runs
-    )
+    base_run = resolver_latest(modo="operacional", fonte=fonte, perfil=perfil, raiz_runs=raiz_runs)
 
     if base_run is None:
         typer.echo("\n[demo] nao achei run operacional via latest/. Veja runs/operacional/.")
@@ -318,15 +311,11 @@ def gerar_resumo_html_cmd(
             modo="operacional", fonte=fonte, perfil=perfil, raiz_runs=raiz_runs
         )
         if base_run is None:
-            registros = listar_runs(
-                raiz_runs, modo="operacional", fonte=fonte, perfil=perfil
-            )
+            registros = listar_runs(raiz_runs, modo="operacional", fonte=fonte, perfil=perfil)
             if registros:
                 base_run = registros[0].raiz
     else:
-        registros = listar_runs(
-            raiz_runs, modo="operacional", fonte=fonte, perfil=perfil
-        )
+        registros = listar_runs(raiz_runs, modo="operacional", fonte=fonte, perfil=perfil)
         for reg in registros:
             tag = reg.manifest.get("tag") or ""
             if tag == run or reg.raiz.name == run or reg.raiz.name.endswith(f"__{run}"):

@@ -1,4 +1,4 @@
-"""Testes do refactor multifonte dos comandos operacionais (Bloco 3).
+"""Testes do refactor multifonte dos comandos operacionais.
 
 Garante que `ingestao manifesto`, `deteccao executar` e
 `classificacao executar` aceitam `--fonte` e gravam em

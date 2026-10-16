@@ -49,3 +49,14 @@ class TestDecisor:
         cfg_relaxado = ConfigDecisor(limiar_confianca=0.40)
         assert decidir_status(topk, cfg_estrito) == STATUS_VALIDACAO_HUMANA
         assert decidir_status(topk, cfg_relaxado) == STATUS_FELIS_CATUS
+
+
+def test_ancestral_de_gato_vai_para_validacao_so_quando_ligado() -> None:
+    from felinet.pipeline.fase3_classificacao.decisor import ConfigDecisor, decidir_status
+    from felinet.pipeline.fase3_classificacao.schema import PrediccaoEspecie
+
+    top = [PrediccaoEspecie(especie="cat family", probabilidade=0.91)]
+    assert decidir_status(top, ConfigDecisor()) == "outra_especie"  # comportamento dos experimentos
+    assert decidir_status(top, ConfigDecisor(ancestrais_para_validacao=True)) == "validacao_humana"
+    outra = [PrediccaoEspecie(especie="lizards and snakes", probabilidade=0.98)]
+    assert decidir_status(outra, ConfigDecisor(ancestrais_para_validacao=True)) == "outra_especie"

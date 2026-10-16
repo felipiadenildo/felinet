@@ -147,6 +147,7 @@ def test_cotas_padrao_focam_em_felinos_e_confundiveis() -> None:
     assert COTAS_PADRAO["bobcat"] >= 1
     assert COTAS_PADRAO["puma"] >= 1
 
+
 # ============================================================
 # Preset smoke (validacao rapida)
 # ============================================================

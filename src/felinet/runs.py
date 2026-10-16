@@ -380,12 +380,13 @@ def _resolver_fonte_path(perfil: Perfil, fonte: str, modo: str) -> str | None:
         return str(caminho)
 
 
-def _git_sha_curto() -> str:
+def _git_sha_curto(cwd: Path | None = None) -> str:
     try:
         out = subprocess.check_output(
             ["git", "rev-parse", "--short=7", "HEAD"],
             stderr=subprocess.DEVNULL,
             text=True,
+            cwd=cwd,
         )
         return out.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
@@ -404,12 +405,13 @@ def _git_branch() -> str | None:
         return None
 
 
-def _git_dirty() -> bool:
+def _git_dirty(cwd: Path | None = None) -> bool:
     try:
         out = subprocess.check_output(
             ["git", "status", "--porcelain"],
             stderr=subprocess.DEVNULL,
             text=True,
+            cwd=cwd,
         )
         return bool(out.strip())
     except (subprocess.CalledProcessError, FileNotFoundError):

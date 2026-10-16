@@ -28,6 +28,20 @@ ROTULOS_FELIS_CATUS = {
 }
 
 
+# Rótulos de nível taxonômico acima de espécie que incluem o gato doméstico (o filtro geográfico
+# do SpeciesNet produz esses rótulos ao subir na taxonomia).
+ROTULOS_ANCESTRAIS_FELIS = {
+    "cat family",
+    "felidae",
+    "felidae family",
+    "carnivorous mammal",
+    "carnivora",
+    "mammal",
+    "mammalia",
+    "animal",
+}
+
+
 @dataclass(frozen=True)
 class ConfigDecisor:
     """Parâmetros da política de decisão."""
@@ -38,6 +52,11 @@ class ConfigDecisor:
     limiar_entropia: float = 1.50
     """Entropia máxima da distribuição top-K para considerar 'concentrada'.
     Acima disso (distribuição espalhada) vai para validação humana."""
+
+    ancestrais_para_validacao: bool = False
+    """Se verdadeiro, top-1 em nível acima de espécie que inclui o gato doméstico (ex.: "cat
+    family") vai para validação humana em vez de ser descartado. Desligado nos experimentos da
+    monografia; recomendado com o filtro geográfico."""
 
 
 def _eh_felis_catus(rotulo: str) -> bool:
@@ -70,6 +89,13 @@ def decidir_status(
 
     # Confiança baixa → fila humana
     if top1.probabilidade < config.limiar_confianca:
+        return STATUS_VALIDACAO_HUMANA
+
+    # Rótulo genérico que pode ser um gato doméstico: não descartar sem revisão
+    if (
+        config.ancestrais_para_validacao
+        and top1.especie.strip().lower() in ROTULOS_ANCESTRAIS_FELIS
+    ):
         return STATUS_VALIDACAO_HUMANA
 
     # Confiança alta — desempate por classe

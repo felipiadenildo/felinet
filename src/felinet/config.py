@@ -54,8 +54,6 @@ class Perfil:
     raw_petface: Path
     interim: Path
     processed: Path
-    artifacts_figuras: Path
-    artifacts_tabelas: Path
     saida_manifesto: Path
     saida_deteccoes: Path
     saida_classificacoes: Path
@@ -113,8 +111,7 @@ def _aplicar_overrides_env(dados: dict[str, Any]) -> dict[str, Any]:
 def carregar_perfil(perfil: str | None = None) -> Perfil:
     """Carrega um perfil de ``configs/paths.yaml``.
 
-    Os campos top-level do YAML (``fontes``, ``raiz_runs``,
-    ``artifacts_figuras_raiz``, ``artifacts_tabelas_raiz``) sao injetados
+    Os campos top-level do YAML (``fontes``, ``raiz_runs``) sao injetados
     em ``Perfil.extras`` para serem consumidos por ``felinet.runs`` e
     outros modulos.
 
@@ -161,7 +158,7 @@ def carregar_perfil(perfil: str | None = None) -> Perfil:
             extras[chave] = valor
 
     # Injeta top-level (fontes, raiz_runs, ...) em extras
-    for chave_top in ("fontes", "raiz_runs", "artifacts_figuras_raiz", "artifacts_tabelas_raiz"):
+    for chave_top in ("fontes", "raiz_runs"):
         if chave_top in raw:
             extras[chave_top] = raw[chave_top]
 

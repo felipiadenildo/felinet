@@ -1,4 +1,4 @@
-"""E1 — Detecção: desenho de bboxes sobre imagens.
+"""Fase II — Detecção: desenho de bboxes sobre imagens.
 
 Renderiza as detecções salvas no esquema neutro como overlay visual
 para inspeção humana e figuras da monografia.

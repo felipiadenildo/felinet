@@ -1,4 +1,4 @@
-"""E0 — Ingestão: utilitários de validação de arquivos.
+"""Fase I — Ingestão: utilitários de validação de arquivos.
 
 Funções básicas para verificar integridade e identificar arquivos
 de mídia provenientes de cartões SD de armadilhas fotográficas.

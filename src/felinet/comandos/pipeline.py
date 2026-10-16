@@ -62,8 +62,12 @@ def executar(
     dev_visual: bool = typer.Option(
         False,
         "--dev",
-        help="Modo dev: gera galeria visual de descartes/bbox/crops em "
-        "runs/.../dev_visualizacao/.",
+        help="Modo dev: gera galeria visual de descartes/bbox/crops em runs/.../dev_visualizacao/.",
+    ),
+    triagem: bool = typer.Option(
+        False,
+        "--triagem",
+        help="Fase I completa: vídeo -> quadros, descarte de escuros/saturados/duplicados e normalização.",
     ),
 ) -> None:
     """Roda a cascata completa I -> II -> III -> IV sobre a fonte selecionada.
@@ -87,6 +91,7 @@ def executar(
         "max_amostras": max_amostras,
         "seed_amostragem": seed_amostragem,
         "dev_visual": dev_visual,
+        "triagem": triagem,
     }
     run = criar_run(
         perfil=cfg,
@@ -107,6 +112,7 @@ def executar(
             max_amostras=max_amostras,
             seed_amostragem=seed_amostragem,
             dev_visual=dev_visual,
+            triagem=triagem,
         )
     except Exception as exc:  # noqa: BLE001
         finalizar_run(run, sucesso=False, mensagem=str(exc))
