@@ -65,9 +65,10 @@ runs/                traceable output of each execution
 tests/               pytest suite (~210 tests)
 ```
 
-The thesis's LaTeX manuscript is versioned separately, in the
-[`monografia-engenharia-de-computacao-felinet`](https://github.com/felipiadenildo/monografia-engenharia-de-computacao-felinet)
-repository (private). This repository holds only the pipeline code.
+**Thesis (PDF):** [defended version, July 2026](docs/monografia/monografia_defendida_2026-07.pdf) ·
+[author's revised version, October 2026](docs/monografia/monografia_revisada_2026-10.pdf) ·
+[what changed](docs/monografia/README.md). The LaTeX manuscript is kept in a separate private repository; this
+repository holds the pipeline code.
 
 ### Documentation
 
@@ -172,9 +173,10 @@ runs/                saídas rastreáveis de cada execução
 tests/               suíte pytest (~210 testes)
 ```
 
-O manuscrito LaTeX da monografia é versionado à parte, no repositório
-[`monografia-engenharia-de-computacao-felinet`](https://github.com/felipiadenildo/monografia-engenharia-de-computacao-felinet)
-(privado). Este repositório contém apenas o código do pipeline.
+**Monografia (PDF):** [versão defendida, julho de 2026](docs/monografia/monografia_defendida_2026-07.pdf) ·
+[versão revisada pelo autor, outubro de 2026](docs/monografia/monografia_revisada_2026-10.pdf) ·
+[o que mudou](docs/monografia/README.md). O manuscrito LaTeX fica num repositório privado à parte; este repositório
+contém o código do pipeline.
 
 ### Documentação
 

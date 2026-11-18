@@ -17,7 +17,7 @@ Pacote principal do TCC. Organizacao:
 
 from __future__ import annotations
 
-__version__ = "0.4.0.dev0"
+__version__ = "0.4.0"
 __author__ = "Felipi Adenildo Soares Sousa"
 __email__ = "felipiadenildo@gmail.com"
 

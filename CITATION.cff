@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "Se usar o felinet, cite o software e a monografia que o descreve."
 title: "felinet: pipeline de visão computacional para monitoramento da colônia de gatos do Campus 2 da USP São Carlos"
-version: 0.4.0.dev0
+version: 0.4.0
 license: MIT
 repository-code: "https://github.com/felipiadenildo/felinet"
 authors:
