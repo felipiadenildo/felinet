@@ -4,7 +4,20 @@
 
 ## English
 
-Bachelor's thesis system by Felipi Soares Sousa (University of São Paulo, São Carlos). A four-stage cascade pipeline that detects, classifies and re-identifies feral cats from camera traps installed on USP's Campus 2 in São Carlos.
+Bachelor's thesis system by Felipi Adenildo Soares Sousa (Computer Engineering, University of São Paulo, São Carlos,
+2026). A four-stage cascade pipeline that detects, classifies and re-identifies the community cats of USP's Campus 2
+from camera-trap images, to support the extension group that manages the colony.
+
+| Stage | What it does | Model |
+|---|---|---|
+| I. Ingestion | reads images from each source, keeps a record of every file | — |
+| II. Detection | finds animals and people; people are masked (LGPD) | MegaDetector v6 |
+| III. Classification | keeps only *Felis catus* crops | SpeciesNet |
+| IV. Re-identification | ranks known cats for each crop, for a volunteer to confirm | MegaDescriptor |
+
+**Thesis (PDF):** [defended version, July 2026](docs/monografia/monografia_defendida_2026-07.pdf) ·
+[author's revised version, October 2026](docs/monografia/monografia_revisada_2026-10.pdf) ·
+[what changed](docs/monografia/README.md). Results are in chapter 5.
 
 ### Quick install
 
@@ -20,7 +33,7 @@ is pinned in `requirements/ambiente-original.txt`.
 
 ### Thesis figures and tables
 
-Every figure and table the thesis draws from data is written by felinet into the thesis repository
+Every figure and table the thesis draws from data is written by felinet into the LaTeX thesis repository (private)
 (`../monografia-felinet/elementos/gerados/`), as vector PDF or LaTeX, together with a `MANIFESTO.json` (sha256 of
 each file, the input files it read, and the felinet commit) and a `LEIAME.md` map (LaTeX label → file → function).
 The registry is `src/felinet/monografia/elementos.py`; default paths are in `configs/monografia.yaml`.
@@ -65,11 +78,6 @@ runs/                traceable output of each execution
 tests/               pytest suite (~210 tests)
 ```
 
-**Thesis (PDF):** [defended version, July 2026](docs/monografia/monografia_defendida_2026-07.pdf) ·
-[author's revised version, October 2026](docs/monografia/monografia_revisada_2026-10.pdf) ·
-[what changed](docs/monografia/README.md). The LaTeX manuscript is kept in a separate private repository; this
-repository holds the pipeline code.
-
 ### Documentation
 
 Technical docs live in `docs/`. The core files:
@@ -109,7 +117,20 @@ MIT.
 
 ## Português
 
-Sistema do TCC de Felipi Soares Sousa (USP São Carlos). Pipeline em cascata de quatro fases para detectar, classificar e re-identificar gatos ferais a partir de armadilhas fotográficas instaladas no Campus 2 da USP em São Carlos.
+Sistema do TCC de Felipi Adenildo Soares Sousa (Engenharia de Computação, USP São Carlos, 2026). *Pipeline* em
+cascata de quatro fases que detecta, classifica e reidentifica os gatos comunitários do Campus 2 da USP a partir de
+imagens de armadilhas fotográficas, para apoiar o grupo de extensão que cuida da colônia.
+
+| Fase | O que faz | Modelo |
+|---|---|---|
+| I. Ingestão | lê as imagens de cada fonte e registra cada arquivo | — |
+| II. Detecção | encontra animais e pessoas; pessoas são mascaradas (LGPD) | MegaDetector v6 |
+| III. Classificação | mantém só os recortes de *Felis catus* | SpeciesNet |
+| IV. Reidentificação | ordena os gatos conhecidos para cada recorte, para um voluntário confirmar | MegaDescriptor |
+
+**Monografia (PDF):** [versão defendida, julho de 2026](docs/monografia/monografia_defendida_2026-07.pdf) ·
+[versão revisada pelo autor, outubro de 2026](docs/monografia/monografia_revisada_2026-10.pdf) ·
+[o que mudou](docs/monografia/README.md). Os resultados estão no capítulo 5.
 
 ### Instalação rápida
 
@@ -125,7 +146,7 @@ NVIDIA MX250) está fixado em `requirements/ambiente-original.txt`.
 
 ### Figuras e tabelas da monografia
 
-Toda figura e tabela que a monografia tira de dados é escrita pelo felinet no repositório da monografia
+Toda figura e tabela que a monografia tira de dados é escrita pelo felinet no repositório LaTeX da monografia (privado)
 (`../monografia-felinet/elementos/gerados/`), em PDF vetorial ou LaTeX, com um `MANIFESTO.json` (sha256 de cada
 arquivo, os arquivos de entrada lidos e o commit do felinet) e um mapa `LEIAME.md` (rótulo do LaTeX → arquivo →
 função). O registro é `src/felinet/monografia/elementos.py`; os caminhos padrão ficam em `configs/monografia.yaml`.
@@ -172,11 +193,6 @@ data/                fontes locais (data/raw/*) e amostras dev
 runs/                saídas rastreáveis de cada execução
 tests/               suíte pytest (~210 testes)
 ```
-
-**Monografia (PDF):** [versão defendida, julho de 2026](docs/monografia/monografia_defendida_2026-07.pdf) ·
-[versão revisada pelo autor, outubro de 2026](docs/monografia/monografia_revisada_2026-10.pdf) ·
-[o que mudou](docs/monografia/README.md). O manuscrito LaTeX fica num repositório privado à parte; este repositório
-contém o código do pipeline.
 
 ### Documentação
 
